@@ -1,6 +1,6 @@
 <?php
 
-require("../src/connection.php");
+require("../db/connection.php");
 require("mainBG.php");
 
 ?>
