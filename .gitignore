@@ -1,3 +1,65 @@
 db/constants.php
 node_modules
 .idea
+
+# Directories
+/vendor/
+/node_modules/
+
+# OS specific
+*.DS_Store
+Thumbs.db
+
+# IDE specific
+/.idea/
+*.sublime-project
+*.sublime-workspace
+.vscode/
+*.code-workspace
+
+# Environment related
+.env
+.env.local
+
+# PHP specific
+*.log
+*.swo
+*.swp
+*.phar
+
+# Other tools
+/phpunit.xml
+/php-cs-fixer.php
+/phpstan.neon
+
+# Composer related
+/composer.lock
+/composer.phar
+
+# Database
+*.sqlite
+
+# Backup & Swap files
+*_backup*
+*.bak
+*.swp
+*.swo
+*.swn
+
+# Others
+*.cache
+*.local
+*.conf
+*.dist
+*.spec
+*.rpm
+*.deb
+*.tar.gz
+*.pkg
+*.egg-info
+.DS_Store
+AppleDouble
+.LSOverride
+Icon
+._*
+
