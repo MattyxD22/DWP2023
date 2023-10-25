@@ -2,6 +2,8 @@
 
 namespace models;
 
+require_once __DIR__ . '/../db\connection.php';
+
 
 use db\DBConnector;
 
