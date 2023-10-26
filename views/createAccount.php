@@ -15,17 +15,22 @@ $regXP = "/^[A-z0-9_-]+([.][A-z0-9_]+)*[@][A-z0-9_-]+([.][A-z0-9_]+)*[.][A-z]{2,
 
         <div class="flex flex-col py-3">
             <span class="text-xl text-red-600">Username</span>
-            <input type="text" id='username' name="username" class="std_input w-[100%]" />
+            <input type="text" id='username' name="username" class="std_input w-[100%]" required/>
         </div>
 
         <div class="flex flex-col py-3">
             <span class="text-xl text-red-600">Email</span>
-            <input type="email" id='email' name="email" class="std_input w-[100%]" />
+            <input type="email" id='email' name="email" class="std_input w-[100%]" required/>
         </div>
 
         <div class="flex flex-col py-3">
             <span class="text-xl text-red-600">Password</span>
-            <input type="password" id='password' name="password" class="std_input w-[100%]" />
+            <input type="password" id='password' name="password" class="std_input w-[100%]" required />
+        </div>
+
+        <div class="flex flex-row gap-2">
+            <input type="checkbox" name="robotCheck" required>
+            <label class="text-red-600 for="robotCheck">I am not a robot</label>
         </div>
 
         <button type="submit" class="std_button flex flex-row mx-auto my-3">

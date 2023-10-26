@@ -5,10 +5,10 @@ USE DWP;
 
 CREATE TABLE UserTable(
     UserID INT(11) AUTO_INCREMENT PRIMARY KEY,
-    Username VARCHAR(50),
+    Username VARCHAR(50) UNIQUE,
     FName VARCHAR(50),
     LName VARCHAR(50),
-    Email VARCHAR(50),
+    Email VARCHAR(50) UNIQUE,
     Password VARCHAR(100),
     SignedUpDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     Banned INT(11)
