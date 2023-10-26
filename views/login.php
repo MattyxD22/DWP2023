@@ -16,10 +16,18 @@ require("header.php");
             <label class="text-red-600 text-xl" for="password">Password:</label><br>
             <input class="std_input w-[500px]" type="password" name="password">
         </div>
-        <div class="py-3 flex flex-col">
+
+        <div class="py-3 flex flex-row justify-around">
             <button type="submit" class="std_button text-white font-bold py-2 px-4 rounded">
-                <span class="text-red-600">Log </span><span>In</span>
+                <span class="text-red-600">Log </span>
+                <span>In</span>
             </button>
         </div>
     </form> 
+    <form action="<?php echo BASE_URL; ?>/views/createAccount.php">
+                <button type="submit" class="std_button text-white font-bold py-2 px-4 rounded">
+                <span class="text-red-600">Create </span>
+                <span>Account</span>
+            </button>
+            </form>
 </article>
