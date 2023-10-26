@@ -1,5 +1,6 @@
 $(document).ready(function () {
-  let url_user = "http://localhost/DWP2023/contronllers/UserController.php";
+  const url_user = "../controllers/UserController.php";
+  const url_sidebar = "../controllers/sidebarController.php";
 
   $(document).on("click", ".feed_item", function () {
     let id = $(this).data("id");
@@ -29,11 +30,25 @@ $(document).ready(function () {
     };
 
     $.ajax({
-      url: url_user,
+      url: url_sidebar,
       type: "POST",
       data: data,
     }).done(function (data) {
-      // Do what you want in case of success
+      console.log("request sent and data returned", data);
+    });
+  });
+
+  $(document).on("click", ".createPost_btn", function () {
+    const data = {
+      action: "newPost",
+    };
+
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log("request sent and data returned", data);
     });
   });
 });

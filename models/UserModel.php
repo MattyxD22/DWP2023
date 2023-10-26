@@ -3,16 +3,8 @@
 namespace models;
 
 require_once 'BaseModel.php';
-session_start();
 class UserModel extends BaseModel
 {
-
-
-
-    function __construct()
-    {
-    }
-
     function create($username, $email, $password)
     {
         try {
@@ -29,12 +21,10 @@ class UserModel extends BaseModel
             $handleCheckUser->bindParam(":email", $sanitized_email);
             $handleCheckUser->execute();
             $handleCheckUserResult = $handleCheckUser->fetch();
-            foreach ($handleCheckUserResult as $key => $value) {
-                echo $value;
-            }
+
 
             // if username or email doesnt exist, continue to create user and send user to login page
-            if ($handleCheckUserResult[0] == 0) {
+            if ($handleCheckUserResult["EXISTS"] == 0) {
                 $statement = "INSERT INTO usertable (username, email, password) VALUES (:username, :email, :password);";
 
                 $handle = $cxn->prepare($statement);
@@ -44,6 +34,8 @@ class UserModel extends BaseModel
 
                 $handle->execute();
                 header('Location: http://localhost/DWP2023/views/login.php');
+            } else {
+                throw new \PDOException("Username or Email already Exists", 1);
             }
 
 
@@ -99,7 +91,8 @@ class UserModel extends BaseModel
 
     function logout($userID)
     {
-        header('location: http://localhost/DWP2023/views/login.php');
+        //echo "logout done";
+        header('Location: http://localhost/DWP2023/views/login.php');
     }
 
     function updateEmail($userID, $newEmail)

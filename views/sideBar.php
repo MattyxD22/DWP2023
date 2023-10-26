@@ -19,7 +19,8 @@
 
 
     <div class="justify-center flex flex-row py-3">
-        <button class="flex flex-row std_button">
+        <button type="button" class="flex flex-row std_button createPost_btn">
+            <!-- <a class="hrefLink" style="visibility: hidden; font-size: 0px;" href="./newPost.php"></a> -->
             <h3 class="text-red-600 text-2xl font-bold">Create</h3>
             <h3 class="text-white text-2xl font-bold ms-1">post</h3>
         </button>

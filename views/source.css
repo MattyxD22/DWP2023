@@ -31,8 +31,16 @@
     align-items: center;
     padding-top: 4px;
     padding-bottom: 6px;
-
+    position: relative;
 }
+
+/* .std_button .hrefLink {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+} */
 
 .std_button span {}
 
@@ -104,4 +112,20 @@
 
 .actions_div .action_like:hover .bi-hand-thumbs-up {
     display: none;
+}
+
+.newPost_container {
+    background-color: #232323;
+    height: 85vh;
+    min-height: 500px;
+    max-width: 1000px !important;
+    width: 100% !important;
+    min-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 6px;
+}
+
+.std_button:hover .createPost_Span {
+    color: #FFF !important
 }

@@ -6,8 +6,18 @@ use models\UserModel;
 
 $userModel = new UserModel();
 
-$action = $_GET["action"];
-echo $action;
+if ($_POST) {
+    // This checks if a request was send from $ajax/javascript. 
+    $action = $_POST["action"];
+} else if ($_GET) {
+    // retrieve action parameter from _GET requests
+    $action = $_GET["action"];
+} else {
+    // debug/test
+    $action = $_ACTION["action"];
+}
+
+
 
 switch ($action) {
     case "login":
@@ -19,7 +29,7 @@ switch ($action) {
 
     case "logout":
 
-        $userID = $_POST["UserID"];
+        $userID = $_POST["userID"];
         $userModel->logout($userID);
         break;
 
