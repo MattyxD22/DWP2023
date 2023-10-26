@@ -13,7 +13,7 @@ switch ($action) {
         $email = $_POST["email"];
         $username = $_POST["username"];
         $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
-        $userModel->create($email, $username, $password);
+        $userModel->create($username, $email, $password);
         break;
     case "login":
         $username = $_POST["username"];
