@@ -32,8 +32,25 @@ class UserModel extends BaseModel
         }
     }
 
-    function login($userID, $password)
+    function login($username, $password)
     {
+        try {
+            $cxn = parent::connectToDB();
+            $statement = "SELECT password FROM usertable WHERE username = :username LIMIT 1";
+            $handle = $cxn->prepare($statement);
+            $handle->bindParam(':username', $username);
+            $handle->execute();
+            $result = $handle->fetch(\PDO::FETCH_ASSOC);
+
+            if ($result && password_verify($password, $result['password'])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\PDOException $e) {
+            print($e->getMessage());
+            return false;
+        }
     }
 
     function logout()

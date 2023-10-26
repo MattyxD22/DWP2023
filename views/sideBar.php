@@ -1,10 +1,7 @@
 <?php
 
-require("../db/connection.php");
 require("mainBG.php");
 
 ?>
 
-<div class="sidebar_container w-50">
-
-</div>
+<div class="w-10 h-10 bg-amber-500"></div>

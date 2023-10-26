@@ -2,11 +2,12 @@
 
 require("../db/connection.php");
 require("mainBG.php");
+require("header.php");
 
 ?>
 <article class="flex justify-center items-center flex-col">
     <div class="text-white text-2xl font-bold">Welcome to <span class="text-red-600">Bread</span>Tube, a <span class="text-red-600">rising</span> community.</div>
-    <form>
+    <form method="post" action="<?php echo BASE_URL; ?>/controllers/UserController.php?action=login">
         <div class="py-3 flex flex-col">
             <label class="text-red-600 text-xl" for="username">Username or email:</label><br>
             <input class="std_input w-[500px]" type="text" name="username">

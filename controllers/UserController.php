@@ -16,6 +16,13 @@ switch ($action) {
         $userModel->create($email, $username, $password);
         break;
     case "login":
+        $username = $_POST["username"];
+        $password = $_POST["password"];
+        if ($userModel->login($username, $password)) {
+            echo "Logged in successfully!";
+        } else {
+            echo "Invalid login credentials!";
+        }
         break;
 }
 
