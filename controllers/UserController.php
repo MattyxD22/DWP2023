@@ -7,13 +7,14 @@ use models\UserModel;
 $userModel = new UserModel();
 
 $action = $_GET["action"];
+echo $action;
 
 switch ($action) {
     case "login":
         $email = $_POST["Email"];
         $password = $_POST["Password"];
         $userModel->login($email, $password);
-    
+
         break;
 
     case "logout":
@@ -26,7 +27,7 @@ switch ($action) {
         $userID = $_POST["UserID"];
         $email = $_POST["Email"];
         $userModel->updateEmail($userID, $email);
-    
+
         break;
 
     case "updatePassword":
@@ -48,4 +49,3 @@ switch ($action) {
     case "login":
         break;
 }
-

@@ -1,9 +1,13 @@
 <?php
 
 namespace models;
+
 require_once 'BaseModel.php';
+session_start();
 class UserModel extends BaseModel
 {
+
+
 
     function __construct()
     {
@@ -14,51 +18,88 @@ class UserModel extends BaseModel
         try {
             $cxn = parent::connectToDB();
 
-            $statement = "INSERT INTO usertable (username, email, password) VALUES (:username, :email, :password);";
+            $sanitized_username = htmlspecialchars($username);
+            $sanitized_email = htmlspecialchars($email);
+            $sanitized_password = htmlspecialchars($password);
 
-            $sanitized_username = htmlspecialchars($username); 
-            $sanitized_email = htmlspecialchars($email); 
-            $sanitized_password = htmlspecialchars($password); 
 
-            $handle = $cxn->prepare($statement);
-            $handle->bindParam(':username', $sanitized_username);
-            $handle->bindParam(':email', $sanitized_email);
-            $handle->bindParam(':password', $sanitized_password);
+            $checkUser = "SELECT COUNT(*) AS 'EXISTS' FROM usertable WHERE usertable.Username = :username OR usertable.Email = :email";
+            $handleCheckUser = $cxn->prepare($checkUser);
+            $handleCheckUser->bindParam(":username", $sanitized_username);
+            $handleCheckUser->bindParam(":email", $sanitized_email);
+            $handleCheckUser->execute();
+            $handleCheckUserResult = $handleCheckUser->fetch();
+            foreach ($handleCheckUserResult as $key => $value) {
+                echo $value;
+            }
 
-            $handle->execute();
+            // if username or email doesnt exist, continue to create user and send user to login page
+            if ($handleCheckUserResult[0] == 0) {
+                $statement = "INSERT INTO usertable (username, email, password) VALUES (:username, :email, :password);";
+
+                $handle = $cxn->prepare($statement);
+                $handle->bindParam(':username', $sanitized_username);
+                $handle->bindParam(':email', $sanitized_email);
+                $handle->bindParam(':password', $sanitized_password);
+
+                $handle->execute();
+                header('Location: http://localhost/DWP2023/views/login.php');
+            }
+
+
             $cxn = null;
         } catch (\PDOException $e) {
             print($e->getMessage());
         }
     }
 
-    function login($userID, $password)
+    function login($email, $password)
     {
 
         try {
-            $userID = htmlspecialchars($userID);
-            $userID = htmlspecialchars($password);
-    
+            $email = htmlspecialchars($email);
+            $password = htmlspecialchars($password);
+
             $conn = parent::connectToDB();
+            $stmt = "SELECT usertable.Password, usertable.UserID FROM usertable WHERE usertable.Email = :email";
+            $prepareSTM = $conn->prepare($stmt);
+            $prepareSTM->bindParam(":email", $email);
+            $prepareSTM->execute();
+
+            //$resultSTM = $prepareSTM->fetchAll();
+
+            $hashedPass = "";
+
+            while ($row = $prepareSTM->fetch()) {
+
+                $hashedPass = $row["Password"];
+
+
+                $verifyPass = password_verify($password, $hashedPass);
+
+                if ($verifyPass == 1) {
+                    $_SESSION["UserID"] = $row["UserID"];
+                    header('Location: http://localhost/DWP2023/views/feed.php');
+                }
+            }
 
 
 
 
-            //code...
+            // foreach ($resultSTM as $key => $value) {
+            //     echo $value;
+            // }
+
         } catch (\PDOException $err) {
-            //throw $th;
-        } finally{
-            $conn = null;
+            foreach ($err as $key => $value) {
+                echo $value[2];
+            }
         }
-
-        
-
-
-
     }
 
     function logout($userID)
     {
+        header('location: http://localhost/DWP2023/views/login.php');
     }
 
     function updateEmail($userID, $newEmail)

@@ -1,19 +1,19 @@
-.mainBG{
+.mainBG {
     width: 100vw;
     height: 100vh;
     background-color: black;
 }
 
 
-.sidebar_container{
-    border-right: 1px solid #DC2626;
+.sidebar_container {
+    border-right: 2px solid #DC2626;
 }
 
-.header_label{
+.header_label {
     color: #DC2626;
 }
 
-.std_input{
+.std_input {
     background-color: #707070;
     color: white;
     border-radius: 10px;
@@ -22,7 +22,7 @@
     padding-right: 0.5rem;
 }
 
-.std_button{
+.std_button {
     background-color: #3B0404 !important;
     border: 0px solid transparent;
     border-radius: 10px;
@@ -34,9 +34,74 @@
 
 }
 
-.std_button span{
+.std_button span {}
+
+.std_button:hover {
+    background-color: #6B0D0D !important;
 }
 
-.std_button:hover{
-    background-color: #6B0D0D !important;
+.sidebar_col {
+    max-width: 250px;
+    min-width: 250px;
+}
+
+.clickable {
+    cursor: pointer !important;
+}
+
+.feed_item {
+    background-color: #3D3D3D;
+    border-radius: 6px;
+    min-height: 500px;
+    max-width: 750px;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.feed_item:hover {
+    box-shadow: 0px 0px 43px 10px rgba(255, 0, 0, 0.18);
+    -webkit-box-shadow: 0px 0px 43px 10px rgba(255, 0, 0, 0.18);
+    -moz-box-shadow: 0px 0px 43px 10px rgba(255, 0, 0, 0.18);
+}
+
+.feed_header {
+    flex-direction: row;
+    border-bottom: 1px solid #DC2626;
+    align-items: center;
+    display: flex;
+}
+
+.feed_footer {
+    border-top: 1px solid #DC2626;
+    display: flex;
+    flex-direction: row;
+}
+
+.actions_div .bi-hand-thumbs-up-fill {
+    display: none;
+}
+
+.actions_div .bi-hand-thumbs-down-fill {
+    display: none;
+}
+
+.actions_div .action_dislike:hover .bi-hand-thumbs-down-fill {
+    display: flex;
+}
+
+.actions_div .action_dislike:hover .bi-hand-thumbs-down {
+    display: none;
+}
+
+.actions_div .action_like:hover .bi-hand-thumbs-up-fill {
+    display: flex;
+}
+
+.actions_div .action_like:hover .bi-hand-thumbs-up {
+    display: none;
 }
