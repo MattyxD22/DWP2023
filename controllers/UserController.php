@@ -21,8 +21,8 @@ if ($_POST) {
 
 switch ($action) {
     case "login":
-        $email = $_POST["Email"];
-        $password = $_POST["Password"];
+        $email = $_POST["username"];
+        $password = $_POST["password"];
         $userModel->login($email, $password);
 
         break;
@@ -51,9 +51,15 @@ switch ($action) {
         $email = $_POST["email"];
         $username = $_POST["username"];
         $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
-        $userModel->create($email, $username, $password);
+        $userModel->create($username, $email, $password);
         break;
-    case "like":
-
+    case "login":
+        $username = $_POST["username"];
+        $password = $_POST["password"];
+        if ($userModel->login($username, $password)) {
+            echo "Logged in successfully!";
+        } else {
+            echo "Invalid login credentials!";
+        }
         break;
 }
