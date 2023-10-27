@@ -12,7 +12,7 @@ class SidebarModel extends BaseModel
 
     function loadCreatePost()
     {
-        return "../views/newPost.php"->create_View;
+        //return "../views/newPost.php"->create_View;
 
         // $view = new View();
         // return $view->render('../views/newPost.php', array('foo' => 'bar'));
