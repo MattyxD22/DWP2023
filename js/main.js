@@ -48,7 +48,9 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      console.log("request sent and data returned", data);
+      console.log($(".state_col"));
+      $(".state_col").empty();
+      $(".state_col").append(data);
     });
   });
 
@@ -61,6 +63,26 @@ $(document).ready(function () {
       $(checkbox).prop("checked", true);
     }
   });
+
+
+  $(document).on('click','.header_title_row', function() {
+    
+      const data = {
+        action: 'homepage'
+      }
+
+      
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log($(".state_col"));
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+
+  })
 
   $(document).on("click", ".createNewPost_btn", function () {
     const container = $(this).closest(".newPost_container");

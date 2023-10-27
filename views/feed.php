@@ -10,7 +10,7 @@ require("mainBG.php");
         <div class="sidebar_col">
             <?php include('../views/sideBar.php') ?>
         </div>
-        <div class="feed_col w-full h-full flex flex-col overflow-y-auto py-3 px-3 justify-center">
+        <div class="feed_col w-full h-full flex flex-col overflow-y-auto py-3 px-3 justify-center state_col">
             <?php
 
             for ($i = 0; $i < 15; $i++) {

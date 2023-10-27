@@ -20,13 +20,6 @@ if ($_POST) {
 
 
 switch ($action) {
-    case "login":
-        $email = $_POST["username"];
-        $password = $_POST["password"];
-        $userModel->login($email, $password);
-
-        break;
-
     case "logout":
 
         $userID = $_POST["userID"];
