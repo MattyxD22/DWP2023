@@ -53,9 +53,10 @@ class UserModel extends BaseModel
 
             // Verify the password
             if ($result && password_verify($password, $result['password'])) {
-                return true;
+                $_SESSION["UserID"] = $result["UserID"];
+                header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
             } else {
-                return false;
+                header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
             }
         } catch (\PDOException $e) {
             print($e->getMessage());
