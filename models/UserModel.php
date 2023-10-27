@@ -45,45 +45,36 @@ class UserModel extends BaseModel
         }
     }
 
-    function login($email, $password)
-    {
-
+    function login($username, $password) {
         try {
-            $email = htmlspecialchars($email);
-            $password = htmlspecialchars($password);
+            $cxn = parent::connectToDB();
 
-            $conn = parent::connectToDB();
-            $stmt = "SELECT usertable.Password, usertable.UserID FROM usertable WHERE usertable.Email = :email";
-            $prepareSTM = $conn->prepare($stmt);
-            $prepareSTM->bindParam(":email", $email);
-            $prepareSTM->execute();
+            // First, try treating the input as a username
+            $statement = "SELECT password FROM usertable WHERE username = :input LIMIT 1";
+            $handle = $cxn->prepare($statement);
+            $handle->bindParam(':input', $username);
+            $handle->execute();
+            $result = $handle->fetch(\PDO::FETCH_ASSOC);
 
-            //$resultSTM = $prepareSTM->fetchAll();
-
-            $hashedPass = "";
-
-            while ($row = $prepareSTM->fetch()) {
-
-                $hashedPass = $row["Password"];
-                $verifyPass = password_verify($password, $hashedPass);
-
-                if ($verifyPass == 1) {
-                    $_SESSION["UserID"] = $row["UserID"];
-                    header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
-                }
+            // If no match was found for username, try treating the input as an email
+            if (!$result) {
+                $statement = "SELECT password FROM usertable WHERE email = :input LIMIT 1";
+                $handle = $cxn->prepare($statement);
+                $handle->bindParam(':input', $username);
+                $handle->execute();
+                $result = $handle->fetch(\PDO::FETCH_ASSOC);
             }
 
-
-
-
-            // foreach ($resultSTM as $key => $value) {
-            //     echo $value;
-            // }
-
-        } catch (\PDOException $err) {
-            foreach ($err as $key => $value) {
-                echo $value[2];
+            // Verify the password
+            if ($result && password_verify($password, $result['password'])) {
+                $_SESSION["UserID"] = $result["UserID"];
+                header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
+            } else {
+                header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
             }
+        } catch (\PDOException $e) {
+            print($e->getMessage());
+            return false;
         }
     }
 

@@ -1,6 +1,5 @@
 <?php
 
-
 ?>
 
 <div class="sidebar_container w-full h-full flex flex-col">
