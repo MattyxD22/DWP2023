@@ -33,7 +33,7 @@ class UserModel extends BaseModel
                 $handle->bindParam(':password', $sanitized_password);
 
                 $handle->execute();
-                header('Location: http://localhost/DWP2023/views/login.php');
+                header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
             } else {
                 throw new \PDOException("Username or Email already Exists", 1);
             }
@@ -65,13 +65,11 @@ class UserModel extends BaseModel
             while ($row = $prepareSTM->fetch()) {
 
                 $hashedPass = $row["Password"];
-
-
                 $verifyPass = password_verify($password, $hashedPass);
 
                 if ($verifyPass == 1) {
                     $_SESSION["UserID"] = $row["UserID"];
-                    header('Location: http://localhost/DWP2023/views/feed.php');
+                    header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
                 }
             }
 
@@ -92,7 +90,7 @@ class UserModel extends BaseModel
     function logout($userID)
     {
         //echo "logout done";
-        header('Location: http://localhost/DWP2023/views/login.php');
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
     }
 
     function updateEmail($userID, $newEmail)
