@@ -21,8 +21,8 @@ if ($_POST) {
 
 switch ($action) {
     case "login":
-        $email = $_POST["Email"];
-        $password = $_POST["Password"];
+        $email = $_POST["username"];
+        $password = $_POST["password"];
         $userModel->login($email, $password);
 
         break;

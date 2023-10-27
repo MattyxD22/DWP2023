@@ -9,7 +9,7 @@ require("header.php");
     
     <div class="text-white text-2xl font-bold">Welcome to <span class="text-red-600">Bread</span>Tube, a <span class="text-red-600">rising</span> community.</div>
     <form method="post" action="<?php echo BASE_URL; ?>/controllers/UserController.php?action=login">
-    <!-- <input readonly hidden name="action" type="text" value="login" style="visibility: hidden; display: none; pointer-events:none;"> -->
+    <input readonly hidden name="action" type="text" value="login" style="visibility: hidden; display: none; pointer-events:none;">
         <div class="py-3 flex flex-col">
             <label class="text-red-600 text-xl" for="username">Username or email:</label><br>
             <input class="std_input w-[500px]" type="text" name="username">

@@ -70,7 +70,8 @@ class UserModel extends BaseModel
                 $_SESSION["UserID"] = $result["UserID"];
                 header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
             } else {
-                header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
+                echo 'failed';
+                // header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
             }
         } catch (\PDOException $e) {
             print($e->getMessage());
