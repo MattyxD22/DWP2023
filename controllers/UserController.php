@@ -47,15 +47,13 @@ switch ($action) {
         $userModel->updatePassword($userID, $password);
         break;
 
-
-
-
     case "create":
         $email = $_POST["email"];
         $username = $_POST["username"];
         $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
         $userModel->create($email, $username, $password);
         break;
-    case "login":
+    case "like":
+
         break;
 }

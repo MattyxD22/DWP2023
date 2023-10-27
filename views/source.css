@@ -129,3 +129,7 @@
 .std_button:hover .createPost_Span {
     color: #FFF !important
 }
+
+.category_checkbox{
+    pointer-events: none;
+}

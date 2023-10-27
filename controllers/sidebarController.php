@@ -17,10 +17,15 @@ if ($_POST) {
 switch ($action) {
 
     case "newPost":
+        $sidebarModel->loadCreatePost();
         //redirect("http://localhost/DWP2023/views/newPost.php");
         //return $sidebarModel->loadCreatePost();
         break;
 }
+
+
+
+
 
 // class SidebarController
 // {
