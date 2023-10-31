@@ -1,5 +1,6 @@
 $(document).ready(function () {
   const url_user = "../controllers/UserController.php";
+  const url_post = "../controllers/PostController.php";
   const url_sidebar = "../controllers/sidebarController.php";
 
   $(document).on("click", ".feed_item", function () {
@@ -54,8 +55,11 @@ $(document).ready(function () {
     });
   });
 
-  $(document).on("click", ".row_category", function () {
-    const checkbox = $(this).find(".category_checkbox");
+  $(document).on("click", ".categoryRow", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const checkbox = $(this).find(".categoryCheckbox");
 
     if ($(checkbox).prop("checked") == true) {
       $(checkbox).prop("checked", false);
@@ -64,14 +68,11 @@ $(document).ready(function () {
     }
   });
 
+  $(document).on("click", ".header_title_row", function () {
+    const data = {
+      action: "homepage",
+    };
 
-  $(document).on('click','.header_title_row', function() {
-    
-      const data = {
-        action: 'homepage'
-      }
-
-      
     $.ajax({
       url: url_sidebar,
       type: "POST",
@@ -81,12 +82,67 @@ $(document).ready(function () {
       $(".state_col").empty();
       $(".state_col").append(data);
     });
-
-  })
+  });
 
   $(document).on("click", ".createNewPost_btn", function () {
     const container = $(this).closest(".newPost_container");
 
-    const title = container.find(".title_input").val();
+    const title = container.find(".newPost_Title").val();
+    const description = container.find(".newPost_Textarea").val();
+    let categories = [];
+
+    let formData = new FormData();
+
+    let images = [];
+
+    container.find(".categoryRow").each(function () {
+      if ($(this).find(".categoryCheckbox").prop("checked") == true) {
+        categories.push({ categoryID: $(this).data("id") });
+      }
+    });
+
+    const data = {
+      action: "createPost",
+      title: title,
+      description: description,
+      categories: categories,
+    };
+
+    // formData.append("data", data);
+
+    // const input = document.getElementById("file_input");
+
+    // $(input.files).each(function () {
+    //   console.log($(this)[0]);
+    //   formData.append("file", $(this)[0], $(this)[0].name);
+    // });
+
+    // console.log(formData);
+
+    // $.ajax({
+    //   url: "url_post",
+    //   data: formData,
+    //   type: "POST",
+    //   contentType: false, // NEEDED, DON'T OMIT THIS
+    //   processData: false, // NEEDED, DON'T OMIT THIS
+    // }).done(function (data) {
+    //   console.log(data);
+    // });
+
+    $.ajax({
+      url: "url_post",
+      data: data,
+      type: "POST",
+    }).done(function (data) {
+      console.log(data);
+    });
+  });
+
+  $(document).on("click", ".categoryContainer", function () {
+    if ($(this).hasClass("open")) {
+      $(this).removeClass("open");
+    } else {
+      $(this).addClass("open");
+    }
   });
 });

@@ -6,7 +6,6 @@ use models\PostModel;
 
 $postModel = new PostModel();
 
-
 if ($_POST) {
     // This checks if a request was send from $ajax/javascript. 
     $action = $_POST["action"];
@@ -18,11 +17,11 @@ if ($_POST) {
     $action = $_ACTION["action"];
 }
 
+
 switch ($action) {
     case "createPost":
 
 
-
-
+        return "It works???";
         break;
 }
