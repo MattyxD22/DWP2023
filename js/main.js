@@ -145,4 +145,34 @@ $(document).ready(function () {
       $(this).addClass("open");
     }
   });
+
+  // Profile
+    $(document).on("click", ".profile_btn", function () {
+    const data = {
+      action: "profile",
+    };
+
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log($(".state_col"));
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", function() {
+    fetch("controllers/UserController.php?action=fetchFollowers", {
+        method: "GET"
+    })
+    .then(response => response.text())
+    .then(data => {
+      console.log("123");
+        document.getElementById("followerCount").innerText = data;
+    })
+    .catch(error => console.error('There was an error:', error));
+});
+
 });

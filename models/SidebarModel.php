@@ -8,6 +8,7 @@ class SidebarModel extends BaseModel
 
     function loadProfile()
     {
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/profile.php');
     }
 
     function loadCreatePost()

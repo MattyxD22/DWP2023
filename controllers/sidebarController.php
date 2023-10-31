@@ -27,6 +27,9 @@ switch ($action) {
         $sidebarModel->loadHomepage();
 
         break;
+    case "profile":
+        $sidebarModel->loadProfile();
+        break;
 }
 
 

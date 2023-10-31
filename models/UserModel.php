@@ -73,6 +73,7 @@ class UserModel extends BaseModel
                 echo 'failed';
                 // header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
             }
+            $cxn = null;
         } catch (\PDOException $e) {
             print($e->getMessage());
             return false;
@@ -91,5 +92,50 @@ class UserModel extends BaseModel
 
     function updatePassword($userID, $newPassword)
     {
+    }
+
+    function fetchAmountOfFollowers($userID) {
+        try {
+            $cxn = parent::connectToDB();
+            $statement = "SELECT COUNT(*) AS NumberOfFollowers FROM FollowingTable WHERE FollowingID = :userID";
+            $query = $cxn->prepare($statement);
+            $query->bindParam(":userID", $userID);
+            $query->execute();
+            $result = $query->fetch(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $result["NumberOfFollowers"];
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchAmountOfFollowing($userID) { 
+        try {
+            $cxn = parent::connectToDB();
+            $statement = "SELECT COUNT(*) AS FollowingCount FROM FollowingTable WHERE UserID = :userID;";
+            $query = $cxn->prepare($statement);
+            $query->bindParam("", $userID);
+            $query->execute();
+            $result = $query->fetch(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $result["FollowingCount"];
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchAmountOfPosts($userID) { 
+        try {
+            $cxn = parent::connectToDB();
+            $statement = "SELECT COUNT(*) AS NumberOfPostsWithoutParent FROM PostTable WHERE CreatedBy = :userID AND ParentID IS NULL;";
+            $query = $cxn->prepare($statement);
+            $query->bindParam("", $userID);
+            $query->execute();
+            $result = $query->fetch(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $result["NumberOfPostsWithoutParent"];
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
     }
 }

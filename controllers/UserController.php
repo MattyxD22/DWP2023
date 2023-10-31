@@ -55,4 +55,10 @@ switch ($action) {
             echo "Invalid login credentials!";
         }
         break;
+    case "fetchFollowers":
+        $userID = 1;
+        $followersCount = $userModel->fetchAmountOfFollowers($userID);
+        echo $followersCount;
+        break;
+
 }
