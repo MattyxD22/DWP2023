@@ -6,7 +6,6 @@ require("header.php");
 
 ?>
 <article class="flex justify-center items-center flex-col">
-    
     <div class="text-white text-2xl font-bold">Welcome to <span class="text-red-600">Bread</span>Tube, a <span class="text-red-600">rising</span> community.</div>
     <form method="post" action="<?php echo BASE_URL; ?>/controllers/UserController.php?action=login">
     <input readonly hidden name="action" type="text" value="login" style="visibility: hidden; display: none; pointer-events:none;">

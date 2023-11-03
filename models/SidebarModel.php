@@ -3,6 +3,7 @@
 namespace models;
 
 require_once 'BaseModel.php';
+session_start();
 class SidebarModel extends BaseModel
 {
 
@@ -28,6 +29,11 @@ class SidebarModel extends BaseModel
 
     function loadAdminPage()
     {
+    }
+
+    function logOut() {
+        session_destroy();
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
     }
 }
 

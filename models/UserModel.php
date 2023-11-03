@@ -2,6 +2,7 @@
 
 namespace models;
 
+session_start();
 require_once 'BaseModel.php';
 class UserModel extends BaseModel
 {
@@ -50,7 +51,7 @@ class UserModel extends BaseModel
             $cxn = parent::connectToDB();
 
             // First, try treating the input as a username
-            $statement = "SELECT password FROM usertable WHERE username = :input LIMIT 1";
+            $statement = "SELECT UserID, password FROM usertable WHERE username = :input LIMIT 1";
             $handle = $cxn->prepare($statement);
             $handle->bindParam(':input', $username);
             $handle->execute();
@@ -58,7 +59,7 @@ class UserModel extends BaseModel
 
             // If no match was found for username, try treating the input as an email
             if (!$result) {
-                $statement = "SELECT password FROM usertable WHERE email = :input LIMIT 1";
+                $statement = "SELECT UserID, password FROM usertable WHERE email = :input LIMIT 1";
                 $handle = $cxn->prepare($statement);
                 $handle->bindParam(':input', $username);
                 $handle->execute();

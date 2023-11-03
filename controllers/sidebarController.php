@@ -30,6 +30,10 @@ switch ($action) {
     case "profile":
         $sidebarModel->loadProfile();
         break;
+    case "logout":
+        $sidebarModel->logOut();
+        break;
+
 }
 
 

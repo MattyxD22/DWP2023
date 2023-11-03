@@ -22,23 +22,6 @@ $(document).ready(function () {
     console.log("disliked post with ID: ", id);
   });
 
-  $(document).on("click", ".logout_btn", function () {
-    let userID = 1;
-
-    const data = {
-      action: "logout",
-      userID: userID,
-    };
-
-    $.ajax({
-      url: url_user,
-      type: "POST",
-      data: data,
-    }).done(function (data) {
-      console.log("request sent and data returned", data);
-    });
-  });
-
   $(document).on("click", ".createPost_btn", function () {
     const data = {
       action: "newPost",
@@ -157,11 +140,26 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      console.log($(".state_col"));
       $(".state_col").empty();
       $(".state_col").append(data);
     });
   });
+
+    // log out
+    $(document).on("click", ".logout_btn", function () {
+      const data = {
+        action: "logout",
+      };
+  
+      $.ajax({
+        url: url_sidebar,
+        type: "POST",
+        data: data,
+      }).done(function (data) {
+        $(".state_col").empty();
+        $(".state_col").append(data);
+      });
+    });
 
   document.addEventListener("DOMContentLoaded", function() {
     fetch("controllers/UserController.php?action=fetchFollowers", {
