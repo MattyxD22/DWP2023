@@ -1,5 +1,6 @@
 <?php
 
+namespace controllers;
 require("../models/UserModel.php");
 
 use models\UserModel;
@@ -14,7 +15,7 @@ if ($_POST) {
     $action = $_GET["action"];
 } else {
     // debug/test
-    $action = $_ACTION["action"];
+    $action = "none"; //$_ACTION["action"];
 }
 
 
@@ -56,9 +57,27 @@ switch ($action) {
         }
         break;
     case "fetchFollowers":
-        $userID = 1;
-        $followersCount = $userModel->fetchAmountOfFollowers($userID);
-        echo $followersCount;
+        
         break;
 
+}
+
+class UserController {
+    function fetchFollowers($userID) {
+        global $userModel;
+        $followersCount = $userModel->fetchAmountOfFollowers($userID);
+        return $followersCount;
+    }
+
+    function fetchFollowing($userID) {
+        global $userModel;
+        $followingCount = $userModel->fetchAmountOfFollowing($userID);
+        return $followingCount;
+    }
+    
+    function fetchPostsAmount($userID) {
+        global $userModel;
+        $followingCount = $userModel->fetchAmountOfPosts($userID);
+        return $followingCount;
+    }
 }

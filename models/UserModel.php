@@ -114,7 +114,7 @@ class UserModel extends BaseModel
             $cxn = parent::connectToDB();
             $statement = "SELECT COUNT(*) AS FollowingCount FROM FollowingTable WHERE UserID = :userID;";
             $query = $cxn->prepare($statement);
-            $query->bindParam("", $userID);
+            $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
             $cxn = null;
@@ -129,7 +129,7 @@ class UserModel extends BaseModel
             $cxn = parent::connectToDB();
             $statement = "SELECT COUNT(*) AS NumberOfPostsWithoutParent FROM PostTable WHERE CreatedBy = :userID AND ParentID IS NULL;";
             $query = $cxn->prepare($statement);
-            $query->bindParam("", $userID);
+            $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
             $cxn = null;

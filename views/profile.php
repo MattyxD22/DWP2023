@@ -1,3 +1,20 @@
+<?php 
+require("../controllers/UserController.php");
+
+use controllers\UserController;
+// Create an instance of UserController
+$userController = new UserController();
+
+// Assuming you have the $userID you want to fetch followers for
+// If you don't have a $userID yet, you need to set it to the appropriate value
+$userID = 1;
+
+// Call the fetchFollowers method
+$followerCount = $userController->fetchFollowers($userID);
+$followingCount = $userController->fetchFollowing($userID);
+$postCount = $userController->fetchPostsAmount($userID);
+?>
+
 <article class="text-white">
     <section class="flex w-full justify-around relative border-b border-red-600 border-solid py-10 ">
         <div class="flex justify-center items-center gap-8">
@@ -5,15 +22,15 @@
             <h1>Username</h1>
         </div>
         <div>
-            <h2>401</h2>
+            <h2><?= htmlspecialchars($postCount) ?></h2>
             <p>Posts</p>
         </div>
         <div>
-            <h2 id="followerCount">20</h2>
+            <h2 id="followerCount"><?= htmlspecialchars($followerCount) ?></h2>
             <p>Followers</p>
         </div>
         <div>
-            <h2>30</h2>
+            <h2><?= htmlspecialchars($followingCount) ?></h2>
             <p>Following</p>
         </div>
     </section>
