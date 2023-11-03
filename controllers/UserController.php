@@ -80,4 +80,10 @@ class UserController {
         $followingCount = $userModel->fetchAmountOfPosts($userID);
         return $followingCount;
     }
+
+    function fetchUsername($userID) {
+        global $userModel;
+        $username = $userModel->fetchUsernameById($userID);
+        return $username;
+    }
 }

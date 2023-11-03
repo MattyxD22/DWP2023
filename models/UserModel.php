@@ -139,4 +139,19 @@ class UserModel extends BaseModel
             echo $e->getMessage();
         }
     }
+
+    function fetchUsernameById($userID) {
+        try {
+            $cxn = parent::connectToDB();
+            $statement = "SELECT username FROM usertable WHERE userid = :userID;";
+            $query = $cxn->prepare($statement);
+            $query->bindParam(":userID", $userID);
+            $query->execute();
+            $result = $query->fetch(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $result["username"];
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
 }

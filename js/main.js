@@ -161,16 +161,4 @@ $(document).ready(function () {
       });
     });
 
-  document.addEventListener("DOMContentLoaded", function() {
-    fetch("controllers/UserController.php?action=fetchFollowers", {
-        method: "GET"
-    })
-    .then(response => response.text())
-    .then(data => {
-      console.log("123");
-        document.getElementById("followerCount").innerText = data;
-    })
-    .catch(error => console.error('There was an error:', error));
-});
-
 });
