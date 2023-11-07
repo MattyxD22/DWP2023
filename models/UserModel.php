@@ -45,12 +45,13 @@ class UserModel extends BaseModel
         }
     }
 
-    function login($username, $password) {
+    function login($username, $password)
+    {
         try {
             $cxn = parent::connectToDB();
 
             // First, try treating the input as a username
-            $statement = "SELECT password FROM usertable WHERE username = :input LIMIT 1";
+            $statement = "SELECT password, UserID FROM usertable WHERE username = :input LIMIT 1";
             $handle = $cxn->prepare($statement);
             $handle->bindParam(':input', $username);
             $handle->execute();
@@ -58,7 +59,7 @@ class UserModel extends BaseModel
 
             // If no match was found for username, try treating the input as an email
             if (!$result) {
-                $statement = "SELECT password FROM usertable WHERE email = :input LIMIT 1";
+                $statement = "SELECT password, UserID FROM usertable WHERE email = :input LIMIT 1";
                 $handle = $cxn->prepare($statement);
                 $handle->bindParam(':input', $username);
                 $handle->execute();
@@ -68,9 +69,22 @@ class UserModel extends BaseModel
             // Verify the password
             if ($result && password_verify($password, $result['password'])) {
                 $_SESSION["UserID"] = $result["UserID"];
+
+                //$getFeedSTM = "CALL getFeed";
+                //$handleFeed = $cxn->prepare($getFeedSTM);
+                //$handleFeed->execute();
+                //$resultFeed = $handleFeed->fetchAll(\PDO::FETCH_ASSOC);
+
+
+
+                //return $resultFeed;
+
+                //return $this->render_view(BASE_URL . "/views/feed.php", $resultFeed);
+
+
                 header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
             } else {
-                echo 'failed';
+                return 0;
                 // header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
             }
         } catch (\PDOException $e) {

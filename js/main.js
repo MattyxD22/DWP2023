@@ -3,6 +3,49 @@ $(document).ready(function () {
   const url_post = "../controllers/PostController.php";
   const url_sidebar = "../controllers/sidebarController.php";
 
+  $(document).on("click", ".btn_categories", function () {
+    const data = {
+      action: "category",
+    };
+
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log($(".state_col"));
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
+
+  $(document).on("click", ".login_btn", function () {
+    const container = $(this).closest(".login_container");
+
+    const user = container.find(".input_user").val();
+    const pass = container.find(".input_password").val();
+
+    const data = {
+      action: "login",
+      user: user,
+      password: pass,
+    };
+
+    console.log(data);
+
+    $.ajax({
+      url: url_user,
+      type: "POST",
+      data: data,
+    }).done(async function (data) {
+      console.log(data);
+      //window.location = "http://localhost/DWP2023/views/feed.php";
+      $(".mainBG").empty();
+      $(".mainBG").append(data);
+      //console.log("logging in.... ", data.view);
+    });
+  });
+
   $(document).on("click", ".feed_item", function () {
     let id = $(this).data("id");
     console.log("Opening post withID: ", id);
@@ -78,9 +121,9 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      console.log($(".state_col"));
-      $(".state_col").empty();
-      $(".state_col").append(data);
+      console.log($(".mainBG"));
+      $(".mainBG").empty();
+      $(".mainBG").append(data);
     });
   });
 
@@ -130,9 +173,9 @@ $(document).ready(function () {
     // });
 
     $.ajax({
-      url: "url_post",
-      data: data,
+      url: url_post,
       type: "POST",
+      data: data,
     }).done(function (data) {
       console.log(data);
     });
@@ -144,5 +187,24 @@ $(document).ready(function () {
     } else {
       $(this).addClass("open");
     }
+  });
+
+  $(document).on("click", ".feed_item", function () {
+    const postID = $(this).data("id");
+
+    const data = {
+      action: "openPost",
+      postID: postID,
+    };
+
+    $.ajax({
+      url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
   });
 });

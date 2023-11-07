@@ -21,7 +21,26 @@ if ($_POST) {
 switch ($action) {
     case "createPost":
 
+        $title = $_POST["title"];
+        $description = $_POST["description"];
+        $userID = 0;
+        $postID = $postModel->createPost($userID, $title, $description);
 
-        return "It works???";
+
+        return json_encode("It works???");
+
+        //return "It works???";
         break;
+
+    case "openPost":
+
+        $postID = $_POST["postID"];
+
+        return $postModel->openPost($postID);
+
+        break;
+}
+
+function render_view($path, array $args)
+{
 }

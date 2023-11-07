@@ -27,6 +27,12 @@ switch ($action) {
         $sidebarModel->loadHomepage();
 
         break;
+
+    case 'category':
+
+        $sidebarModel->loadCategories();
+
+        break;
 }
 
 

@@ -18,11 +18,12 @@ class SidebarModel extends BaseModel
 
     function loadHomepage()
     {
-        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/homepage.php');
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
     }
 
     function loadCategories()
     {
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/categoryPage.php');
     }
 
     function loadAdminPage()

@@ -1,3 +1,12 @@
+<?php
+
+require("../db/connection.php")
+
+
+
+?>
+
+
 <div class="newPost_col w-full h-full flex flex-col overflow-y-auto py-3 px-3 justify-center">
     <form class="h-full w-full flex flex-col" method="post" action="../controllers/">
         <div class="container newPost_container flex flex-col px-4 py-4 my-auto">

@@ -47,12 +47,56 @@ switch ($action) {
         $userModel->create($username, $email, $password);
         break;
     case "login":
+
         $username = $_POST["username"];
         $password = $_POST["password"];
-        if ($userModel->login($username, $password)) {
+
+        //$result = $userModel->login($username, $password);
+
+        //echo $result;
+
+
+
+        if ($userModel->login($username, $password) != 0) {
             echo "Logged in successfully!";
+            header('Location: ../views/feed.php');
+
+            // $path = BASE_URL . "/views/feed.php";
+
+
+            // $test = [];
+
+
+            // foreach ($result as $key => $value) {
+
+
+            //     array_push($test, (object)[
+            //         "PostID" => $value["PostID"],
+            //         "Title" => $value["Title"]
+            //     ]);
+
+            //     //echo $value["PostID"];
+            // }
+
+
+            // $view = render_view($path, array($test));
+
+
+
+            // return $test;
         } else {
             echo "Invalid login credentials!";
         }
         break;
+}
+
+function render_view($path, array $args)
+{
+    ob_start();
+    // USE 
+    echo DOC_ROOT_PATH . $path;
+    include(DOC_ROOT_PATH . $path);
+    $var = ob_get_contents();
+    ob_end_clean();
+    return $var;
 }
