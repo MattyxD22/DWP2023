@@ -14,6 +14,7 @@ $followerCount = $userController->fetchFollowers($userID);
 $followingCount = $userController->fetchFollowing($userID);
 $postCount = $userController->fetchPostsAmount($userID);
 $username = $userController->fetchUsername($userID);
+$userPosts = $userController->fetchPosts($userID);
 ?>
 
 <article class="text-white">
@@ -35,5 +36,19 @@ $username = $userController->fetchUsername($userID);
             <p>Following</p>
         </div>
     </section>
-    
+    <section>
+    <?php // var_dump($userPosts); // Uncomment for debugging purposes ?>
+    <div class="grid grid-cols-3 gap-4 p-8">
+        <?php
+        foreach ($userPosts as $post) {
+            // Set variables with the information from the current post
+            $title = $post['Title']; // Assuming 'Title' is the correct key
+            $description = $post['Description']; // And so on for other variables
+            
+            // Now include the profileItem.php file, which will use the variables above
+            include('./profileItem.php');
+        }
+        ?>
+    </div>
+</section>
 </article>

@@ -154,4 +154,19 @@ class UserModel extends BaseModel
             echo $e->getMessage();
         }
     }
+
+    function fetchPostsById($userID) {
+        try {
+            $cxn = parent::connectToDB();
+            $statement = "SELECT PostID, Description, CreatedDate, CreatedBy, Title, CategoryID FROM PostTable WHERE ParentID IS NULL AND CreatedBy = :userID ORDER BY PostID DESC;";
+            $query = $cxn->prepare($statement);
+            $query->bindParam(":userID", $userID);
+            $query->execute();
+            $result = $query->fetchAll(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $result;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
 }

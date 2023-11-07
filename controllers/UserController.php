@@ -86,4 +86,10 @@ class UserController {
         $username = $userModel->fetchUsernameById($userID);
         return $username;
     }
+
+    function fetchPosts($userID) {
+        global $userModel;
+        $posts = $userModel->fetchPostsById($userID);
+        return $posts;
+    }
 }

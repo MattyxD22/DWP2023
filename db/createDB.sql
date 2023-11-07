@@ -25,9 +25,9 @@ CREATE TABLE PostTable(
     PostID INT(11) AUTO_INCREMENT PRIMARY KEY,
     ParentID INT(11),
     Description TEXT,
-    CreatedDate DATE,
+    CreatedDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     CreatedBy INT(11),
-    Titel VARCHAR(50),   
+    Title VARCHAR(50),   
     CategoryID INT(11),
     FOREIGN KEY(CategoryID) REFERENCES CategoryTable(CategoryID),
     FOREIGN KEY(ParentID) REFERENCES PostTable(PostID)
