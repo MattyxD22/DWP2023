@@ -21,6 +21,18 @@ switch ($action) {
         //redirect("http://localhost/DWP2023/views/newPost.php");
         //return $sidebarModel->loadCreatePost();
         break;
+
+    case "homepage":
+
+        $sidebarModel->loadHomepage();
+
+        break;
+
+    case 'category':
+
+        $sidebarModel->loadCategories();
+
+        break;
 }
 
 

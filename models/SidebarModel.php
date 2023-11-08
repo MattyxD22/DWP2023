@@ -12,13 +12,18 @@ class SidebarModel extends BaseModel
 
     function loadCreatePost()
     {
-        return "../views/newPost.php"->create_View;
-
-        // $view = new View();
-        // return $view->render('../views/newPost.php', array('foo' => 'bar'));
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/newPost.php');
     }
+
+
+    function loadHomepage()
+    {
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
+    }
+
     function loadCategories()
     {
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/categoryPage.php');
     }
 
     function loadAdminPage()

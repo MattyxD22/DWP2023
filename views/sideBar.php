@@ -27,7 +27,7 @@
 
 
     <div class="justify-center flex flex-row py-3">
-        <button class="flex flex-row std_button">
+        <button class="flex flex-row std_button btn_categories">
             <h3 class="text-red-600 text-2xl font-bold">Cate</h3>
             <h3 class="text-white text-2xl font-bold">gories</h3>
         </button>
