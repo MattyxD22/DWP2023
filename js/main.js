@@ -237,4 +237,13 @@ $(document).ready(function () {
       $(".state_col").append(data);
     });
   });
+
+  $(document).on("click", ".open_profile_event", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const name = $(this).data("name");
+
+    alert("cliked on user profile: " + name);
+  });
 });
