@@ -268,7 +268,7 @@ $(document).ready(function () {
     const container = $(this).closest(".updateUserContainer");
 
     const user = container.find(".selectedUserToUpdate").val();
-    const userBan = container.find(".selectedUserBanStatus").val();
+    const userBan = container.find(".selectedUserBanStatus").is(':checked');
     const userNewEmail = container.find(".newEmail").val();
     const userNewPassword = container.find(".newPassword").val();
 
