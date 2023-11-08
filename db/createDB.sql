@@ -11,7 +11,9 @@ CREATE TABLE UserTable(
     Email VARCHAR(50) UNIQUE,
     Password VARCHAR(100),
     SignedUpDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Banned INT(11)
+    Banned INT(11),
+    MediaID INT(11),
+    FOREIGN KEY(MediaID) REFERENCES UserTable(MediaID)
 ) ENGINE = INNODB;
 
 

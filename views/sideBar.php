@@ -10,7 +10,7 @@
     </div>
 
     <div class="justify-center flex flex-row py-3">
-        <button class="flex flex-row std_button">
+        <button class="flex flex-row std_button profile_btn">
             <h3 class="text-red-600 text-2xl font-bold">Pro</h3>
             <h3 class="text-white text-2xl font-bold">file</h3>
         </button>
@@ -42,7 +42,7 @@
     </div>
 
     <div class="justify-center flex flex-row py-3">
-        <button type="submit" action="./login.php" class="flex flex-row std_button logout_btn">
+        <button type="button" class="flex flex-row std_button logout_btn">
             <h3 class="text-red-600 text-2xl font-bold">Log</h3>
             <h3 class="text-white text-2xl font-bold">out</h3>
         </button>
