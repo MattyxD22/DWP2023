@@ -52,7 +52,7 @@ class UserModel extends BaseModel
             $cxn = parent::connectToDB();
 
             // First, try treating the input as a username
-            $statement = "SELECT UserID, password FROM usertable WHERE username = :input LIMIT 1";
+            $statement = "SELECT UserID, IsAdmin, password FROM usertable WHERE username = :input AND (Banned IS NULL OR Banned = 0) LIMIT 1";
             $handle = $cxn->prepare($statement);
             $handle->bindParam(':input', $username);
             $handle->execute();
@@ -60,7 +60,7 @@ class UserModel extends BaseModel
 
             // If no match was found for username, try treating the input as an email
             if (!$result) {
-                $statement = "SELECT UserID, password FROM usertable WHERE email = :input LIMIT 1";
+                $statement = "SELECT UserID, IsAdmin, password FROM usertable WHERE email = :input AND (Banned IS NULL OR Banned = 0) LIMIT 1";
                 $handle = $cxn->prepare($statement);
                 $handle->bindParam(':input', $username);
                 $handle->execute();
@@ -70,6 +70,11 @@ class UserModel extends BaseModel
             // Verify the password
             if ($result && password_verify($password, $result['password'])) {
                 $_SESSION["UserID"] = $result["UserID"];
+                if ($result["IsAdmin"] == 1) {
+                    $_SESSION["isAdmin"] = true;
+                } else {
+                    $_SESSION["isAdmin"] = false;
+                }
                 session_write_close();
                 header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
             } else {

@@ -28,8 +28,8 @@ class SidebarModel extends BaseModel
         header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/categoryPage.php');
     }
 
-    function loadAdminPage()
-    {
+    function loadAdminPage(){
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/adminPage.php');
     }
 
     function logOut() {

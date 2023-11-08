@@ -201,6 +201,22 @@ $(document).ready(function () {
       $(".state_col").append(data);
     });
   });
+  
+  // Admin
+  $(document).on("click", ".admin_btn", function () {
+    const data = {
+      action: "admin",
+    };
+
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
 
   $(document).on("click", ".submit_comment", function () {
     const container = $(this).closest(".postComment_Container");
