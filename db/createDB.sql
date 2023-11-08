@@ -11,7 +11,9 @@ CREATE TABLE UserTable(
     Email VARCHAR(50) UNIQUE,
     Password VARCHAR(100),
     SignedUpDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Banned INT(11)
+    Banned INT(11),
+    MediaID INT(11),
+    FOREIGN KEY(MediaID) REFERENCES UserTable(MediaID)
 );
 
 
@@ -119,7 +121,7 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE getFeed()
 BEGIN
-SELECT posttable.PostID, posttable.Description, posttable.CreatedBy, posttable.Title, usertable.Username FROM posttable LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy;
+SELECT posttable.PostID, posttable.Description, posttable.CreatedBy, posttable.Title, usertable.Username FROM posttable LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID IS NULL;
 END //
 DELIMITER ;
 
