@@ -2,6 +2,7 @@ $(document).ready(function () {
   const url_user = "../controllers/UserController.php";
   const url_post = "../controllers/PostController.php";
   const url_sidebar = "../controllers/sidebarController.php";
+  const url_admin = "../controllers/AdminController.php";
 
   $(document).on("click", ".btn_categories", function () {
     const data = {
@@ -261,5 +262,30 @@ $(document).ready(function () {
     const name = $(this).data("name");
 
     alert("cliked on user profile: " + name);
+  });
+
+    $(document).on("click", ".updateUserBtn", function () {
+    const container = $(this).closest(".updateUserContainer");
+
+    const user = container.find(".selectedUserToUpdate").val();
+    const userBan = container.find(".selectedUserBanStatus").val();
+    const userNewEmail = container.find(".newEmail").val();
+    const userNewPassword = container.find(".newPassword").val();
+
+    const data = {
+      action: "updateUser",
+      user: user,
+      userBan: userBan,
+      userNewEmail: userNewEmail,
+      userNewPassword: userNewPassword
+    };
+
+    $.ajax({
+      url: url_admin,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
+    });
   });
 });
