@@ -40,7 +40,7 @@ class PostModel extends BaseModel
             $handle_getPost->execute();
             $post = $handle_getPost->fetch(\PDO::FETCH_ASSOC);
             $cxn = null;
-            $cxn = parent::connectToDB();
+            //$cxn = parent::connectToDB();
 
             // $get_comments = "CALL getComments(:postID)";
             // $handle_getComments = $cxn->prepare($get_comments);

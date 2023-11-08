@@ -224,3 +224,8 @@
 .border-bottom-red{
     border-bottom: 1px solid #DC2626;
 }
+
+.comment_span{
+    color: #FFFFFF;
+    font-size: 14px;
+}

@@ -63,13 +63,13 @@ mysqli_close($connection);
 
                             <div class="action_like">
                                 <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
-                                <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer" data-id="1"></i>
+                                <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer" data-id="<?php echo $value[0] ?>"></i>
 
                             </div>
 
                             <div class="action_dislike">
                                 <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex"></i>
-                                <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer" data-id="1"></i>
+                                <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer" data-id="<?php echo $value[0] ?>"></i>
 
                             </div>
 

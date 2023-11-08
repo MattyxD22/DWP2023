@@ -70,6 +70,35 @@ CREATE TABLE RepostTable(
     FOREIGN KEY(PostID) REFERENCES postTable(PostID)
 );
 
+--Mockaroo generated users for testing
+insert into usertable (username, FName, LName, email) values ('jflipsen0', 'Jess', 'Flipsen', 'jflipsen0@latimes.com');
+insert into usertable (username, FName, LName, email) values ('fstanislaw1', 'Florette', 'Stanislaw', 'fstanislaw1@cam.ac.uk');
+insert into usertable (username, FName, LName, email) values ('bspurret2', 'Bridie', 'Spurret', 'bspurret2@cafepress.com');
+insert into usertable (username, FName, LName, email) values ('lwem3', 'Laurene', 'Wem', 'lwem3@cornell.edu');
+insert into usertable (username, FName, LName, email) values ('lwoffenden4', 'Logan', 'Woffenden', 'lwoffenden4@wikia.com');
+insert into usertable (username, FName, LName, email) values ('ofrounks5', 'Odey', 'Frounks', 'ofrounks5@hhs.gov');
+insert into usertable (username, FName, LName, email) values ('othames6', 'Osborn', 'Thames', 'othames6@webeden.co.uk');
+insert into usertable (username, FName, LName, email) values ('bnewey7', 'Brita', 'Newey', 'bnewey7@icq.com');
+insert into usertable (username, FName, LName, email) values ('ecarreck8', 'Estell', 'Carreck', 'ecarreck8@hubpages.com');
+insert into usertable (username, FName, LName, email) values ('awinthrop9', 'Aridatha', 'Winthrop', 'awinthrop9@bravesites.com');
+insert into usertable (username, FName, LName, email) values ('ggieroka', 'Gordon', 'Gierok', 'ggieroka@netlog.com');
+insert into usertable (username, FName, LName, email) values ('rknuttonb', 'Rolfe', 'Knutton', 'rknuttonb@foxnews.com');
+insert into usertable (username, FName, LName, email) values ('gromic', 'Gale', 'Romi', 'gromic@nbcnews.com');
+insert into usertable (username, FName, LName, email) values ('cwinslowd', 'Cly', 'Winslow', 'cwinslowd@woothemes.com');
+insert into usertable (username, FName, LName, email) values ('kmatushenkoe', 'Karalynn', 'Matushenko', 'kmatushenkoe@t.co');
+insert into usertable (username, FName, LName, email) values ('ghunef', 'Griz', 'Hune', 'ghunef@shutterfly.com');
+insert into usertable (username, FName, LName, email) values ('rbardeyg', 'Reagan', 'Bardey', 'rbardeyg@people.com.cn');
+insert into usertable (username, FName, LName, email) values ('nbollardh', 'Normie', 'Bollard', 'nbollardh@comcast.net');
+insert into usertable (username, FName, LName, email) values ('bmelhuishi', 'Buddie', 'Melhuish', 'bmelhuishi@intel.com');
+insert into usertable (username, FName, LName, email) values ('aparsonagej', 'Alanson', 'Parsonage', 'aparsonagej@typepad.com');
+insert into usertable (username, FName, LName, email) values ('bathyk', 'Brook', 'Athy', 'bathyk@vkontakte.ru');
+insert into usertable (username, FName, LName, email) values ('ialphegel', 'Ingelbert', 'Alphege', 'ialphegel@mayoclinic.com');
+insert into usertable (username, FName, LName, email) values ('tgotcherm', 'Tedda', 'Gotcher', 'tgotcherm@earthlink.net');
+insert into usertable (username, FName, LName, email) values ('mbendsonn', 'Marris', 'Bendson', 'mbendsonn@sphinn.com');
+insert into usertable (username, FName, LName, email) values ('aitzkovwitcho', 'Archibaldo', 'Itzkovwitch', 'aitzkovwitcho@aol.com');
+
+
+
 INSERT INTO categorytable(categorytable.Title) VALUES ("Homemade");
 INSERT INTO categorytable(categorytable.Title) VALUES ("Amateur");
 INSERT INTO categorytable(categorytable.Title) VALUES ("Professionals");

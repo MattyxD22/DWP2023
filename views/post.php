@@ -1,4 +1,4 @@
-<div class="container w-full h-full flex flex-col post_Container px-4 py-4 ">
+<div class="container w-full h-full flex flex-col post_Container px-4 py-4 mx-auto">
 
     <div class="post_header flex flex-row border-bottom-red pb-2">
         <i class="bi bi-person-circle text-4xl my-auto"></i>
@@ -108,8 +108,7 @@
 
     <div class="comment_section flex flex-col">
 
-        <!-- <?php getComments($post["PostID"]) ?> -->
-
+        <?php getComments($post["PostID"]) ?>
     </div>
 </div>
 
