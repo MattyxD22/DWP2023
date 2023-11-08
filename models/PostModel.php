@@ -77,7 +77,7 @@ class PostModel extends BaseModel
 
             $handle_getComment->bindValue(":postID", $sanitized_postID);
             $handle_getComment->execute();
-            $comments = $handle_getComment->fetch(\PDO::FETCH_ASSOC);
+            $comments = $handle_getComment->fetchAll(\PDO::FETCH_ASSOC);
             $cnx = null;
 
             return include("../views/comments.php");
@@ -104,6 +104,75 @@ class PostModel extends BaseModel
             $handle_createComment->bindValue(":userID", $sanitized_userID);
             $handle_createComment->execute();
             $handle_createComment->fetch(\PDO::FETCH_ASSOC);
+            $cnx = null;
+
+            return "200";
+        } catch (\PDOException $err) {
+            print($err->getMessage());
+        }
+    }
+
+    function addLike($postID, $userID)
+    {
+        try {
+
+            $cxn = parent::connectToDB();
+
+            $sanitized_postID = htmlspecialchars($postID);
+            $sanitized_userID = htmlspecialchars($userID);
+
+
+            $likeComment = "CALL updateLikePost(:postID, :userID, 1)";
+            $handle_likeComment = $cxn->prepare($likeComment);
+
+            $handle_likeComment->bindValue(":postID", $sanitized_postID);
+            $handle_likeComment->bindValue(":userID", $sanitized_userID);
+            $handle_likeComment->execute();
+            $handle_likeComment->fetch(\PDO::FETCH_ASSOC);
+            $cnx = null;
+        } catch (\PDOException $err) {
+            print($err->getMessage());
+            return $err->getMessage();
+        }
+    }
+
+    function addDislike($postID, $userID)
+    {
+        try {
+
+            $cxn = parent::connectToDB();
+
+            $sanitized_postID = htmlspecialchars($postID);
+            $sanitized_userID = htmlspecialchars($userID);
+
+
+            $likeComment = "CALL updateLikePost(:postID, :userID, 0)";
+            $handle_likeComment = $cxn->prepare($likeComment);
+
+            $handle_likeComment->bindValue(":postID", $sanitized_postID);
+            $handle_likeComment->bindValue(":userID", $sanitized_userID);
+            $handle_likeComment->execute();
+            $handle_likeComment->fetch(\PDO::FETCH_ASSOC);
+            $cnx = null;
+        } catch (\PDOException $err) {
+            print($err->getMessage());
+        }
+    }
+
+    function removeLike($postID, $userID)
+    {
+        try {
+            $cxn = parent::connectToDB();
+
+            $sanitized_postID = htmlspecialchars($postID);
+            $sanitized_userID = htmlspecialchars($userID);
+
+            $likeComment = "CALL deleteFromLikesTable(:postID, :userID)";
+            $handle_likeComment = $cxn->prepare($likeComment);
+
+            $handle_likeComment->bindValue(":postID", $sanitized_postID);
+            $handle_likeComment->bindValue(":userID", $sanitized_userID);
+            $handle_likeComment->execute();
             $cnx = null;
 
             return "200";

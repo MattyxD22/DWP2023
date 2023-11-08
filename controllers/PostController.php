@@ -49,8 +49,21 @@ switch ($action) {
         return $postModel->createComment($postID, $comment, $userID);
 
         break;
-}
 
-function render_view($path, array $args)
-{
+    case "addLike":
+
+        $postID = $_POST["postID"];
+        $postID = $_POST["userID"];
+
+        $postModel->addLike($postID, $userID);
+
+
+        break;
+    case "removeLike":
+
+        $postID = $_POST["postID"];
+        $postID = $_POST["userID"];
+        $postModel->removeLike($postID, $userID);
+
+        break;
 }

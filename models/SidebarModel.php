@@ -3,7 +3,7 @@
 namespace models;
 
 require_once 'BaseModel.php';
-session_start();
+
 class SidebarModel extends BaseModel
 {
 
@@ -20,7 +20,22 @@ class SidebarModel extends BaseModel
 
     function loadHomepage()
     {
-        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
+
+        try {
+            $cxn = parent::connectToDB();
+            $getFeed = "CALL getFeed()";
+            $handle_getFeed = $cxn->prepare($getFeed);
+            $handle_getFeed->execute();
+            $results = $handle_getFeed->fetchAll(\PDO::FETCH_ASSOC);
+
+            return include("../views/feedOnly.php");
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+
+
+
+        //header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
     }
 
     function loadCategories()
@@ -32,7 +47,8 @@ class SidebarModel extends BaseModel
     {
     }
 
-    function logOut() {
+    function logOut()
+    {
         session_destroy();
         header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
     }

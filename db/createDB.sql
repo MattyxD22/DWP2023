@@ -161,3 +161,34 @@ INSERT INTO posttable(posttable.ParentID, posttable.Description, posttable.Creat
 END //
 
 DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE updateLikePost(IN postID INT(11), IN UserID INT(11), IN Type INT(11))
+BEGIN 
+
+SET @Exists = NULL;
+
+SELECT likestable.PostID INTO @Exists FROM likestable WHERE likestable.PostID = PostID AND likestable.UserID = UserID; 
+
+IF @Exists IS NULL THEN
+    INSERT INTO likestable(likestable.PostID, likestable.UserID, likestable.Type) VALUES (PostID, UserID, Type);
+ELSE 
+    UPDATE likestable SET likestable.Type = Type WHERE likestable.postID = PostID AND likestable.UserID = UserID;
+END IF;
+
+
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE deleteFromLikesTable(IN postID INT(11), IN UserID INT(11))
+BEGIN 
+
+DELETE FROM likestable WHERE likestable.PostID = PostID AND likestable.UserID = UserID;
+
+
+END //
+
+DELIMITER ;

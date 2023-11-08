@@ -1,5 +1,43 @@
+<?php if (!empty($comments)) { ?>
 
+    <?php foreach ($comments as $key => $comment) { ?>
+        <div class="comment_container flex flex-col">
 
+            <div class="comment_headerr flex flex-row pb-2">
+
+                <i class="bi bi-person-circle text-4xl my-auto"></i>
+                <span class="ms-3 my-auto font-bold"><?php echo $comment["Username"] ?></span>
+            </div>
+            <div class="comment_content">
+
+                <span class="comment_span">
+                    <?php echo $comment["Description"] ?>
+                </span>
+
+            </div>
+            <div class="comment_footer">
+
+                <div class="actions_div flex flex-row ms-auto my-auto">
+
+                    <div class="action_like">
+                        <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
+                        <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-id=" <?php echo $comment["PostID"] ?>"></i>
+                    </div>
+
+                    <div class="action_dislike">
+                        <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex"></i>
+                        <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-id=" <?php echo $comment["PostID"] ?>"></i>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    <?php   } ?>
+
+<?php   } ?>
+<!-- 
 <div class="comment_container flex flex-col">
 
     <div class="comment_headerr flex flex-row pb-2">
@@ -31,4 +69,4 @@
         </div>
 
     </div>
-</div>
+</div> -->

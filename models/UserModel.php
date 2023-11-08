@@ -2,7 +2,6 @@
 
 namespace models;
 
-session_start();
 require_once 'BaseModel.php';
 class UserModel extends BaseModel
 {
@@ -70,8 +69,12 @@ class UserModel extends BaseModel
             // Verify the password
             if ($result && password_verify($password, $result['password'])) {
                 $_SESSION["UserID"] = $result["UserID"];
-                session_write_close();
-                header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
+
+                if (isset($_SESSION["UserID"])) {
+                    session_write_close();
+                    //return include("../views/feedOnly.php");
+                    header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
+                }
             } else {
                 return 0;
             }
@@ -96,7 +99,8 @@ class UserModel extends BaseModel
     {
     }
 
-    function fetchAmountOfFollowers($userID) {
+    function fetchAmountOfFollowers($userID)
+    {
         try {
             $cxn = parent::connectToDB();
             $statement = "SELECT COUNT(*) AS NumberOfFollowers FROM FollowingTable WHERE FollowingID = :userID";
@@ -111,7 +115,8 @@ class UserModel extends BaseModel
         }
     }
 
-    function fetchAmountOfFollowing($userID) { 
+    function fetchAmountOfFollowing($userID)
+    {
         try {
             $cxn = parent::connectToDB();
             $statement = "SELECT COUNT(*) AS FollowingCount FROM FollowingTable WHERE UserID = :userID;";
@@ -126,7 +131,8 @@ class UserModel extends BaseModel
         }
     }
 
-    function fetchAmountOfPosts($userID) { 
+    function fetchAmountOfPosts($userID)
+    {
         try {
             $cxn = parent::connectToDB();
             $statement = "SELECT COUNT(*) AS NumberOfPostsWithoutParent FROM PostTable WHERE CreatedBy = :userID AND ParentID IS NULL;";
@@ -141,7 +147,8 @@ class UserModel extends BaseModel
         }
     }
 
-    function fetchUsernameById($userID) {
+    function fetchUsernameById($userID)
+    {
         try {
             $cxn = parent::connectToDB();
             $statement = "SELECT username FROM usertable WHERE userid = :userID;";
@@ -156,7 +163,8 @@ class UserModel extends BaseModel
         }
     }
 
-    function fetchPostsById($userID) {
+    function fetchPostsById($userID)
+    {
         try {
             $cxn = parent::connectToDB();
             $statement = "SELECT PostID, Description, CreatedDate, CreatedBy, Title, CategoryID FROM PostTable WHERE ParentID IS NULL AND CreatedBy = :userID ORDER BY PostID DESC;";

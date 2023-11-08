@@ -46,20 +46,6 @@ $(document).ready(function () {
     });
   });
 
-  $(document).on("click", ".bi-hand-thumbs-up-fill", function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    let id = $(this).data("id");
-    console.log("liked post with ID: ", id);
-  });
-
-  $(document).on("click", ".bi-hand-thumbs-down-fill", function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    let id = $(this).data("id");
-    console.log("disliked post with ID: ", id);
-  });
-
   $(document).on("click", ".createPost_btn", function () {
     const data = {
       action: "newPost",
@@ -100,8 +86,8 @@ $(document).ready(function () {
       data: data,
     }).done(function (data) {
       console.log($(".mainBG"));
-      $(".mainBG").empty();
-      $(".mainBG").append(data);
+      $(".state_col").empty();
+      $(".state_col").append(data);
     });
   });
 
@@ -235,6 +221,45 @@ $(document).ready(function () {
     }).done(function (data) {
       $(".state_col").empty();
       $(".state_col").append(data);
+    });
+  });
+
+  $(document).on("click", ".like_post", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    let elem = $(this); // put the event element into a variable, to be able to access it in the ajax request
+    let action = "addLike";
+    let postID = $(this).data("id");
+    let userID = $(this).data("user");
+
+    // Check if the post has been liked by the user
+    if ($(elem).hasClass("liked")) {
+      action = "removeLike";
+    }
+
+    const data = {
+      action: action,
+      postID: postID,
+      userID: userID,
+    };
+
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log("", data);
+
+      // Check if the post has been liked by the user
+      if ($(elem).hasClass("liked")) {
+        // prepare data obj for removinf the like
+        // remove "like" class so icon wont be red
+        $(elem).removeClass("like");
+      } else {
+        // add "like" class to icon will be red
+        $(elem).addClass("like");
+      }
     });
   });
 });
