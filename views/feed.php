@@ -1,5 +1,6 @@
 <?php
 
+//echo $_SESSION["UserID"];
 require("../db/connection.php");
 
 require("mainBG.php");
@@ -13,6 +14,7 @@ $query =    "SELECT posttable.PostID, posttable.Title, posttable.Description, po
 $db_conn = mysqli_select_db($connection, DB_NAME);
 $data = mysqli_query($connection, $query);
 $results = mysqli_fetch_all($data);
+mysqli_close($connection);
 ?>
 
 <div class="container-fluid flex flex-row w-full h-full">

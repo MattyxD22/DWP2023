@@ -69,23 +69,10 @@ class UserModel extends BaseModel
             // Verify the password
             if ($result && password_verify($password, $result['password'])) {
                 $_SESSION["UserID"] = $result["UserID"];
-
-                //$getFeedSTM = "CALL getFeed";
-                //$handleFeed = $cxn->prepare($getFeedSTM);
-                //$handleFeed->execute();
-                //$resultFeed = $handleFeed->fetchAll(\PDO::FETCH_ASSOC);
-
-
-
-                //return $resultFeed;
-
-                //return $this->render_view(BASE_URL . "/views/feed.php", $resultFeed);
-
-
+                session_write_close();
                 header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
             } else {
                 return 0;
-                // header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
             }
         } catch (\PDOException $e) {
             print($e->getMessage());

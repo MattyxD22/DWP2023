@@ -39,6 +39,16 @@ switch ($action) {
         return $postModel->openPost($postID);
 
         break;
+
+    case "createComment":
+
+        $postID = $_POST["postID"];
+        $comment = $_POST["comment"];
+        $userID = 2;
+
+        return $postModel->createComment($postID, $comment, $userID);
+
+        break;
 }
 
 function render_view($path, array $args)

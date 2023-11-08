@@ -32,13 +32,22 @@ class PostModel extends BaseModel
         try {
             $cxn = parent::connectToDB();
 
-            $sanitized_title = htmlspecialchars($postID);
+            $sanitized_postID = htmlspecialchars($postID);
 
             $get_post = "CALL getPost(:postID)";
             $handle_getPost = $cxn->prepare($get_post);
-            $handle_getPost->bindValue(":postID", $postID);
+            $handle_getPost->bindValue(":postID", $sanitized_postID);
             $handle_getPost->execute();
             $post = $handle_getPost->fetch(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            $cxn = parent::connectToDB();
+
+            // $get_comments = "CALL getComments(:postID)";
+            // $handle_getComments = $cxn->prepare($get_comments);
+            // $handle_getComments->bindValue(":postID", $sanitized_postID);
+            // $handle_getComments->execute();
+            // $comments = $handle_getComments->fetch(\PDO::FETCH_ASSOC);
+
             return include("../views/post.php");
         } catch (\PDOException $err) {
             print($err->getMessage());
@@ -56,8 +65,51 @@ class PostModel extends BaseModel
     {
     }
 
-    function createComment($postID, $userID, $comment)
+    function getComments($postID)
     {
+        try {
+            $cxn = parent::connectToDB();
+
+            $sanitized_postID = htmlspecialchars($postID);
+
+            $get_Comments = "CALL getComments(:postID)";
+            $handle_getComment = $cxn->prepare($get_Comments);
+
+            $handle_getComment->bindValue(":postID", $sanitized_postID);
+            $handle_getComment->execute();
+            $comments = $handle_getComment->fetch(\PDO::FETCH_ASSOC);
+            $cnx = null;
+
+            return include("../views/comments.php");
+        } catch (\PDOException $err) {
+            print($err->getMessage());
+        }
+    }
+
+    function createComment($postID, $comment, $userID)
+    {
+
+        try {
+            $cxn = parent::connectToDB();
+
+            $sanitized_postID = htmlspecialchars($postID);
+            $sanitized_description = htmlspecialchars($comment);
+            $sanitized_userID = htmlspecialchars($userID);
+
+            $create_Comment = "CALL createComment(:postID, :comment, :userID)";
+            $handle_createComment = $cxn->prepare($create_Comment);
+
+            $handle_createComment->bindValue(":postID", $sanitized_postID);
+            $handle_createComment->bindValue(":comment", $sanitized_description);
+            $handle_createComment->bindValue(":userID", $sanitized_userID);
+            $handle_createComment->execute();
+            $handle_createComment->fetch(\PDO::FETCH_ASSOC);
+            $cnx = null;
+
+            return "200";
+        } catch (\PDOException $err) {
+            print($err->getMessage());
+        }
     }
 
     function addCategoryToPost($postID, $categoryID)

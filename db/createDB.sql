@@ -106,3 +106,26 @@ WHERE posttable.PostID = postID;
 END //
 
 DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE getPost(IN postID INT(11))
+BEGIN 
+
+SELECT posttable.PostID, posttable.Description, posttable.CreatedDate, usertable.Username
+FROM posttable 
+LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy 
+WHERE posttable.ParentID = postID;
+
+END //
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE createComment(IN postID INT(11), IN userComment VARCHAR(500), IN userID INT(11))
+BEGIN 
+
+INSERT INTO posttable(posttable.ParentID, posttable.Description, posttable.CreatedDate, posttable.CreatedBy) VALUES (postID, userComment, NOW(), userID);
+
+END //
+
+DELIMITER ;

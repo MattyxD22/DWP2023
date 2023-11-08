@@ -202,9 +202,29 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      console.log(data);
+      //console.log(data);
       $(".state_col").empty();
       $(".state_col").append(data);
+    });
+  });
+
+  $(document).on("click", ".submit_comment", function () {
+    const container = $(this).closest(".postComment_Container");
+    const comment = container.find(".comment_textArea").val();
+    const id = $(this).data("id");
+
+    const data = {
+      action: "createComment",
+      comment: comment,
+      postID: id,
+    };
+
+    $.ajax({
+      url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
     });
   });
 });
