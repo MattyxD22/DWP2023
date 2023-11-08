@@ -70,11 +70,9 @@ class UserModel extends BaseModel
             if ($result && password_verify($password, $result['password'])) {
                 $_SESSION["UserID"] = $result["UserID"];
 
-                if (isset($_SESSION["UserID"])) {
-                    session_write_close();
-                    //return include("../views/feedOnly.php");
-                    header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
-                }
+                session_write_close();
+                //return include("../views/feedOnly.php");
+                header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
             } else {
                 return 0;
             }

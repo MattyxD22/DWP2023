@@ -7,7 +7,13 @@
             <span class="ms-3 font-bold"><?php echo $value["Username"] ?></span>
         </div>
         <div class="feed_content h-4/6">
+            <div class="feed_title_container py-2 px-2">
+                <span><?php echo $value["Title"] ?></span>
+            </div>
 
+            <div class="feed_title_container py-2 px-2">
+                <span><?php echo $value["Description"] ?></span>
+            </div>
         </div>
         <div class="feed_footer h-1/6 pt-2">
 

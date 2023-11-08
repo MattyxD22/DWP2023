@@ -48,7 +48,13 @@ class PostModel extends BaseModel
             // $handle_getComments->execute();
             // $comments = $handle_getComments->fetch(\PDO::FETCH_ASSOC);
 
+            // $content = [
+            //     'data' => $post,
+            //     'view' => include("../views/post.php")
+            // ];
+
             return include("../views/post.php");
+            //return $content;
         } catch (\PDOException $err) {
             print($err->getMessage());
         }

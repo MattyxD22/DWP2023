@@ -3,20 +3,6 @@ DROP DATABASE IF EXISTS DWP;
 CREATE DATABASE DWP;
 USE DWP;
 
-CREATE TABLE UserTable(
-    UserID INT(11) AUTO_INCREMENT PRIMARY KEY,
-    Username VARCHAR(50) UNIQUE,
-    FName VARCHAR(50),
-    LName VARCHAR(50),
-    Email VARCHAR(50) UNIQUE,
-    Password VARCHAR(100),
-    SignedUpDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Banned INT(11),
-    MediaID INT(11),
-    FOREIGN KEY(MediaID) REFERENCES UserTable(MediaID)
-) ENGINE = INNODB;
-
-
 CREATE TABLE CategoryTable(
     CategoryID INT(11) AUTO_INCREMENT PRIMARY KEY,
     Title TEXT
@@ -35,16 +21,28 @@ CREATE TABLE PostTable(
     FOREIGN KEY(ParentID) REFERENCES PostTable(PostID)
 ) ENGINE = INNODB;
 
-
-
 CREATE TABLE MediaTable(
     MediaID INT(11) AUTO_INCREMENT PRIMARY KEY,
     MediaType INT(11),
 
     UploadDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     PostID INT(11),
-    FOREIGN KEY(PostID) REFERENCES PostTable(PostID),
+    FOREIGN KEY(PostID) REFERENCES PostTable(PostID)
     ) ENGINE = INNODB;
+
+CREATE TABLE UserTable(
+    UserID INT(11) AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(50) UNIQUE,
+    FName VARCHAR(50),
+    LName VARCHAR(50),
+    Email VARCHAR(50) UNIQUE,
+    Password VARCHAR(100),
+    SignedUpDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Banned INT(11),
+    MediaID INT(11),
+    FOREIGN KEY(MediaID) REFERENCES MediaTable(MediaID)
+) ENGINE = INNODB;
+
 
 CREATE TABLE FollowingTable (
     ID INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -73,7 +71,7 @@ CREATE TABLE RepostTable(
     FOREIGN KEY(PostID) REFERENCES postTable(PostID)
 ) ENGINE = INNODB;
 
---Mockaroo generated users for testing
+
 insert into usertable (username, FName, LName, email) values ('jflipsen0', 'Jess', 'Flipsen', 'jflipsen0@latimes.com');
 insert into usertable (username, FName, LName, email) values ('fstanislaw1', 'Florette', 'Stanislaw', 'fstanislaw1@cam.ac.uk');
 insert into usertable (username, FName, LName, email) values ('bspurret2', 'Bridie', 'Spurret', 'bspurret2@cafepress.com');
@@ -126,27 +124,16 @@ SELECT posttable.PostID, posttable.Description, posttable.CreatedBy, posttable.T
 END //
 DELIMITER ;
 
-DELIMITER //
-CREATE PROCEDURE getPost(IN postID INT(11))
-BEGIN 
-
-SELECT posttable.Description, posttable.Title, posttable.CreatedDate, usertable.Username
-FROM posttable 
-LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy 
-WHERE posttable.PostID = postID;
-
-END //
-
 DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE getPost(IN postID INT(11))
 BEGIN 
 
-SELECT posttable.PostID, posttable.Description, posttable.CreatedDate, usertable.Username
+SELECT posttable.PostID, posttable.Title, posttable.Description, posttable.CreatedDate, usertable.Username
 FROM posttable 
 LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy 
-WHERE posttable.ParentID = postID;
+WHERE posttable.PostID = postID;
 
 END //
 
@@ -187,6 +174,18 @@ CREATE PROCEDURE deleteFromLikesTable(IN postID INT(11), IN UserID INT(11))
 BEGIN 
 
 DELETE FROM likestable WHERE likestable.PostID = PostID AND likestable.UserID = UserID;
+
+
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE getComments(IN postID INT(11))
+BEGIN 
+
+SELECT posttable.Description, posttable.CreatedDate, postTable.CreatedBy, usertable.Username FROM posttable LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.PostID = PostID; 
 
 
 END //

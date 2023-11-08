@@ -126,14 +126,3 @@ class UserController {
         return $posts;
     }
 }
-
-function render_view($path, array $args)
-{
-    ob_start();
-    // USE 
-    echo DOC_ROOT_PATH . $path;
-    include(DOC_ROOT_PATH . $path);
-    $var = ob_get_contents();
-    ob_end_clean();
-    return $var;
-}

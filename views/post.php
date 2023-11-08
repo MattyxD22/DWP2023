@@ -1,5 +1,4 @@
 <div class="container w-full h-full flex flex-col post_Container px-4 py-4 mx-auto">
-
     <div class="post_header flex flex-row border-bottom-red pb-2">
         <i class="bi bi-person-circle text-4xl my-auto"></i>
         <span class="ms-3 my-auto font-bold"><?php echo $post["Username"] ?></span>
@@ -12,6 +11,8 @@
     </div>
 
     <div class="post_image_container">
+
+
 
 
         <div id="default-carousel" class="relative w-full" data-carousel="slide">

@@ -23,11 +23,8 @@ switch ($action) {
 
         $title = $_POST["title"];
         $description = $_POST["description"];
-        $userID = 0;
+        $userID = $_SESSION["UserID"];
         $postID = $postModel->createPost($userID, $title, $description);
-
-
-        return json_encode("It works???");
 
         //return "It works???";
         break;
