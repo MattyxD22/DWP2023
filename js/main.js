@@ -46,11 +46,6 @@ $(document).ready(function () {
     });
   });
 
-  $(document).on("click", ".feed_item", function () {
-    let id = $(this).data("id");
-    console.log("Opening post withID: ", id);
-  });
-
   $(document).on("click", ".bi-hand-thumbs-up-fill", function (e) {
     e.stopPropagation();
     e.preventDefault();
@@ -185,12 +180,14 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      //console.log(data);
+      console.log(data);
+      $(".state_col").empty();
+      $(".state_col").append(data);
     });
   });
 
   // Profile
-    $(document).on("click", ".profile_btn", function () {
+  $(document).on("click", ".profile_btn", function () {
     const data = {
       action: "profile",
     };
@@ -224,21 +221,20 @@ $(document).ready(function () {
       console.log(data);
     });
   });
-  
-    // log out
-    $(document).on("click", ".logout_btn", function () {
-      const data = {
-        action: "logout",
-      };
-  
-      $.ajax({
-        url: url_sidebar,
-        type: "POST",
-        data: data,
-      }).done(function (data) {
-        $(".state_col").empty();
-        $(".state_col").append(data);
-      });
-    });
 
+  // log out
+  $(document).on("click", ".logout_btn", function () {
+    const data = {
+      action: "logout",
+    };
+
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
 });
