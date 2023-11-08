@@ -2,6 +2,7 @@
 
 namespace models;
 
+session_start();
 require_once 'BaseModel.php';
 class UserModel extends BaseModel
 {
@@ -51,7 +52,7 @@ class UserModel extends BaseModel
             $cxn = parent::connectToDB();
 
             // First, try treating the input as a username
-            $statement = "SELECT password, UserID FROM usertable WHERE username = :input LIMIT 1";
+            $statement = "SELECT UserID, password FROM usertable WHERE username = :input LIMIT 1";
             $handle = $cxn->prepare($statement);
             $handle->bindParam(':input', $username);
             $handle->execute();
@@ -59,7 +60,7 @@ class UserModel extends BaseModel
 
             // If no match was found for username, try treating the input as an email
             if (!$result) {
-                $statement = "SELECT password, UserID FROM usertable WHERE email = :input LIMIT 1";
+                $statement = "SELECT UserID, password FROM usertable WHERE email = :input LIMIT 1";
                 $handle = $cxn->prepare($statement);
                 $handle->bindParam(':input', $username);
                 $handle->execute();
@@ -74,6 +75,7 @@ class UserModel extends BaseModel
             } else {
                 return 0;
             }
+            $cxn = null;
         } catch (\PDOException $e) {
             print($e->getMessage());
             return false;
@@ -92,5 +94,80 @@ class UserModel extends BaseModel
 
     function updatePassword($userID, $newPassword)
     {
+    }
+
+    function fetchAmountOfFollowers($userID) {
+        try {
+            $cxn = parent::connectToDB();
+            $statement = "SELECT COUNT(*) AS NumberOfFollowers FROM FollowingTable WHERE FollowingID = :userID";
+            $query = $cxn->prepare($statement);
+            $query->bindParam(":userID", $userID);
+            $query->execute();
+            $result = $query->fetch(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $result["NumberOfFollowers"];
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchAmountOfFollowing($userID) { 
+        try {
+            $cxn = parent::connectToDB();
+            $statement = "SELECT COUNT(*) AS FollowingCount FROM FollowingTable WHERE UserID = :userID;";
+            $query = $cxn->prepare($statement);
+            $query->bindParam(":userID", $userID);
+            $query->execute();
+            $result = $query->fetch(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $result["FollowingCount"];
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchAmountOfPosts($userID) { 
+        try {
+            $cxn = parent::connectToDB();
+            $statement = "SELECT COUNT(*) AS NumberOfPostsWithoutParent FROM PostTable WHERE CreatedBy = :userID AND ParentID IS NULL;";
+            $query = $cxn->prepare($statement);
+            $query->bindParam(":userID", $userID);
+            $query->execute();
+            $result = $query->fetch(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $result["NumberOfPostsWithoutParent"];
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchUsernameById($userID) {
+        try {
+            $cxn = parent::connectToDB();
+            $statement = "SELECT username FROM usertable WHERE userid = :userID;";
+            $query = $cxn->prepare($statement);
+            $query->bindParam(":userID", $userID);
+            $query->execute();
+            $result = $query->fetch(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $result["username"];
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchPostsById($userID) {
+        try {
+            $cxn = parent::connectToDB();
+            $statement = "SELECT PostID, Description, CreatedDate, CreatedBy, Title, CategoryID FROM PostTable WHERE ParentID IS NULL AND CreatedBy = :userID ORDER BY PostID DESC;";
+            $query = $cxn->prepare($statement);
+            $query->bindParam(":userID", $userID);
+            $query->execute();
+            $result = $query->fetchAll(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $result;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
     }
 }

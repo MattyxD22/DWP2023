@@ -3,11 +3,13 @@
 namespace models;
 
 require_once 'BaseModel.php';
+session_start();
 class SidebarModel extends BaseModel
 {
 
     function loadProfile()
     {
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/profile.php');
     }
 
     function loadCreatePost()
@@ -28,6 +30,11 @@ class SidebarModel extends BaseModel
 
     function loadAdminPage()
     {
+    }
+
+    function logOut() {
+        session_destroy();
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
     }
 }
 

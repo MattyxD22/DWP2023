@@ -14,13 +14,13 @@ CREATE TABLE UserTable(
     Banned INT(11),
     MediaID INT(11),
     FOREIGN KEY(MediaID) REFERENCES UserTable(MediaID)
-);
+) ENGINE = INNODB;
 
 
 CREATE TABLE CategoryTable(
     CategoryID INT(11) AUTO_INCREMENT PRIMARY KEY,
     Title TEXT
-);
+) ENGINE = INNODB;
 
 CREATE TABLE PostTable(
 
@@ -33,17 +33,18 @@ CREATE TABLE PostTable(
     CategoryID INT(11),
     FOREIGN KEY(CategoryID) REFERENCES CategoryTable(CategoryID),
     FOREIGN KEY(ParentID) REFERENCES PostTable(PostID)
-);
+) ENGINE = INNODB;
 
 
 
 CREATE TABLE MediaTable(
     MediaID INT(11) AUTO_INCREMENT PRIMARY KEY,
     MediaType INT(11),
+
     UploadDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     PostID INT(11),
     FOREIGN KEY(PostID) REFERENCES PostTable(PostID),
-    );
+    ) ENGINE = INNODB;
 
 CREATE TABLE FollowingTable (
     ID INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -51,7 +52,7 @@ CREATE TABLE FollowingTable (
     FollowingID INT(11),
     FOREIGN KEY(UserID) REFERENCES usertable(UserID),
     FOREIGN KEY(FollowingID) REFERENCES usertable(UserID)
-);
+) ENGINE = INNODB;
 
 
 CREATE TABLE LikesTable(
@@ -61,7 +62,7 @@ CREATE TABLE LikesTable(
     Type INT(11),
     FOREIGN KEY(UserID) REFERENCES usertable(UserID),
     FOREIGN KEY(PostID) REFERENCES postTable(PostID)
-);
+) ENGINE = INNODB;
 
 
 CREATE TABLE RepostTable(
@@ -70,7 +71,7 @@ CREATE TABLE RepostTable(
     PostID INT(11),
     FOREIGN KEY(UserID) REFERENCES usertable(UserID),
     FOREIGN KEY(PostID) REFERENCES postTable(PostID)
-);
+) ENGINE = INNODB;
 
 --Mockaroo generated users for testing
 insert into usertable (username, FName, LName, email) values ('jflipsen0', 'Jess', 'Flipsen', 'jflipsen0@latimes.com');

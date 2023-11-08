@@ -5,8 +5,8 @@ require("mainBG.php");
 require("header.php");
 
 ?>
-<article class="flex justify-center items-center flex-col login_container">
 
+<article class="flex justify-center items-center flex-col login_container">
     <div class="text-white text-2xl font-bold">Welcome to <span class="text-red-600">Bread</span>Tube, a <span class="text-red-600">rising</span> community.</div>
     <form class="login_form_class" method="post" action="<?php echo BASE_URL; ?>/controllers/UserController.php?action=login">
         <input readonly hidden name="action" type="text" value="login" style="visibility: hidden; display: none; pointer-events:none;">
