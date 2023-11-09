@@ -5,7 +5,7 @@ namespace models;
 require_once 'BaseModel.php';
 class PostModel extends BaseModel
 {
-    function createPost($userID, $title, $description)
+    function createPost($userID, $title, $description, $fileData)
     {
 
         try {
@@ -20,7 +20,30 @@ class PostModel extends BaseModel
             $handleCreatePost->bindParam(":title", $sanitized_title);
             $handleCreatePost->bindParam(":description", $sanitized_description);
             $handleCreatePost->execute();
-            return $handleCreatePost->fetch(\PDO::FETCH_ASSOC);
+            $postID =  $handleCreatePost->fetch(\PDO::FETCH_ASSOC);
+            $cxn = null;
+
+
+
+            if (!empty($fileData)) {
+
+                // Upload file to database if exists
+
+                // FileType / Type is currently hardcoded to 1, once there is time, create functions to determine filetype and adjust accordingly, 1 = img (for now)
+                // PostID = ID which should be returned by previous database call
+                // file = file to upload
+
+                $cxn = parent::connectToDB();
+                $addImg = "CALL addFileToPost(:type, :postID, :file)";
+                $handle_addImg = $cxn->prepare($addImg);
+                $handle_addImg->bindValue(":type", 1);
+                $handle_addImg->bindValue(":postID", $postID);
+                $handle_addImg->bindParam(":file", $fileData);
+                $handle_addImg->execute();
+                $cxn = null;
+            }
+
+            //return
         } catch (\PDOException $err) {
             print($err->getMessage());
         }

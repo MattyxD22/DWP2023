@@ -14,7 +14,21 @@ class SidebarModel extends BaseModel
 
     function loadCreatePost()
     {
-        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/newPost.php');
+
+        try {
+            $cxn = parent::connectToDB();
+            $getCategories = "CALL getCategories()";
+            $handle_getCategories = $cxn->prepare($getCategories);
+            $handle_getCategories->execute();
+            $categories = $handle_getCategories->fetchAll(\PDO::FETCH_ASSOC);
+
+            return include("../views/newPost.php");
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+
+
+        //header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/newPost.php');
     }
 
 

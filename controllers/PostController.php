@@ -12,6 +12,9 @@ if ($_POST) {
 } else if ($_GET) {
     // retrieve action parameter from _GET requests
     $action = $_GET["action"];
+} else if ($_FILES) {
+    // retrieve action parameter from _GET requests
+    $action = $_FILES["action"];
 } else {
     // debug/test
     $action = $_ACTION["action"];
@@ -21,10 +24,19 @@ if ($_POST) {
 switch ($action) {
     case "createPost":
 
-        $title = $_POST["title"];
-        $description = $_POST["description"];
+        $title = $_FILES["name"]["title"];
+        $description = $_FILES["description"];
         $userID = $_SESSION["UserID"];
-        $postID = $postModel->createPost($userID, $title, $description);
+        $file = $_FILES["file"];
+        $returnDataTest = [
+            'title' => $title,
+            'description' => $description,
+            'userID' => $userID,
+            'file' => $file['name'],
+        ];
+
+        //return $returnDataTest;
+        $postID = $postModel->createPost($userID, $title, $description, $file);
 
         //return "It works???";
         break;
@@ -41,7 +53,7 @@ switch ($action) {
 
         $postID = $_POST["postID"];
         $comment = $_POST["comment"];
-        $userID = 2;
+        $userID = $_SESSION["UserID"];
 
         return $postModel->createComment($postID, $comment, $userID);
 
@@ -50,7 +62,7 @@ switch ($action) {
     case "addLike":
 
         $postID = $_POST["postID"];
-        $postID = $_POST["userID"];
+        $postID = $_SESSION["UserID"];
 
         $postModel->addLike($postID, $userID);
 
@@ -59,7 +71,7 @@ switch ($action) {
     case "removeLike":
 
         $postID = $_POST["postID"];
-        $postID = $_POST["userID"];
+        $postID = $_SESSION["UserID"];
         $postModel->removeLike($postID, $userID);
 
         break;

@@ -1,7 +1,8 @@
-:root{
+:root {
     --red: #DC2626;
     --btn_hover_red: #6B0D0D;
 }
+
 .mainBG {
     width: 100vw;
     height: 100vh;
@@ -133,17 +134,17 @@
     color: #FFF !important
 }
 
-.category_checkbox{
+.category_checkbox {
     pointer-events: none;
 }
 
-.categoryContainer .bi-chevron-down{
+.categoryContainer .bi-chevron-down {
     right: 0.5rem !important;
     top: 0.25rem;
     bottom: 0rem;
 }
 
-.categoryContainer{
+.categoryContainer {
     background-color: #707070;
     border-radius: 10px;
     border: 0px solid transparent;
@@ -153,16 +154,22 @@
     cursor: pointer;
 }
 
-.categoryContainer.open{
+.categoryContainer.open {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
 }
 
-.categoryContainer.open .categoryDropdownContainer{
+.categoryContainer.open .categoryDropdownContainer {
     display: flex;
+    position: absolute;
+    top: 35px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #707070;
+    max-height: 25rem;
 }
 
-.categoryDropdownContainer{
+.categoryDropdownContainer {
     display: none;
     flex-direction: column;
     width: 100%;
@@ -172,60 +179,55 @@
     position: absolute;
     left: 0px;
     right: 0px;
-    top: calc(35px);
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
 }
 
-.categoryCheckbox{
+.categoryCheckbox {
     pointer-events: none;
 }
 
-.newPost_Textarea{
+.newPost_Textarea {
     min-height: 125px;
     resize: none;
 }
 
-.imageContainer{
+.imageContainer {
     min-width: 200px !important;
     max-width: 200px !important;
     height: 150px !important;
 }
 
-.imagePlaceholder{
+.imagePlaceholder {
     background-color: #CACACA;
     border-radius: 10px;
     width: 100%;
     height: 100%;
 }
 
-.category_mainContainer{
+.category_mainContainer {
     overflow-y: auto;
     overflow-x: hidden;
 }
 
-.categoryRow{
+.categoryRow {
     overflow-y: hidden;
     overflow-x: auto;
 }
 
-.categoryRow{
-    min-height: 225px;
-}
 
-
-.post_Container{
+.post_Container {
     background-color: #3D3D3D;
     border-radius: 10px;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
-.border-bottom-red{
+.border-bottom-red {
     border-bottom: 1px solid #DC2626;
 }
 
-.comment_span{
+.comment_span {
     color: #FFFFFF;
     font-size: 14px;
 }

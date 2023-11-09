@@ -8,6 +8,18 @@ CREATE TABLE CategoryTable(
     Title TEXT
 ) ENGINE = INNODB;
 
+CREATE TABLE UserTable(
+    UserID INT(11) AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(50) UNIQUE,
+    FName VARCHAR(50),
+    LName VARCHAR(50),
+    Email VARCHAR(50) UNIQUE,
+    Password VARCHAR(100),
+    SignedUpDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Banned INT(11),
+    MediaID INT(11)
+) ENGINE = INNODB;
+
 CREATE TABLE PostTable(
 
     PostID INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -18,30 +30,20 @@ CREATE TABLE PostTable(
     Title VARCHAR(50),   
     CategoryID INT(11),
     FOREIGN KEY(CategoryID) REFERENCES CategoryTable(CategoryID),
-    FOREIGN KEY(ParentID) REFERENCES PostTable(PostID)
+    FOREIGN KEY(ParentID) REFERENCES PostTable(PostID),
+    FOREIGN KEY(CreatedBy) REFERENCES UserTable(UserID)
 ) ENGINE = INNODB;
 
 CREATE TABLE MediaTable(
     MediaID INT(11) AUTO_INCREMENT PRIMARY KEY,
     MediaType INT(11),
-
+    ImgData LONGBLOB NOT NULL,
     UploadDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     PostID INT(11),
     FOREIGN KEY(PostID) REFERENCES PostTable(PostID)
     ) ENGINE = INNODB;
 
-CREATE TABLE UserTable(
-    UserID INT(11) AUTO_INCREMENT PRIMARY KEY,
-    Username VARCHAR(50) UNIQUE,
-    FName VARCHAR(50),
-    LName VARCHAR(50),
-    Email VARCHAR(50) UNIQUE,
-    Password VARCHAR(100),
-    SignedUpDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Banned INT(11),
-    MediaID INT(11),
-    FOREIGN KEY(MediaID) REFERENCES MediaTable(MediaID)
-) ENGINE = INNODB;
+
 
 
 CREATE TABLE FollowingTable (
@@ -71,6 +73,7 @@ CREATE TABLE RepostTable(
     FOREIGN KEY(PostID) REFERENCES postTable(PostID)
 ) ENGINE = INNODB;
 
+ALTER TABLE usertable ADD FOREIGN KEY (MediaID) REFERENCES mediatable(MediaID);
 
 insert into usertable (username, FName, LName, email) values ('jflipsen0', 'Jess', 'Flipsen', 'jflipsen0@latimes.com');
 insert into usertable (username, FName, LName, email) values ('fstanislaw1', 'Florette', 'Stanislaw', 'fstanislaw1@cam.ac.uk');
@@ -185,7 +188,29 @@ DELIMITER //
 CREATE PROCEDURE getComments(IN postID INT(11))
 BEGIN 
 
-SELECT posttable.Description, posttable.CreatedDate, postTable.CreatedBy, usertable.Username FROM posttable LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.PostID = PostID; 
+SELECT posttable.Description, posttable.CreatedDate, postTable.CreatedBy, usertable.Username FROM posttable LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID = PostID; 
+
+
+END //
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE getCategories()
+BEGIN 
+
+SELECT * FROM categorytable; 
+
+
+END //
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE addFileToPost(IN Type INT(11), IN PostID INT(11), IN FileData LONGBLOB)
+BEGIN 
+
+INSERT INTO mediatable(mediatable.MediaType, mediatable.UploadDate, mediatable.PostID, mediatable.ImgData) VALUES (Type, NOW(), PostID, FileData);
 
 
 END //

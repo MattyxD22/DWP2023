@@ -56,7 +56,6 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      console.log($(".state_col"));
       $(".state_col").empty();
       $(".state_col").append(data);
     });
@@ -104,45 +103,58 @@ $(document).ready(function () {
 
     container.find(".categoryRow").each(function () {
       if ($(this).find(".categoryCheckbox").prop("checked") == true) {
-        categories.push({ categoryID: $(this).data("id") });
+        categories.push($(this).data("id"));
       }
     });
 
-    const data = {
-      action: "createPost",
-      title: title,
-      description: description,
-      categories: categories,
-    };
+    // const data = {
+    //   action: "createPost",
+    //   title: title,
+    //   description: description,
+    //   categories: categories,
+    // };
 
-    // formData.append("data", data);
+    formData.append("action", "createPost");
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("categories", categories);
 
-    // const input = document.getElementById("file_input");
+    const input = document.getElementById("file_input");
 
-    // $(input.files).each(function () {
-    //   console.log($(this)[0]);
-    //   formData.append("file", $(this)[0], $(this)[0].name);
-    // });
+    $(input.files).each(function () {
+      // console.log($(this)[0]);
+      formData.append("file", $(this)[0], $(this)[0].name);
+    });
 
-    // console.log(formData);
-
-    // $.ajax({
-    //   url: "url_post",
-    //   data: formData,
-    //   type: "POST",
-    //   contentType: false, // NEEDED, DON'T OMIT THIS
-    //   processData: false, // NEEDED, DON'T OMIT THIS
-    // }).done(function (data) {
-    //   console.log(data);
-    // });
+    console.log(formData);
 
     $.ajax({
       url: url_post,
+      data: formData,
+      dataType: "JSON",
       type: "POST",
-      data: data,
+      contentType: false, // NEEDED, DON'T OMIT THIS
+      processData: false, // NEEDED, DON'T OMIT THIS
     }).done(function (data) {
       console.log(data);
     });
+
+    // $.ajax({
+    //   url: url_post,
+    //   type: "POST",
+    //   data: data,
+    // }).done(function (data) {
+    //   console.log(data);
+    // });
+  });
+
+  $(document).on("click", ".mainBG", function (e) {
+    console.log(e.target);
+
+    if (!$(e.target).closest(".categoryDropdownContainer")) {
+      alert("!");
+      $(".categoryContainer").removeClass("open");
+    }
   });
 
   $(document).on("click", ".categoryContainer", function () {
@@ -231,7 +243,6 @@ $(document).ready(function () {
     let elem = $(this); // put the event element into a variable, to be able to access it in the ajax request
     let action = "addLike";
     let postID = $(this).data("id");
-    let userID = $(this).data("user");
 
     // Check if the post has been liked by the user
     if ($(elem).hasClass("liked")) {
@@ -241,7 +252,6 @@ $(document).ready(function () {
     const data = {
       action: action,
       postID: postID,
-      userID: userID,
     };
 
     $.ajax({
@@ -249,7 +259,7 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      console.log("", data);
+      console.log(data);
 
       // Check if the post has been liked by the user
       if ($(elem).hasClass("liked")) {

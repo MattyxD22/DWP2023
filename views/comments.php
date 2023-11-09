@@ -21,12 +21,12 @@
 
                     <div class="action_like">
                         <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
-                        <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-id=" <?php echo $comment["PostID"] ?>"></i>
+                        <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-id="<?php echo $comment["PostID"] ?>"></i>
                     </div>
 
                     <div class="action_dislike">
                         <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex"></i>
-                        <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-id=" <?php echo $comment["PostID"] ?>"></i>
+                        <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-id="<?php echo $comment["PostID"] ?>"></i>
 
                     </div>
                 </div>
