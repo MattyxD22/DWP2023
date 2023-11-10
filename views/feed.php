@@ -42,7 +42,7 @@ mysqli_close($connection);
 
                 <div class="feed_item" data-id="<?php echo $value[0] ?>">
 
-                    <div class="feed_header h-1/6 align-center open_profile_event" data-userid="<?php echo $value[5] ?>">
+                    <div class="feed_header h-1/6 align-center cursor-pointer open_profile_event" data-userid="<?php echo $value[5] ?>">
                         <i class="bi bi-person-circle text-4xl"></i>
                         <span class="ms-3 font-bold"><?php echo $value[4] ?></span>
                     </div>
