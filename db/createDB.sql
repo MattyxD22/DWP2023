@@ -194,8 +194,6 @@ DELIMITER //
 CREATE PROCEDURE getComments(IN postID INT(11))
 BEGIN 
 
-BEGIN
-
 SELECT DISTINCT
     posttable.PostID,
     posttable.ParentID,
@@ -209,7 +207,7 @@ FROM
     posttable
 LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy
 WHERE
-    posttable.ParentID = PostID -- Assuming that the main posts have NULL ParentID
+    posttable.ParentID = PostID
 
 UNION
 
@@ -229,9 +227,6 @@ LEFT JOIN posttable p2 ON p2.ParentID = posttable.PostID
 LEFT JOIN usertable u2 ON u2.UserID = p2.CreatedBy
 WHERE
     posttable.ParentID = PostID;
-
-END
-
 
 END //
 
@@ -279,7 +274,7 @@ LEFT JOIN categoryposttable ON categoryposttable.CategoryID = categorytable.Cate
 LEFT JOIN posttable ON posttable.PostID = categoryposttable.PostID
 LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy
 LEFT JOIN mediatable ON mediatable.PostID = posttable.PostID
-WHERE categorytable.CategoryID = CategoryID
+WHERE categorytable.CategoryID = CategoryID;
 
 END //
 
