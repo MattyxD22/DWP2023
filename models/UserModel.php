@@ -175,4 +175,8 @@ class UserModel extends BaseModel
             echo $e->getMessage();
         }
     }
+
+    function userPage($userID) {
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/profile.php?userid=' . urlencode($userID));
+    }    
 }

@@ -246,7 +246,7 @@ $(document).ready(function () {
     };
 
     $.ajax({
-      url: url_sidebar,
+      url: url_user,
       type: "POST",
       data: data,
     }).done(function (data) {
@@ -259,9 +259,23 @@ $(document).ready(function () {
     e.stopPropagation();
     e.preventDefault();
 
-    const name = $(this).data("name");
+    const userID = $(this).data("userid");
 
-    alert("cliked on user profile: " + name);
+    const data = {
+      action: "fromPost",
+      userID: userID
+    }
+
+    $.ajax({
+      url: url_user,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+
+    // alert("cliked on user profile: " + userID);
   });
 
     $(document).on("click", ".updateUserBtn", function () {
