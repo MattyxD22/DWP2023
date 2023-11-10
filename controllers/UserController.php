@@ -10,7 +10,7 @@ $userModel = new UserModel();
 if ($_POST) {
     // This checks if a request was send from $ajax/javascript. 
     $action = $_POST["action"];
-} else if ($_GET) {
+} else if ($_GET && isset($_GET["action"])) {
     // retrieve action parameter from _GET requests
     $action = $_GET["action"];
 } else {
@@ -91,6 +91,10 @@ switch ($action) {
         break;
     case "fetchFollowers":
         
+        break;
+    case "fromPost":
+        $userID = $_POST["userID"];
+        $userModel->userPage($userID);
         break;
 
 }

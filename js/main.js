@@ -2,6 +2,7 @@ $(document).ready(function () {
   const url_user = "../controllers/UserController.php";
   const url_post = "../controllers/PostController.php";
   const url_sidebar = "../controllers/sidebarController.php";
+  const url_admin = "../controllers/AdminController.php";
 
   $(document).on("click", ".btn_categories", function () {
     const data = {
@@ -234,6 +235,22 @@ $(document).ready(function () {
       $(".state_col").append(data);
     });
   });
+  
+  // Admin
+  $(document).on("click", ".admin_btn", function () {
+    const data = {
+      action: "admin",
+    };
+
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
 
   $(document).on("click", ".submit_comment", function () {
     const container = $(this).closest(".postComment_Container");
@@ -262,7 +279,7 @@ $(document).ready(function () {
     };
 
     $.ajax({
-      url: url_sidebar,
+      url: url_user,
       type: "POST",
       data: data,
     }).done(function (data) {
@@ -333,8 +350,6 @@ $(document).ready(function () {
       data: data,
     }).done(function (data) {
       console.log(data);
-
-      // Check if the post has been liked by the user
       if ($(elem).hasClass("liked")) {
         // prepare data obj for removinf the like
         // remove "like" class so icon wont be red
@@ -345,4 +360,72 @@ $(document).ready(function () {
       }
     });
   });
+
+  $(document).on("click", ".open_profile_event", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const userID = $(this).data("userid");
+
+    const data = {
+      action: "fromPost",
+      userID: userID
+    }
+
+    $.ajax({
+      url: url_user,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+
+    // alert("cliked on user profile: " + userID);
+  });
+
+    $(document).on("click", ".updateUserBtn", function () {
+    const container = $(this).closest(".updateUserContainer");
+
+    const user = container.find(".selectedUserToUpdate").val();
+    const userBan = container.find(".selectedUserBanStatus").is(':checked');
+    const userNewEmail = container.find(".newEmail").val();
+    const userNewPassword = container.find(".newPassword").val();
+
+    const data = {
+      action: "updateUser",
+      user: user,
+      userBan: userBan,
+      userNewEmail: userNewEmail,
+      userNewPassword: userNewPassword
+    };
+
+    $.ajax({
+      url: url_admin,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
+    });
+  });
+
+  $(document).on("click", ".followUnfollowBtn", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    /* const userID = $(this).data("userid");
+
+    const data = {
+      action: "fromPost",
+      userID: userID
+    }
+
+    $.ajax({
+      url: url_user,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    }); */
 });

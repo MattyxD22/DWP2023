@@ -33,6 +33,9 @@ switch ($action) {
     case "logout":
         $sidebarModel->logOut();
         break;
+    case "admin":
+        $sidebarModel->loadAdminPage();
+        break;
 }
 
 

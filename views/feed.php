@@ -8,7 +8,8 @@ require("mainBG.php");
 
 $connection = mysqli_connect(DB_SERVER, DB_USER, DB_PASS);
 
-$query = "SELECT posttable.PostID, posttable.Title, posttable.Description, posttable.CreatedDate, usertable.Username FROM posttable LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID IS NULL";
+
+$query = "SELECT posttable.PostID, posttable.Title, posttable.Description, posttable.CreatedDate, usertable.Username, usertable.UserID FROM posttable LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID IS NULL";
 
 //$db = mysqli_connect(DB_NAME, DB_USER, DB_PASS, DB_NAME) or die("error opening mysqli");
 $db_conn = mysqli_select_db($connection, DB_NAME);
@@ -37,10 +38,34 @@ mysqli_close($connection);
             <?php include('../views/sideBar.php') ?>
         </div>
         <div class="feed_col w-full h-full flex flex-col overflow-y-auto py-3 px-3 state_col">
-            <?php foreach ($results as $key => $value) {
+            <?php foreach ($results as $key => $value) { ?>
+
+                <div class="feed_item" data-id="<?php echo $value[0] ?>">
+
+                    <div class="feed_header h-1/6 align-center open_profile_event" data-userid="<?php echo $value[5] ?>">
+                        <i class="bi bi-person-circle text-4xl"></i>
+                        <span class="ms-3 font-bold"><?php echo $value[4] ?></span>
+                    </div>
+                    <div class="feed_content h-4/6">
+
+                    </div>
+                    <div class="feed_footer h-1/6 pt-2">
+
+                        <div class="likes_div pe-4 my-auto">
+
+                            <span class="text-red-600 text-l font-bold">600</span>
+                            <span class="text-white text-l font-bold ms-1">Likes</span>
+
+                        </div>
+
+                        <div class="dislikes_div pe-4 my-auto">
+                            <span class="text-red-600 text-l font-bold">32</span>
+                            <span class="text-white text-l font-bold ms-1">Dislikes</span>
+                        </div>
 
 
-                include('./feedItem.php');
+                        <?php
+                // include('./feedItem.php');
             } ?>
         </div>
     </div>

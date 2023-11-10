@@ -23,7 +23,6 @@ CREATE TABLE UserTable(
 
 
 CREATE TABLE PostTable(
-
     PostID INT(11) AUTO_INCREMENT PRIMARY KEY,
     ParentID INT(11),
     Description TEXT,
@@ -51,9 +50,6 @@ CREATE TABLE MediaTable(
     PostID INT(11),
     FOREIGN KEY(PostID) REFERENCES PostTable(PostID)
     ) ENGINE = INNODB;
-
-
-
 
 CREATE TABLE FollowingTable (
     ID INT(11) AUTO_INCREMENT PRIMARY KEY,
