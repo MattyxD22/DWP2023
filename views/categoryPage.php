@@ -1,32 +1,12 @@
-<?php
-
-
-
-require("../db/connection.php");
-//require("mainBG.php");
-
-$connection = mysqli_connect(DB_SERVER, DB_USER, DB_PASS);
-
-//$db = mysqli_connect(DB_NAME, DB_USER, DB_PASS, DB_NAME) or die("error opening mysqli");
-$db_conn = mysqli_select_db($connection, DB_NAME);
-$data = mysqli_query($connection, "SELECT Title FROM CategoryTable");
-$results = mysqli_fetch_all($data);
-
-// foreach ($results as $key => $value) {
-//     echo $value[0];
-// }
-
-?>
-
 <div class="w-full h-full flex flex-col category_mainContainer">
 
     <?php if (isset($results) && !empty($results)) { ?>
         <?php foreach ($results as $key => $value) {
 
-            $title = $value[0];
+            $title = $value["Title"];
 
         ?>
-            <div class="categoryRow flex flex-col py-3">
+            <div class="categoryRow_categoryPage flex flex-col py-3">
 
                 <div class="categoryHeader pb-3 sticky left-0">
                     <label class="text-red-600">
@@ -34,32 +14,113 @@ $results = mysqli_fetch_all($data);
                     </label>
                 </div>
 
-                <div class="categoryContent flex flex-row">
+                <div class="categoryContent flex flex-row h-full">
 
                     <?php
 
-                    for ($i = 0; $i < 10; $i++) { ?>
+                    foreach ($posts as $key => $post) {
+                        //$arr = json_decode($post, true);
+                        if ($post->CategoryID == $value["CategoryID"] && $post->PostID != null) {
 
-                        <div class="imageContainer flex flex-col px-2">
-                            <div class="imagePlaceholder"></div>
-                            <div class="imageContext flex flex-col">
-                                <span class="flex text-red-600 flex-row">Title test <?php echo $i ?> </span>
+                    ?>
 
+                            <div class="imageContainer category_item flex flex-col px-2 py-2 mx-2 h-full" data-id="<?php echo $post->PostID ?>">
+                                <div class="imagePlaceholder">
+                                    <?php if ($post->ImgData != null) { ?>
+                                        <img class="h-auto max-w-full mx-auto my-auto" src="data:image/jpeg;base64,<?php echo base64_encode($post["ImgData"]); ?>">
+                                    <?php } ?>
+                                </div>
+                                <div class="imageContext flex flex-col">
+                                    <div class="category_item_header py-2">
+                                        <span class="flex text-red-600 flex-row font-bold  h-[3.5rem]"><?php echo $post->Title ?> </span>
+
+                                    </div>
+                                    <!-- <div class="category_item_content"></div> -->
+                                    <div class="category_item_footer flex flex-row">
+                                        <div class="actions_div flex flex-row my-auto">
+
+                                            <div class="action_like flex flex-row pe-2">
+                                                <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
+                                                <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-id="<?php echo $post->PostID ?>"></i>
+                                                <span class="mx-2 text-red-600"><?php echo $post->Likes ?></span>
+                                            </div>
+
+                                            <div class="action_dislike flex flex-row pe-2">
+                                                <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex"></i>
+                                                <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-id="<?php echo $post->PostID ?>"></i>
+                                                <span class="mx-2 text-red-600"><?php echo $post->Dislikes ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
+                                            <i class="bi bi-chat-square-heart not_reposted"></i>
+                                            <i class="bi bi-chat-square-heart-fill reposted"></i>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
-                        </div>
-
-                    <?php } ?>
+                    <?php }
+                    } ?>
 
                 </div>
             </div>
+    <?php }
+    } ?>
+
+    <div class="categoryRow_categoryPage flex flex-col py-3">
+
+        <div class="categoryHeader pb-3 sticky left-0">
+            <label class="text-red-600">
+                Uncategorized
+            </label>
+        </div>
+
+        <div class="categoryContent flex flex-row h-full">
+
+            <?php
+            foreach ($resultsUncatorized as $key => $post) { ?>
+                <div class="imageContainer category_item flex flex-col px-2 py-2 mx-2 h-full" data-id="<?php echo $post["PostID"] ?>">
+                    <div class="imagePlaceholder flex">
+
+                        <?php if ($post["ImgData"] != null) { ?>
+                            <img class="h-auto max-w-full mx-auto my-auto" src="data:image/jpeg;base64,<?php echo base64_encode($post["ImgData"]); ?>">
+                        <?php } ?>
 
 
 
+                    </div>
+                    <div class="imageContext flex flex-col">
+                        <div class="category_item_header py-2">
+                            <span class="flex text-red-600 flex-row font-bold h-[3.5rem]"><?php echo $post["Title"] ?> </span>
 
+                        </div>
+                        <!-- <div class="category_item_content"></div> -->
+                        <div class="category_item_footer flex flex-row">
+                            <div class="actions_div flex flex-row my-auto">
 
-        <?php } ?>
-    <?php } ?>
+                                <div class="action_like flex flex-row pe-2">
+                                    <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
+                                    <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-id="<?php echo $post["PostID"] ?>"></i>
+                                    <span class="mx-2 text-red-600"><?php echo $post["Likes"] ?></span>
+                                </div>
 
+                                <div class="action_dislike flex flex-row pe-2">
+                                    <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex"></i>
+                                    <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-id="<?php echo $post["PostID"] ?>"></i>
+                                    <span class="mx-2 text-red-600"><?php echo $post["Dislikes"] ?></span>
+                                </div>
+                            </div>
+                            <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
+                                <i class="bi bi-chat-square-heart not_reposted"></i>
+                                <i class="bi bi-chat-square-heart-fill reposted"></i>
+                            </div>
+                        </div>
 
+                    </div>
+                </div>
+            <?php } ?>
+
+        </div>
+    </div>
 
 </div>

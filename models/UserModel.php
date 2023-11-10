@@ -2,7 +2,6 @@
 
 namespace models;
 
-session_start();
 require_once 'BaseModel.php';
 class UserModel extends BaseModel
 {
@@ -52,7 +51,7 @@ class UserModel extends BaseModel
             $cxn = parent::connectToDB();
 
             // First, try treating the input as a username
-            $statement = "SELECT UserID, password FROM usertable WHERE username = :input LIMIT 1";
+            $statement = "SELECT UserID, IsAdmin, password FROM usertable WHERE username = :input AND (Banned IS NULL OR Banned = 0) LIMIT 1";
             $handle = $cxn->prepare($statement);
             $handle->bindParam(':input', $username);
             $handle->execute();
@@ -60,7 +59,7 @@ class UserModel extends BaseModel
 
             // If no match was found for username, try treating the input as an email
             if (!$result) {
-                $statement = "SELECT UserID, password FROM usertable WHERE email = :input LIMIT 1";
+                $statement = "SELECT UserID, IsAdmin, password FROM usertable WHERE email = :input AND (Banned IS NULL OR Banned = 0) LIMIT 1";
                 $handle = $cxn->prepare($statement);
                 $handle->bindParam(':input', $username);
                 $handle->execute();
@@ -70,7 +69,13 @@ class UserModel extends BaseModel
             // Verify the password
             if ($result && password_verify($password, $result['password'])) {
                 $_SESSION["UserID"] = $result["UserID"];
+                if ($result["IsAdmin"] == 1) {
+                    $_SESSION["isAdmin"] = true;
+                } else {
+                    $_SESSION["isAdmin"] = false;
+                }
                 session_write_close();
+                //return include("../views/feedOnly.php");
                 header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/feed.php');
             } else {
                 return 0;
@@ -96,7 +101,8 @@ class UserModel extends BaseModel
     {
     }
 
-    function fetchAmountOfFollowers($userID) {
+    function fetchAmountOfFollowers($userID)
+    {
         try {
             $cxn = parent::connectToDB();
             $statement = "SELECT COUNT(*) AS NumberOfFollowers FROM FollowingTable WHERE FollowingID = :userID";
@@ -111,7 +117,8 @@ class UserModel extends BaseModel
         }
     }
 
-    function fetchAmountOfFollowing($userID) { 
+    function fetchAmountOfFollowing($userID)
+    {
         try {
             $cxn = parent::connectToDB();
             $statement = "SELECT COUNT(*) AS FollowingCount FROM FollowingTable WHERE UserID = :userID;";
@@ -126,7 +133,8 @@ class UserModel extends BaseModel
         }
     }
 
-    function fetchAmountOfPosts($userID) { 
+    function fetchAmountOfPosts($userID)
+    {
         try {
             $cxn = parent::connectToDB();
             $statement = "SELECT COUNT(*) AS NumberOfPostsWithoutParent FROM PostTable WHERE CreatedBy = :userID AND ParentID IS NULL;";
@@ -141,7 +149,8 @@ class UserModel extends BaseModel
         }
     }
 
-    function fetchUsernameById($userID) {
+    function fetchUsernameById($userID)
+    {
         try {
             $cxn = parent::connectToDB();
             $statement = "SELECT username FROM usertable WHERE userid = :userID;";
@@ -156,7 +165,8 @@ class UserModel extends BaseModel
         }
     }
 
-    function fetchPostsById($userID) {
+    function fetchPostsById($userID)
+    {
         try {
             $cxn = parent::connectToDB();
             $statement = "SELECT PostID, Description, CreatedDate, CreatedBy, Title, CategoryID FROM PostTable WHERE ParentID IS NULL AND CreatedBy = :userID ORDER BY PostID DESC;";
@@ -170,4 +180,8 @@ class UserModel extends BaseModel
             echo $e->getMessage();
         }
     }
+
+    function userPage($userID) {
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/profile.php?userid=' . urlencode($userID));
+    }    
 }

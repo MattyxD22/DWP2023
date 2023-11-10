@@ -12,6 +12,9 @@ if ($_POST) {
 } else if ($_GET) {
     // retrieve action parameter from _GET requests
     $action = $_GET["action"];
+} else if ($_FILES) {
+    // retrieve action parameter from _GET requests
+    $action = $_FILES["action"];
 } else {
     // debug/test
     $action = $_ACTION["action"];
@@ -20,14 +23,32 @@ if ($_POST) {
 
 switch ($action) {
     case "createPost":
-
+        print_r($_FILES);
+        print_r($_POST);
         $title = $_POST["title"];
         $description = $_POST["description"];
-        $userID = 0;
-        $postID = $postModel->createPost($userID, $title, $description);
+        $categories = $_POST["categories"];
+        $userID = $_SESSION["UserID"];
+        $file = $_FILES["file"]["tmp_name"];
+        $fileData = file_get_contents($file);
+        // $returnDataTest = [
+        //     'title' => $title,
+        //     'description' => $description,
+        //     'userID' => $userID,
+        //     'file' => $file['name'],
+        // ];
+
+        //print_r($returnDataTest);
+
+        // $userID = $_SESSION["UserID"];
+        // $title = $_POST["title"];
+        // $description = $_POST["description"];
+        // $categories = $_POST["categories"];
+        // $files = "";
 
 
-        return json_encode("It works???");
+        //return $returnDataTest;
+        $postID = $postModel->createPost($userID, $title, $description, $categories, $fileData);
 
         //return "It works???";
         break;
@@ -44,13 +65,26 @@ switch ($action) {
 
         $postID = $_POST["postID"];
         $comment = $_POST["comment"];
-        $userID = 2;
+        $userID = $_SESSION["UserID"];
 
         return $postModel->createComment($postID, $comment, $userID);
 
         break;
-}
 
-function render_view($path, array $args)
-{
+    case "addLike":
+
+        $postID = $_POST["postID"];
+        $postID = $_SESSION["UserID"];
+
+        $postModel->addLike($postID, $userID);
+
+
+        break;
+    case "removeLike":
+
+        $postID = $_POST["postID"];
+        $postID = $_SESSION["UserID"];
+        $postModel->removeLike($postID, $userID);
+
+        break;
 }

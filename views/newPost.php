@@ -1,12 +1,3 @@
-<?php
-
-require("../db/connection.php")
-
-
-
-?>
-
-
 <div class="newPost_col w-full h-full flex flex-col overflow-y-auto py-3 px-3 justify-center">
     <form class="h-full w-full flex flex-col" method="post" action="../controllers/">
         <div class="container newPost_container flex flex-col px-4 py-4 my-auto">
@@ -21,20 +12,19 @@ require("../db/connection.php")
             <div class="newPost_CategoryCol flex flex-col h-1/8 py-2">
                 <span class="text-red-600 text-2xl font-bold mb-2">Select one or more categories</span>
 
-                <div class="categoryContainer content-center flex flex-row justify-center relative">
+                <div class="categoryContainer relative content-center flex flex-row justify-center relative">
 
                     <span class="text-red-600 flex my-auto">Categories</span>
                     <i class="bi bi-chevron-down absolute text-red-600"></i>
 
                     <div class="categoryDropdownContainer">
 
-                        <?php
-                        $counter = 1;
-                        while ($counter <= 10) {
-                            echo '<div class="flex flex-row categoryRow py-1" data-id="' . $counter . '"><input  class="categoryCheckbox my-auto" type="checkbox"><span class="ms-2 my-auto flex text-red-600">Category ' . $counter . '</span></div>';
-                            $counter++;
-                        }
-                        ?>
+                        <?php foreach ($categories as $key => $category) { ?>
+                            <div class="flex flex-row categoryRow py-1" data-id="<?php echo $category["CategoryID"] ?>">
+                                <input class="categoryCheckbox my-auto" type="checkbox">
+                                <span class="ms-2 my-auto flex text-red-600"><?php echo $category["Title"] ?></span>
+                            </div>
+                        <?php } ?>
 
                     </div>
 

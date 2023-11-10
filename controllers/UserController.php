@@ -10,7 +10,7 @@ $userModel = new UserModel();
 if ($_POST) {
     // This checks if a request was send from $ajax/javascript. 
     $action = $_POST["action"];
-} else if ($_GET) {
+} else if ($_GET && isset($_GET["action"])) {
     // retrieve action parameter from _GET requests
     $action = $_GET["action"];
 } else {
@@ -92,6 +92,10 @@ switch ($action) {
     case "fetchFollowers":
         
         break;
+    case "fromPost":
+        $userID = $_POST["userID"];
+        $userModel->userPage($userID);
+        break;
 
 }
 
@@ -125,15 +129,4 @@ class UserController {
         $posts = $userModel->fetchPostsById($userID);
         return $posts;
     }
-}
-
-function render_view($path, array $args)
-{
-    ob_start();
-    // USE 
-    echo DOC_ROOT_PATH . $path;
-    include(DOC_ROOT_PATH . $path);
-    $var = ob_get_contents();
-    ob_end_clean();
-    return $var;
 }

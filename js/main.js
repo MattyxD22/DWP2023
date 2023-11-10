@@ -2,6 +2,7 @@ $(document).ready(function () {
   const url_user = "../controllers/UserController.php";
   const url_post = "../controllers/PostController.php";
   const url_sidebar = "../controllers/sidebarController.php";
+  const url_admin = "../controllers/AdminController.php";
 
   $(document).on("click", ".btn_categories", function () {
     const data = {
@@ -46,20 +47,6 @@ $(document).ready(function () {
     });
   });
 
-  $(document).on("click", ".bi-hand-thumbs-up-fill", function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    let id = $(this).data("id");
-    console.log("liked post with ID: ", id);
-  });
-
-  $(document).on("click", ".bi-hand-thumbs-down-fill", function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    let id = $(this).data("id");
-    console.log("disliked post with ID: ", id);
-  });
-
   $(document).on("click", ".createPost_btn", function () {
     const data = {
       action: "newPost",
@@ -70,7 +57,6 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      console.log($(".state_col"));
       $(".state_col").empty();
       $(".state_col").append(data);
     });
@@ -100,8 +86,8 @@ $(document).ready(function () {
       data: data,
     }).done(function (data) {
       console.log($(".mainBG"));
-      $(".mainBG").empty();
-      $(".mainBG").append(data);
+      $(".state_col").empty();
+      $(".state_col").append(data);
     });
   });
 
@@ -118,7 +104,7 @@ $(document).ready(function () {
 
     container.find(".categoryRow").each(function () {
       if ($(this).find(".categoryCheckbox").prop("checked") == true) {
-        categories.push({ categoryID: $(this).data("id") });
+        categories.push($(this).data("id"));
       }
     });
 
@@ -129,34 +115,47 @@ $(document).ready(function () {
       categories: categories,
     };
 
-    // formData.append("data", data);
+    formData.append("action", "createPost");
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("categories", categories);
 
-    // const input = document.getElementById("file_input");
+    const input = document.getElementById("file_input");
 
-    // $(input.files).each(function () {
-    //   console.log($(this)[0]);
-    //   formData.append("file", $(this)[0], $(this)[0].name);
-    // });
+    $(input.files).each(function () {
+      // console.log($(this)[0]);
+      formData.append("file", $(this)[0], $(this)[0].name);
+    });
 
-    // console.log(formData);
-
-    // $.ajax({
-    //   url: "url_post",
-    //   data: formData,
-    //   type: "POST",
-    //   contentType: false, // NEEDED, DON'T OMIT THIS
-    //   processData: false, // NEEDED, DON'T OMIT THIS
-    // }).done(function (data) {
-    //   console.log(data);
-    // });
+    console.log(formData);
 
     $.ajax({
       url: url_post,
+      data: formData,
+      dataType: "JSON",
       type: "POST",
-      data: data,
+      contentType: false, // NEEDED, DON'T OMIT THIS
+      processData: false, // NEEDED, DON'T OMIT THIS
     }).done(function (data) {
       console.log(data);
     });
+
+    // $.ajax({
+    //   url: url_post,
+    //   type: "POST",
+    //   data: data,
+    // }).done(function (data) {
+    //   console.log(data);
+    // });
+  });
+
+  $(document).on("click", ".mainBG", function (e) {
+    console.log(e.target);
+
+    if (!$(e.target).closest(".categoryDropdownContainer")) {
+      alert("!");
+      $(".categoryContainer").removeClass("open");
+    }
   });
 
   $(document).on("click", ".categoryContainer", function () {
@@ -180,7 +179,42 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      console.log(data);
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
+
+  $(document).on("click", ".category_item", function () {
+    const postID = $(this).data("id");
+
+    const data = {
+      action: "openPost",
+      postID: postID,
+    };
+
+    $.ajax({
+      url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
+
+  $(document).on("click", ".profile_item", function () {
+    const postID = $(this).data("id");
+
+    const data = {
+      action: "openPost",
+      postID: postID,
+    };
+
+    $.ajax({
+      url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
       $(".state_col").empty();
       $(".state_col").append(data);
     });
@@ -190,6 +224,22 @@ $(document).ready(function () {
   $(document).on("click", ".profile_btn", function () {
     const data = {
       action: "profile",
+    };
+
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
+  
+  // Admin
+  $(document).on("click", ".admin_btn", function () {
+    const data = {
+      action: "admin",
     };
 
     $.ajax({
@@ -229,7 +279,7 @@ $(document).ready(function () {
     };
 
     $.ajax({
-      url: url_sidebar,
+      url: url_user,
       type: "POST",
       data: data,
     }).done(function (data) {
@@ -238,12 +288,145 @@ $(document).ready(function () {
     });
   });
 
+  $(document).on("click", ".reply_comment_container", function () {
+    $(this).toggleClass("open");
+  });
+
+  $(document).on("click", ".reply_to_comment_container", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+  });
+
+  $(document).on("click", ".close_popup", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    $(this).closest(".reply_comment_container").removeClass("open");
+  });
+
+  $(document).on("click", ".submit_reply", function () {
+    const container = $(this).closest(".reply_to_comment_container");
+
+    let reply = container.find(".std_input").val();
+    let commentID = $(this).data("id");
+
+    const data = {
+      action: "createComment",
+      comment: reply,
+      postID: commentID,
+    };
+
+    $.ajax({
+      url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      container.find(".std_input").val("");
+      container.closest(".reply_comment_container").removeClass("open");
+    });
+  });
+
+  $(document).on("click", ".like_post", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    let elem = $(this); // put the event element into a variable, to be able to access it in the ajax request
+    let action = "addLike";
+    let postID = $(this).data("id");
+
+    // Check if the post has been liked by the user
+    if ($(elem).hasClass("liked")) {
+      action = "removeLike";
+    }
+
+    const data = {
+      action: action,
+      postID: postID,
+    };
+
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
+      if ($(elem).hasClass("liked")) {
+        // prepare data obj for removinf the like
+        // remove "like" class so icon wont be red
+        $(elem).removeClass("like");
+      } else {
+        // add "like" class to icon will be red
+        $(elem).addClass("like");
+      }
+    });
+  });
+
   $(document).on("click", ".open_profile_event", function (e) {
     e.stopPropagation();
     e.preventDefault();
 
-    const name = $(this).data("name");
+    const userID = $(this).data("userid");
 
-    alert("cliked on user profile: " + name);
+    const data = {
+      action: "fromPost",
+      userID: userID
+    }
+
+    $.ajax({
+      url: url_user,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+
+    // alert("cliked on user profile: " + userID);
+  });
+
+    $(document).on("click", ".updateUserBtn", function () {
+    const container = $(this).closest(".updateUserContainer");
+
+    const user = container.find(".selectedUserToUpdate").val();
+    const userBan = container.find(".selectedUserBanStatus").is(':checked');
+    const userNewEmail = container.find(".newEmail").val();
+    const userNewPassword = container.find(".newPassword").val();
+
+    const data = {
+      action: "updateUser",
+      user: user,
+      userBan: userBan,
+      userNewEmail: userNewEmail,
+      userNewPassword: userNewPassword
+    };
+
+    $.ajax({
+      url: url_admin,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
+    });
+  });
+
+  $(document).on("click", ".followUnfollowBtn", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    /* const userID = $(this).data("userid");
+
+    const data = {
+      action: "fromPost",
+      userID: userID
+    }
+
+    $.ajax({
+      url: url_user,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    }); */
   });
 });

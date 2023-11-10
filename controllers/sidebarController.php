@@ -17,7 +17,7 @@ if ($_POST) {
 switch ($action) {
 
     case "newPost":
-        $sidebarModel->loadCreatePost();
+        return $sidebarModel->loadCreatePost();
         //redirect("http://localhost/DWP2023/views/newPost.php");
         //return $sidebarModel->loadCreatePost();
         break;
@@ -32,6 +32,9 @@ switch ($action) {
         break;
     case "logout":
         $sidebarModel->logOut();
+        break;
+    case "admin":
+        $sidebarModel->loadAdminPage();
         break;
 }
 

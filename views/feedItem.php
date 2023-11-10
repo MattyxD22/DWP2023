@@ -1,10 +1,24 @@
-<div class="feed_item" data-id="1">
-
+<div class="feed_item" data-id="<?php echo $value[0] ?>">
+    <?php foreach ($imgObj as $key => $test) {
+        echo $test;
+    } ?>
     <div class="feed_header h-1/6 align-center">
         <i class="bi bi-person-circle text-4xl"></i>
-        <span class="ms-3 font-bold">xXUsername31231Xx</span>
+        <span class="ms-3 font-bold"><?php echo $value[4] ?></span>
     </div>
-    <div class="feed_content h-4/6">
+    <div class="feed_content flex flex-col h-4/6">
+
+        <div class="feed_title_container py-2 px-2">
+            <span><?php echo $value[1] ?></span>
+        </div>
+
+        <div class="feed_title_container py-2 px-2">
+            <span><?php echo $value[2] ?></span>
+        </div>
+
+
+
+
 
     </div>
     <div class="feed_footer h-1/6 pt-2">
@@ -36,21 +50,17 @@
 
             <div class="action_like">
                 <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
-                <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer" data-id="1"></i>
+                <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $value[0] ?>"></i>
 
             </div>
 
             <div class="action_dislike">
                 <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex"></i>
-                <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer" data-id="1"></i>
+                <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $value[0] ?>"></i>
 
             </div>
 
-
-
-
         </div>
-
 
     </div>
 

@@ -8,12 +8,27 @@ require("mainBG.php");
 
 $connection = mysqli_connect(DB_SERVER, DB_USER, DB_PASS);
 
-$query =    "SELECT posttable.PostID, posttable.Title, posttable.Description, posttable.CreatedDate, usertable.Username FROM posttable LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy;";
+
+$query = "SELECT posttable.PostID, posttable.Title, posttable.Description, posttable.CreatedDate, usertable.Username, usertable.UserID FROM posttable LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID IS NULL";
 
 //$db = mysqli_connect(DB_NAME, DB_USER, DB_PASS, DB_NAME) or die("error opening mysqli");
 $db_conn = mysqli_select_db($connection, DB_NAME);
 $data = mysqli_query($connection, $query);
 $results = mysqli_fetch_all($data);
+
+$imgObj = [];
+
+foreach ($results as $result) {
+    $img_prepare = mysqli_prepare($connection, "CALL getPostImgs(?)");
+    $img_prepare->prepare($result[0]);
+
+    $img_prepare->execute();
+    $imgData = $img_prepare->fetch();
+    
+    $imgObj[] = $imgData;
+}
+
+
 mysqli_close($connection);
 ?>
 
@@ -27,12 +42,17 @@ mysqli_close($connection);
 
                 <div class="feed_item" data-id="<?php echo $value[0] ?>">
 
-                    <div class="feed_header h-1/6 align-center open_profile_event" data-name="<?php echo $value[4] ?>">
+                    <div class="feed_header h-1/6 align-center open_profile_event" data-userid="<?php echo $value[5] ?>">
                         <i class="bi bi-person-circle text-4xl"></i>
                         <span class="ms-3 font-bold"><?php echo $value[4] ?></span>
                     </div>
                     <div class="feed_content h-4/6">
-
+                        <div class="feed_title_container py-2 px-2">
+                            <span><?php echo $value[1] ?></span>
+                        </div>
+                        <div class="feed_title_container py-2 px-2">
+                            <span><?php echo $value[2] ?></span>
+                        </div>
                     </div>
                     <div class="feed_footer h-1/6 pt-2">
 
@@ -48,56 +68,26 @@ mysqli_close($connection);
                             <span class="text-white text-l font-bold ms-1">Dislikes</span>
                         </div>
 
-
-                        <div class="reposts_div pe-4 my-auto">
-                            <span class="text-red-600 text-l font-bold">10</span>
-                            <span class="text-white text-l font-bold ms-1">Reposts</span>
-                        </div>
-
-                        <div class="comments_div pe-4 my-auto">
-                            <span class="text-red-600 text-l font-bold">1024</span>
-                            <span class="text-white text-l font-bold ms-1">Comments</span>
-                        </div>
-
-                        <div class="actions_div flex flex-row ms-auto my-auto">
-
-                            <div class="action_like">
-                                <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
-                                <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer" data-id="<?php echo $value[0] ?>"></i>
-
-                            </div>
-
-                            <div class="action_dislike">
-                                <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex"></i>
-                                <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer" data-id="<?php echo $value[0] ?>"></i>
-
-                            </div>
-
-
-
-
-                        </div>
-
-
                     </div>
-
                 </div>
 
-                <!-- //include('./feedItem.php'); -->
-            <?php } ?>
+
+                        <?php
+                // include('./feedItem.php');
+            } ?>
         </div>
     </div>
 </div>
 
 
 <!--Copy paste for later -->
-<!-- <div class="container-fluid flex flex-row w-full h-full">
-    <div class="columns-2 w-full flex flex-row">
-        <div class="sidebar_col w-1/5">
+<!-- <div class=" container-fluid flex flex-row w-full h-full">
+                                    <div class="columns-2 w-full flex flex-row">
+                                        <div class="sidebar_col w-1/5">
 
-        </div>
-        <div class="feed_col w-4/5">
+                                        </div>
+                                        <div class="feed_col w-4/5">
 
-        </div>
-    </div>
-</div> -->
+                                        </div>
+                                    </div>
+                            </div> -->
