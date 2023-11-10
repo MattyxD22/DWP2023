@@ -44,7 +44,7 @@ $userPosts = $userController->fetchPosts($userID);
             if (isset($_GET['userid']) && $_SESSION['UserID'] != $userID) {
         ?>
         <div>
-            <button type="button" class="std_button followUnfollowBtn">
+            <button type="button" class="std_button followUnfollowBtn" data-userid="<?php echo $userID?>">
                 <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
             </button>
         </div>

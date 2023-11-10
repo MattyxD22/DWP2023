@@ -413,10 +413,10 @@ $(document).ready(function () {
     e.stopPropagation();
     e.preventDefault();
 
-    /* const userID = $(this).data("userid");
+    const userID = $(this).data("userid");
 
     const data = {
-      action: "fromPost",
+      action: "followUser",
       userID: userID
     }
 
@@ -425,8 +425,7 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      $(".state_col").empty();
-      $(".state_col").append(data);
-    }); */
+      console.log(data);
+    });
   });
 });

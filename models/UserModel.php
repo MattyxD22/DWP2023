@@ -183,5 +183,34 @@ class UserModel extends BaseModel
 
     function userPage($userID) {
         header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/profile.php?userid=' . urlencode($userID));
-    }    
+    }  
+    
+    function followUser($userID) {
+    try {
+        $currentUser = $_SESSION["UserID"];
+
+        $cxn = parent::connectToDB();
+
+        $checkStatement = "SELECT * FROM FollowingTable WHERE UserID = :currentUser AND FollowingID = :targetUser";
+        $checkQuery = $cxn->prepare($checkStatement);
+        $checkQuery->bindParam(":currentUser", $currentUser);
+        $checkQuery->bindParam(":targetUser", $userID);
+        $checkQuery->execute();
+
+        if ($checkQuery->rowCount() > 0) {
+            $statement = "DELETE FROM FollowingTable WHERE UserID = :currentUser AND FollowingID = :targetUser";
+        } else {
+            $statement = "INSERT INTO FollowingTable (UserID, FollowingID) VALUES (:currentUser, :targetUser)";
+        }
+
+        $query = $cxn->prepare($statement);
+        $query->bindParam(":currentUser", $currentUser);
+        $query->bindParam(":targetUser", $userID);
+        $query->execute();
+
+    } catch (\PDOException $e) {
+        echo $e->getMessage();
+    }
+}
+
 }
