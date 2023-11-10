@@ -1,5 +1,7 @@
-<div class="feed_item" data-id="<?php echo $value[4] ?>">
-
+<div class="feed_item" data-id="<?php echo $value[0] ?>">
+    <?php foreach ($imgObj as $key => $test) {
+        echo $test;
+    } ?>
     <div class="feed_header h-1/6 align-center">
         <i class="bi bi-person-circle text-4xl"></i>
         <span class="ms-3 font-bold"><?php echo $value[4] ?></span>
@@ -13,6 +15,8 @@
         <div class="feed_title_container py-2 px-2">
             <span><?php echo $value[2] ?></span>
         </div>
+
+
 
 
 

@@ -20,6 +20,8 @@ CREATE TABLE UserTable(
     MediaID INT(11)
 ) ENGINE = INNODB;
 
+
+
 CREATE TABLE PostTable(
 
     PostID INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -29,10 +31,17 @@ CREATE TABLE PostTable(
     CreatedBy INT(11),
     Title VARCHAR(50),   
     CategoryID INT(11),
-    FOREIGN KEY(CategoryID) REFERENCES CategoryTable(CategoryID),
     FOREIGN KEY(ParentID) REFERENCES PostTable(PostID),
     FOREIGN KEY(CreatedBy) REFERENCES UserTable(UserID)
 ) ENGINE = INNODB;
+
+CREATE TABLE CategoryPostTable(
+    ID INT(11) AUTO_INCREMENT PRIMARY KEY,
+    PostID INT(11),
+    CategoryID INT(11),
+    FOREIGN KEY(PostID) REFERENCES PostTable(PostID),
+    FOREIGN KEY(CategoryID) REFERENCES CategoryTable(CategoryID)
+ ) ENGINE = INNODB;
 
 CREATE TABLE MediaTable(
     MediaID INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -74,6 +83,7 @@ CREATE TABLE RepostTable(
 ) ENGINE = INNODB;
 
 ALTER TABLE usertable ADD FOREIGN KEY (MediaID) REFERENCES mediatable(MediaID);
+ALTER TABLE PostTable ADD FOREIGN KEY (CategoryID) REFERENCES CategoryPostTable(ID);
 
 insert into usertable (username, FName, LName, email) values ('jflipsen0', 'Jess', 'Flipsen', 'jflipsen0@latimes.com');
 insert into usertable (username, FName, LName, email) values ('fstanislaw1', 'Florette', 'Stanislaw', 'fstanislaw1@cam.ac.uk');
@@ -188,7 +198,43 @@ DELIMITER //
 CREATE PROCEDURE getComments(IN postID INT(11))
 BEGIN 
 
-SELECT posttable.Description, posttable.CreatedDate, postTable.CreatedBy, usertable.Username FROM posttable LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID = PostID; 
+BEGIN
+
+SELECT DISTINCT
+    posttable.PostID,
+    posttable.ParentID,
+    posttable.Description,
+    posttable.CreatedDate,
+    posttable.CreatedBy,
+    usertable.Username,
+    (SELECT COUNT(*) FROM likestable WHERE likestable.Type = 1 AND likestable.PostID = posttable.ParentID) AS 'Likes',
+    (SELECT COUNT(*) FROM likestable WHERE likestable.Type = 2 AND likestable.PostID = posttable.ParentID) AS 'Dislikes'
+FROM
+    posttable
+LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy
+WHERE
+    posttable.ParentID = PostID -- Assuming that the main posts have NULL ParentID
+
+UNION
+
+SELECT DISTINCT
+    p2.PostID,
+    p2.ParentID,
+    p2.Description,
+    p2.CreatedDate,
+    p2.CreatedBy,
+    u2.Username,
+    (SELECT COUNT(*) FROM likestable WHERE likestable.Type = 1 AND likestable.PostID = p2.ParentID) AS 'Likes',
+    (SELECT COUNT(*) FROM likestable WHERE likestable.Type = 2 AND likestable.PostID = p2.ParentID) AS 'Dislikes'
+FROM
+    posttable
+LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy
+LEFT JOIN posttable p2 ON p2.ParentID = posttable.PostID
+LEFT JOIN usertable u2 ON u2.UserID = p2.CreatedBy
+WHERE
+    posttable.ParentID = PostID;
+
+END
 
 
 END //
@@ -216,3 +262,54 @@ INSERT INTO mediatable(mediatable.MediaType, mediatable.UploadDate, mediatable.P
 END //
 
 DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE addPostToCategory(IN CategoryID INT(11), IN PostID INT(11))
+BEGIN 
+
+INSERT INTO CategoryPostTable(CategoryPostTable.PostID, CategoryPostTable.CategoryID) VALUES (PostID, CategoryID);
+
+
+END //
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE getPostsInCategory(IN CategoryID INT(11))
+BEGIN 
+
+SELECT posttable.PostID, posttable.CreatedDate, posttable.CreatedBy, posttable.Title, usertable.Username, (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 2) AS 'Dislikes', (SELECT COUNT(posttable.Description) FROM posttable WHERE posttable.ParentID IS NOT NULL AND posttable.PostID = categoryposttable.PostID) AS 'Comments', mediatable.ImgData FROM categorytable
+LEFT JOIN categoryposttable ON categoryposttable.CategoryID = categorytable.CategoryID
+LEFT JOIN posttable ON posttable.PostID = categoryposttable.PostID
+LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy
+LEFT JOIN mediatable ON mediatable.PostID = posttable.PostID
+WHERE categorytable.CategoryID = CategoryID
+
+END //
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE getPostImgs(IN PostID INT(11))
+BEGIN 
+
+SELECT mediatable.ImgData, mediatable.MediaID FROM mediatable WHERE mediatable.PostID = PostID;
+
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE getUncatorizedPosts()
+BEGIN 
+
+SELECT posttable.PostID, posttable.CreatedDate, posttable.CreatedBy, posttable.Title, usertable.Username, mediatable.ImgData, (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 2) AS 'Dislikes' FROM PostTable
+LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy
+LEFT JOIN mediatable ON mediatable.PostID = posttable.PostID
+WHERE posttable.CategoryID IS NULL;
+
+END //
+
+DELIMITER ;
+

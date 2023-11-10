@@ -14,6 +14,20 @@ $query = "SELECT posttable.PostID, posttable.Title, posttable.Description, postt
 $db_conn = mysqli_select_db($connection, DB_NAME);
 $data = mysqli_query($connection, $query);
 $results = mysqli_fetch_all($data);
+
+$imgObj = [];
+
+foreach ($results as $result) {
+    $img_prepare = mysqli_prepare($connection, "CALL getPostImgs(?)");
+    $img_prepare->prepare($result[0]);
+
+    $img_prepare->execute();
+    $imgData = $img_prepare->fetch();
+    
+    $imgObj[] = $imgData;
+}
+
+
 mysqli_close($connection);
 ?>
 

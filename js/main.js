@@ -107,12 +107,12 @@ $(document).ready(function () {
       }
     });
 
-    // const data = {
-    //   action: "createPost",
-    //   title: title,
-    //   description: description,
-    //   categories: categories,
-    // };
+    const data = {
+      action: "createPost",
+      title: title,
+      description: description,
+      categories: categories,
+    };
 
     formData.append("action", "createPost");
     formData.append("title", title);
@@ -178,7 +178,42 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      console.log(data);
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
+
+  $(document).on("click", ".category_item", function () {
+    const postID = $(this).data("id");
+
+    const data = {
+      action: "openPost",
+      postID: postID,
+    };
+
+    $.ajax({
+      url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
+
+  $(document).on("click", ".profile_item", function () {
+    const postID = $(this).data("id");
+
+    const data = {
+      action: "openPost",
+      postID: postID,
+    };
+
+    $.ajax({
+      url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
       $(".state_col").empty();
       $(".state_col").append(data);
     });
@@ -233,6 +268,44 @@ $(document).ready(function () {
     }).done(function (data) {
       $(".state_col").empty();
       $(".state_col").append(data);
+    });
+  });
+
+  $(document).on("click", ".reply_comment_container", function () {
+    $(this).toggleClass("open");
+  });
+
+  $(document).on("click", ".reply_to_comment_container", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+  });
+
+  $(document).on("click", ".close_popup", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    $(this).closest(".reply_comment_container").removeClass("open");
+  });
+
+  $(document).on("click", ".submit_reply", function () {
+    const container = $(this).closest(".reply_to_comment_container");
+
+    let reply = container.find(".std_input").val();
+    let commentID = $(this).data("id");
+
+    const data = {
+      action: "createComment",
+      comment: reply,
+      postID: commentID,
+    };
+
+    $.ajax({
+      url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      container.find(".std_input").val("");
+      container.closest(".reply_comment_container").removeClass("open");
     });
   });
 

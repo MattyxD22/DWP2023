@@ -23,20 +23,32 @@ if ($_POST) {
 
 switch ($action) {
     case "createPost":
-
-        $title = $_FILES["name"]["title"];
-        $description = $_FILES["description"];
+        print_r($_FILES);
+        print_r($_POST);
+        $title = $_POST["title"];
+        $description = $_POST["description"];
+        $categories = $_POST["categories"];
         $userID = $_SESSION["UserID"];
-        $file = $_FILES["file"];
-        $returnDataTest = [
-            'title' => $title,
-            'description' => $description,
-            'userID' => $userID,
-            'file' => $file['name'],
-        ];
+        $file = $_FILES["file"]["tmp_name"];
+        $fileData = file_get_contents($file);
+        // $returnDataTest = [
+        //     'title' => $title,
+        //     'description' => $description,
+        //     'userID' => $userID,
+        //     'file' => $file['name'],
+        // ];
+
+        //print_r($returnDataTest);
+
+        // $userID = $_SESSION["UserID"];
+        // $title = $_POST["title"];
+        // $description = $_POST["description"];
+        // $categories = $_POST["categories"];
+        // $files = "";
+
 
         //return $returnDataTest;
-        $postID = $postModel->createPost($userID, $title, $description, $file);
+        $postID = $postModel->createPost($userID, $title, $description, $categories, $fileData);
 
         //return "It works???";
         break;

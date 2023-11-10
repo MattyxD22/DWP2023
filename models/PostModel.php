@@ -5,7 +5,7 @@ namespace models;
 require_once 'BaseModel.php';
 class PostModel extends BaseModel
 {
-    function createPost($userID, $title, $description, $fileData)
+    function createPost($userID, $title, $description, $categories, $fileData)
     {
 
         try {
@@ -23,6 +23,21 @@ class PostModel extends BaseModel
             $postID =  $handleCreatePost->fetch(\PDO::FETCH_ASSOC);
             $cxn = null;
 
+            if (!empty($categories)) {
+
+                $cxn = parent::connectToDB();
+
+                foreach ($categories as $key => $category) {
+                    $addCategory = "CALL addPostToCategory(:CategoryID, :postID)";
+                    $handle_addCategory = $cxn->prepare($addCategory);
+                    $handle_addCategory->bindValue(":CategoryID", $category);
+                    $handle_addCategory->bindValue(":postID", $postID["PostID"]);
+                    $handle_addCategory->execute();
+                }
+
+                $cxn = null;
+            }
+
 
 
             if (!empty($fileData)) {
@@ -37,7 +52,7 @@ class PostModel extends BaseModel
                 $addImg = "CALL addFileToPost(:type, :postID, :file)";
                 $handle_addImg = $cxn->prepare($addImg);
                 $handle_addImg->bindValue(":type", 1);
-                $handle_addImg->bindValue(":postID", $postID);
+                $handle_addImg->bindValue(":postID", $postID["PostID"]);
                 $handle_addImg->bindParam(":file", $fileData);
                 $handle_addImg->execute();
                 $cxn = null;
@@ -62,6 +77,17 @@ class PostModel extends BaseModel
             $handle_getPost->bindValue(":postID", $sanitized_postID);
             $handle_getPost->execute();
             $post = $handle_getPost->fetch(\PDO::FETCH_ASSOC);
+
+            $handle_getPost->closeCursor();
+
+            $get_postImgs = "CALL getPostImgs(:postID)";
+            $handle_getPostImgs = $cxn->prepare($get_postImgs);
+            $handle_getPostImgs->bindValue(":postID", $sanitized_postID);
+            $handle_getPostImgs->execute();
+            header("content-type: image/jpeg");
+            $imgs = $handle_getPostImgs->fetch(\PDO::FETCH_ASSOC);
+            //print_r($imgs["ImgData"]);
+
             $cxn = null;
             //$cxn = parent::connectToDB();
 
@@ -107,6 +133,7 @@ class PostModel extends BaseModel
             $handle_getComment->bindValue(":postID", $sanitized_postID);
             $handle_getComment->execute();
             $comments = $handle_getComment->fetchAll(\PDO::FETCH_ASSOC);
+            
             $cnx = null;
 
             return include("../views/comments.php");
