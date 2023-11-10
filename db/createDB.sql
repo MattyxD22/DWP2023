@@ -56,8 +56,8 @@ CREATE TABLE FollowingTable (
     ID INT(11) AUTO_INCREMENT PRIMARY KEY,
     UserID INT(11),
     FollowingID INT(11),
-    FOREIGN KEY(UserID) REFERENCES usertable(UserID),
-    FOREIGN KEY(FollowingID) REFERENCES usertable(UserID)
+    FOREIGN KEY(UserID) REFERENCES UserTable(UserID),
+    FOREIGN KEY(FollowingID) REFERENCES UserTable(UserID)
 ) ENGINE = INNODB;
 
 
@@ -66,8 +66,8 @@ CREATE TABLE LikesTable(
     UserID INT(11),
     PostID INT(11),
     Type INT(11),
-    FOREIGN KEY(UserID) REFERENCES usertable(UserID),
-    FOREIGN KEY(PostID) REFERENCES postTable(PostID)
+    FOREIGN KEY(UserID) REFERENCES UserTable(UserID),
+    FOREIGN KEY(PostID) REFERENCES PostTable(PostID)
 ) ENGINE = INNODB;
 
 
@@ -75,49 +75,49 @@ CREATE TABLE RepostTable(
     ID INT(11) AUTO_INCREMENT PRIMARY KEY,
     UserID INT(11),
     PostID INT(11),
-    FOREIGN KEY(UserID) REFERENCES usertable(UserID),
-    FOREIGN KEY(PostID) REFERENCES postTable(PostID)
+    FOREIGN KEY(UserID) REFERENCES UserTable(UserID),
+    FOREIGN KEY(PostID) REFERENCES PostTable(PostID)
 ) ENGINE = INNODB;
 
 ALTER TABLE usertable ADD FOREIGN KEY (MediaID) REFERENCES mediatable(MediaID);
 ALTER TABLE PostTable ADD FOREIGN KEY (CategoryID) REFERENCES CategoryPostTable(ID);
 
-insert into usertable (username, FName, LName, email) values ('jflipsen0', 'Jess', 'Flipsen', 'jflipsen0@latimes.com');
-insert into usertable (username, FName, LName, email) values ('fstanislaw1', 'Florette', 'Stanislaw', 'fstanislaw1@cam.ac.uk');
-insert into usertable (username, FName, LName, email) values ('bspurret2', 'Bridie', 'Spurret', 'bspurret2@cafepress.com');
-insert into usertable (username, FName, LName, email) values ('lwem3', 'Laurene', 'Wem', 'lwem3@cornell.edu');
-insert into usertable (username, FName, LName, email) values ('lwoffenden4', 'Logan', 'Woffenden', 'lwoffenden4@wikia.com');
-insert into usertable (username, FName, LName, email) values ('ofrounks5', 'Odey', 'Frounks', 'ofrounks5@hhs.gov');
-insert into usertable (username, FName, LName, email) values ('othames6', 'Osborn', 'Thames', 'othames6@webeden.co.uk');
-insert into usertable (username, FName, LName, email) values ('bnewey7', 'Brita', 'Newey', 'bnewey7@icq.com');
-insert into usertable (username, FName, LName, email) values ('ecarreck8', 'Estell', 'Carreck', 'ecarreck8@hubpages.com');
-insert into usertable (username, FName, LName, email) values ('awinthrop9', 'Aridatha', 'Winthrop', 'awinthrop9@bravesites.com');
-insert into usertable (username, FName, LName, email) values ('ggieroka', 'Gordon', 'Gierok', 'ggieroka@netlog.com');
-insert into usertable (username, FName, LName, email) values ('rknuttonb', 'Rolfe', 'Knutton', 'rknuttonb@foxnews.com');
-insert into usertable (username, FName, LName, email) values ('gromic', 'Gale', 'Romi', 'gromic@nbcnews.com');
-insert into usertable (username, FName, LName, email) values ('cwinslowd', 'Cly', 'Winslow', 'cwinslowd@woothemes.com');
-insert into usertable (username, FName, LName, email) values ('kmatushenkoe', 'Karalynn', 'Matushenko', 'kmatushenkoe@t.co');
-insert into usertable (username, FName, LName, email) values ('ghunef', 'Griz', 'Hune', 'ghunef@shutterfly.com');
-insert into usertable (username, FName, LName, email) values ('rbardeyg', 'Reagan', 'Bardey', 'rbardeyg@people.com.cn');
-insert into usertable (username, FName, LName, email) values ('nbollardh', 'Normie', 'Bollard', 'nbollardh@comcast.net');
-insert into usertable (username, FName, LName, email) values ('bmelhuishi', 'Buddie', 'Melhuish', 'bmelhuishi@intel.com');
-insert into usertable (username, FName, LName, email) values ('aparsonagej', 'Alanson', 'Parsonage', 'aparsonagej@typepad.com');
-insert into usertable (username, FName, LName, email) values ('bathyk', 'Brook', 'Athy', 'bathyk@vkontakte.ru');
-insert into usertable (username, FName, LName, email) values ('ialphegel', 'Ingelbert', 'Alphege', 'ialphegel@mayoclinic.com');
-insert into usertable (username, FName, LName, email) values ('tgotcherm', 'Tedda', 'Gotcher', 'tgotcherm@earthlink.net');
-insert into usertable (username, FName, LName, email) values ('mbendsonn', 'Marris', 'Bendson', 'mbendsonn@sphinn.com');
-insert into usertable (username, FName, LName, email) values ('aitzkovwitcho', 'Archibaldo', 'Itzkovwitch', 'aitzkovwitcho@aol.com');
+insert into UserTable (Username, FName, LName, Email) values ('jflipsen0', 'Jess', 'Flipsen', 'jflipsen0@latimes.com');
+insert into UserTable (Username, FName, LName, Email) values ('fstanislaw1', 'Florette', 'Stanislaw', 'fstanislaw1@cam.ac.uk');
+insert into UserTable (Username, FName, LName, Email) values ('bspurret2', 'Bridie', 'Spurret', 'bspurret2@cafepress.com');
+insert into UserTable (Username, FName, LName, Email) values ('lwem3', 'Laurene', 'Wem', 'lwem3@cornell.edu');
+insert into UserTable (Username, FName, LName, Email) values ('lwoffenden4', 'Logan', 'Woffenden', 'lwoffenden4@wikia.com');
+insert into UserTable (Username, FName, LName, Email) values ('ofrounks5', 'Odey', 'Frounks', 'ofrounks5@hhs.gov');
+insert into UserTable (Username, FName, LName, Email) values ('othames6', 'Osborn', 'Thames', 'othames6@webeden.co.uk');
+insert into UserTable (Username, FName, LName, Email) values ('bnewey7', 'Brita', 'Newey', 'bnewey7@icq.com');
+insert into UserTable (Username, FName, LName, Email) values ('ecarreck8', 'Estell', 'Carreck', 'ecarreck8@hubpages.com');
+insert into UserTable (Username, FName, LName, Email) values ('awinthrop9', 'Aridatha', 'Winthrop', 'awinthrop9@bravesites.com');
+insert into UserTable (Username, FName, LName, Email) values ('ggieroka', 'Gordon', 'Gierok', 'ggieroka@netlog.com');
+insert into UserTable (Username, FName, LName, Email) values ('rknuttonb', 'Rolfe', 'Knutton', 'rknuttonb@foxnews.com');
+insert into UserTable (Username, FName, LName, Email) values ('gromic', 'Gale', 'Romi', 'gromic@nbcnews.com');
+insert into UserTable (Username, FName, LName, Email) values ('cwinslowd', 'Cly', 'Winslow', 'cwinslowd@woothemes.com');
+insert into UserTable (Username, FName, LName, Email) values ('kmatushenkoe', 'Karalynn', 'Matushenko', 'kmatushenkoe@t.co');
+insert into UserTable (Username, FName, LName, Email) values ('ghunef', 'Griz', 'Hune', 'ghunef@shutterfly.com');
+insert into UserTable (Username, FName, LName, Email) values ('rbardeyg', 'Reagan', 'Bardey', 'rbardeyg@people.com.cn');
+insert into UserTable (Username, FName, LName, Email) values ('nbollardh', 'Normie', 'Bollard', 'nbollardh@comcast.net');
+insert into UserTable (Username, FName, LName, Email) values ('bmelhuishi', 'Buddie', 'Melhuish', 'bmelhuishi@intel.com');
+insert into UserTable (Username, FName, LName, Email) values ('aparsonagej', 'Alanson', 'Parsonage', 'aparsonagej@typepad.com');
+insert into UserTable (Username, FName, LName, Email) values ('bathyk', 'Brook', 'Athy', 'bathyk@vkontakte.ru');
+insert into UserTable (Username, FName, LName, Email) values ('ialphegel', 'Ingelbert', 'Alphege', 'ialphegel@mayoclinic.com');
+insert into UserTable (Username, FName, LName, Email) values ('tgotcherm', 'Tedda', 'Gotcher', 'tgotcherm@earthlink.net');
+insert into UserTable (Username, FName, LName, Email) values ('mbendsonn', 'Marris', 'Bendson', 'mbendsonn@sphinn.com');
+insert into UserTable (Username, FName, LName, Email) values ('aitzkovwitcho', 'Archibaldo', 'Itzkovwitch', 'aitzkovwitcho@aol.com');
 
 
 
-INSERT INTO categorytable(categorytable.Title) VALUES ("Homemade");
-INSERT INTO categorytable(categorytable.Title) VALUES ("Amateur");
-INSERT INTO categorytable(categorytable.Title) VALUES ("Professionals");
-insert into categorytable(categorytable.Title) VALUES("Category 1");
-insert into categorytable(categorytable.Title) VALUES("Category 2");
-insert into categorytable(categorytable.Title) VALUES("Category 3");
-insert into categorytable(categorytable.Title) VALUES("Category 4");
-insert into categorytable(categorytable.Title) VALUES("Category 5");
+INSERT INTO CategoryTable(CategoryTable.Title) VALUES ("Homemade");
+INSERT INTO CategoryTable(CategoryTable.Title) VALUES ("Amateur");
+INSERT INTO CategoryTable(CategoryTable.Title) VALUES ("Professionals");
+insert into CategoryTable(CategoryTable.Title) VALUES("Category 1");
+insert into CategoryTable(CategoryTable.Title) VALUES("Category 2");
+insert into CategoryTable(CategoryTable.Title) VALUES("Category 3");
+insert into CategoryTable(CategoryTable.Title) VALUES("Category 4");
+insert into CategoryTable(CategoryTable.Title) VALUES("Category 5");
 
 DELIMITER //
 CREATE PROCEDURE addNewPost(IN Description VARCHAR(500), IN UserID INT(11), IN Title VARCHAR(50))
@@ -132,7 +132,6 @@ CREATE PROCEDURE getFeed()
 BEGIN
 SELECT posttable.PostID, posttable.Description, posttable.CreatedBy, posttable.Title, usertable.Username, usertable.UserID FROM posttable LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID IS NULL;
 END //
-DELIMITER ;
 
 DELIMITER ;
 
