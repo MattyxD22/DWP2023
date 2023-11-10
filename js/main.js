@@ -302,4 +302,24 @@ $(document).ready(function () {
       console.log(data);
     });
   });
+
+  $(document).on("click", ".followUnfollowBtn", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    /* const userID = $(this).data("userid");
+
+    const data = {
+      action: "fromPost",
+      userID: userID
+    }
+
+    $.ajax({
+      url: url_user,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    }); */
 });

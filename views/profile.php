@@ -40,6 +40,25 @@ $userPosts = $userController->fetchPosts($userID);
             <h2><?= htmlspecialchars($followingCount) ?></h2>
             <p>Following</p>
         </div>
+        <?php 
+            if (isset($_GET['userid']) && $_SESSION['UserID'] != $userID) {
+        ?>
+        <div>
+            <button type="button" class="std_button followUnfollowBtn">
+                <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
+            </button>
+        </div>
+        <?php 
+            } else {
+        ?>
+            <button type="button" class="std_button opacity-0">
+                <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
+            </button>
+        </div>
+        <?php 
+            }
+        ?>
+        
     </section>
     <section>
     <?php // var_dump($userPosts); // Uncomment for debugging purposes ?>
