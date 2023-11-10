@@ -2,7 +2,7 @@
 
     <div class="feed_item" data-id="<?php echo $value["PostID"] ?>">
 
-        <div class="feed_header h-1/6 align-center">
+        <div class="feed_header h-1/6 align-center open_profile_event" data-userid="<?php echo $value[5] ?>">
             <i class="bi bi-person-circle text-4xl"></i>
             <span class="ms-3 font-bold"><?php echo $value["Username"] ?></span>
         </div>

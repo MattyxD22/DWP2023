@@ -17,8 +17,8 @@ CREATE TABLE UserTable(
     Password VARCHAR(100),
     SignedUpDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     Banned INT(11),
-    MediaID INT(11)
-    
+    MediaID INT(11),
+    IsAdmin TINYINT(1) DEFAULT 0
 ) ENGINE = INNODB;
 
 
