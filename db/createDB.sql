@@ -133,7 +133,7 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE getFeed()
 BEGIN
-SELECT posttable.PostID, posttable.Description, posttable.CreatedBy, posttable.Title, usertable.Username FROM posttable LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID IS NULL;
+SELECT posttable.PostID, posttable.Description, posttable.CreatedBy, posttable.Title, usertable.Username, usertable.UserID FROM posttable LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID IS NULL;
 END //
 DELIMITER ;
 
