@@ -428,4 +428,5 @@ $(document).ready(function () {
       $(".state_col").empty();
       $(".state_col").append(data);
     }); */
+  });
 });
