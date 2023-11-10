@@ -67,7 +67,7 @@ CREATE TABLE LikesTable(
     PostID INT(11),
     Type INT(11),
     FOREIGN KEY(UserID) REFERENCES UserTable(UserID),
-    FOREIGN KEY(PostID) REFERENCES postTable(PostID)
+    FOREIGN KEY(PostID) REFERENCES PostTable(PostID)
 ) ENGINE = INNODB;
 
 
@@ -76,7 +76,7 @@ CREATE TABLE RepostTable(
     UserID INT(11),
     PostID INT(11),
     FOREIGN KEY(UserID) REFERENCES UserTable(UserID),
-    FOREIGN KEY(PostID) REFERENCES postTable(PostID)
+    FOREIGN KEY(PostID) REFERENCES PostTable(PostID)
 ) ENGINE = INNODB;
 
 ALTER TABLE UserTable ADD FOREIGN KEY (MediaID) REFERENCES MediaTable(MediaID);
@@ -132,9 +132,8 @@ CREATE PROCEDURE getFeed()
 BEGIN
 SELECT PostTable.PostID, PostTable.Description, PostTable.CreatedBy, PostTable.Title, UserTable.Username, UserTable.UserID FROM PostTable LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy WHERE PostTable.ParentID IS NULL;
 END //
+
 DELIMITER ;
-
-
 
 DELIMITER //
 CREATE PROCEDURE getPost(IN postID INT(11))
