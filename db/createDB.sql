@@ -82,31 +82,31 @@ CREATE TABLE RepostTable(
 ALTER TABLE UserTable ADD FOREIGN KEY (MediaID) REFERENCES MediaTable(MediaID);
 ALTER TABLE PostTable ADD FOREIGN KEY (CategoryID) REFERENCES CategoryPostTable(ID);
 
-insert into UserTable (Username, FName, LName, Email) values ('jflipsen0', 'Jess', 'Flipsen', 'jflipsen0@latimes.com');
-insert into UserTable (Username, FName, LName, Email) values ('fstanislaw1', 'Florette', 'Stanislaw', 'fstanislaw1@cam.ac.uk');
-insert into UserTable (Username, FName, LName, Email) values ('bspurret2', 'Bridie', 'Spurret', 'bspurret2@cafepress.com');
-insert into UserTable (Username, FName, LName, Email) values ('lwem3', 'Laurene', 'Wem', 'lwem3@cornell.edu');
-insert into UserTable (Username, FName, LName, Email) values ('lwoffenden4', 'Logan', 'Woffenden', 'lwoffenden4@wikia.com');
-insert into UserTable (Username, FName, LName, Email) values ('ofrounks5', 'Odey', 'Frounks', 'ofrounks5@hhs.gov');
-insert into UserTable (Username, FName, LName, Email) values ('othames6', 'Osborn', 'Thames', 'othames6@webeden.co.uk');
-insert into UserTable (Username, FName, LName, Email) values ('bnewey7', 'Brita', 'Newey', 'bnewey7@icq.com');
-insert into UserTable (Username, FName, LName, Email) values ('ecarreck8', 'Estell', 'Carreck', 'ecarreck8@hubpages.com');
-insert into UserTable (Username, FName, LName, Email) values ('awinthrop9', 'Aridatha', 'Winthrop', 'awinthrop9@bravesites.com');
-insert into UserTable (Username, FName, LName, Email) values ('ggieroka', 'Gordon', 'Gierok', 'ggieroka@netlog.com');
-insert into UserTable (Username, FName, LName, Email) values ('rknuttonb', 'Rolfe', 'Knutton', 'rknuttonb@foxnews.com');
-insert into UserTable (Username, FName, LName, Email) values ('gromic', 'Gale', 'Romi', 'gromic@nbcnews.com');
-insert into UserTable (Username, FName, LName, Email) values ('cwinslowd', 'Cly', 'Winslow', 'cwinslowd@woothemes.com');
-insert into UserTable (Username, FName, LName, Email) values ('kmatushenkoe', 'Karalynn', 'Matushenko', 'kmatushenkoe@t.co');
-insert into UserTable (Username, FName, LName, Email) values ('ghunef', 'Griz', 'Hune', 'ghunef@shutterfly.com');
-insert into UserTable (Username, FName, LName, Email) values ('rbardeyg', 'Reagan', 'Bardey', 'rbardeyg@people.com.cn');
-insert into UserTable (Username, FName, LName, Email) values ('nbollardh', 'Normie', 'Bollard', 'nbollardh@comcast.net');
-insert into UserTable (Username, FName, LName, Email) values ('bmelhuishi', 'Buddie', 'Melhuish', 'bmelhuishi@intel.com');
-insert into UserTable (Username, FName, LName, Email) values ('aparsonagej', 'Alanson', 'Parsonage', 'aparsonagej@typepad.com');
-insert into UserTable (Username, FName, LName, Email) values ('bathyk', 'Brook', 'Athy', 'bathyk@vkontakte.ru');
-insert into UserTable (Username, FName, LName, Email) values ('ialphegel', 'Ingelbert', 'Alphege', 'ialphegel@mayoclinic.com');
-insert into UserTable (Username, FName, LName, Email) values ('tgotcherm', 'Tedda', 'Gotcher', 'tgotcherm@earthlink.net');
-insert into UserTable (Username, FName, LName, Email) values ('mbendsonn', 'Marris', 'Bendson', 'mbendsonn@sphinn.com');
-insert into UserTable (Username, FName, LName, Email) values ('aitzkovwitcho', 'Archibaldo', 'Itzkovwitch', 'aitzkovwitcho@aol.com');
+insert into UserTable (Username, FName, LName, Email, Password) values ('jflipsen0', 'Jess', 'Flipsen', 'jflipsen0@latimes.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('fstanislaw1', 'Florette', 'Stanislaw', 'fstanislaw1@cam.ac.uk', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('bspurret2', 'Bridie', 'Spurret', 'bspurret2@cafepress.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('lwem3', 'Laurene', 'Wem', 'lwem3@cornell.edu', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('lwoffenden4', 'Logan', 'Woffenden', 'lwoffenden4@wikia.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('ofrounks5', 'Odey', 'Frounks', 'ofrounks5@hhs.gov', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('othames6', 'Osborn', 'Thames', 'othames6@webeden.co.uk', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('bnewey7', 'Brita', 'Newey', 'bnewey7@icq.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('ecarreck8', 'Estell', 'Carreck', 'ecarreck8@hubpages.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('awinthrop9', 'Aridatha', 'Winthrop', 'awinthrop9@bravesites.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('ggieroka', 'Gordon', 'Gierok', 'ggieroka@netlog.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('rknuttonb', 'Rolfe', 'Knutton', 'rknuttonb@foxnews.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('gromic', 'Gale', 'Romi', 'gromic@nbcnews.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('cwinslowd', 'Cly', 'Winslow', 'cwinslowd@woothemes.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('kmatushenkoe', 'Karalynn', 'Matushenko', 'kmatushenkoe@t.co', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('ghunef', 'Griz', 'Hune', 'ghunef@shutterfly.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('rbardeyg', 'Reagan', 'Bardey', 'rbardeyg@people.com.cn', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('nbollardh', 'Normie', 'Bollard', 'nbollardh@comcast.net', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('bmelhuishi', 'Buddie', 'Melhuish', 'bmelhuishi@intel.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('aparsonagej', 'Alanson', 'Parsonage', 'aparsonagej@typepad.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('bathyk', 'Brook', 'Athy', 'bathyk@vkontakte.ru', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('ialphegel', 'Ingelbert', 'Alphege', 'ialphegel@mayoclinic.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('tgotcherm', 'Tedda', 'Gotcher', 'tgotcherm@earthlink.net', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('mbendsonn', 'Marris', 'Bendson', 'mbendsonn@sphinn.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
+insert into UserTable (Username, FName, LName, Email, Password) values ('aitzkovwitcho', 'Archibaldo', 'Itzkovwitch', 'aitzkovwitcho@aol.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
 
 
 
