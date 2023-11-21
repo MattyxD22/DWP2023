@@ -133,7 +133,7 @@ class PostModel extends BaseModel
             $handle_getComment->bindValue(":postID", $sanitized_postID);
             $handle_getComment->execute();
             $comments = $handle_getComment->fetchAll(\PDO::FETCH_ASSOC);
-            
+
             $cnx = null;
 
             return include("../views/comments.php");
@@ -178,14 +178,17 @@ class PostModel extends BaseModel
             $sanitized_userID = htmlspecialchars($userID);
 
 
+
+
             $likeComment = "CALL updateLikePost(:postID, :userID, 1)";
             $handle_likeComment = $cxn->prepare($likeComment);
 
             $handle_likeComment->bindValue(":postID", $sanitized_postID);
             $handle_likeComment->bindValue(":userID", $sanitized_userID);
             $handle_likeComment->execute();
-            $handle_likeComment->fetch(\PDO::FETCH_ASSOC);
+            $plz = $handle_likeComment->fetch(\PDO::FETCH_ASSOC);
             $cnx = null;
+            print_r($plz);
         } catch (\PDOException $err) {
             print($err->getMessage());
             return $err->getMessage();

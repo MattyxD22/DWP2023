@@ -31,14 +31,14 @@ switch ($action) {
         $userID = $_SESSION["UserID"];
         $file = $_FILES["file"]["tmp_name"];
         $fileData = file_get_contents($file);
-        // $returnDataTest = [
-        //     'title' => $title,
-        //     'description' => $description,
-        //     'userID' => $userID,
-        //     'file' => $file['name'],
-        // ];
+        $returnDataTest = [
+            'title' => $title,
+            'description' => $description,
+            'userID' => $userID,
+            'file' => $file['name'],
+        ];
 
-        //print_r($returnDataTest);
+        print_r($returnDataTest);
 
         // $userID = $_SESSION["UserID"];
         // $title = $_POST["title"];
@@ -74,16 +74,26 @@ switch ($action) {
     case "addLike":
 
         $postID = $_POST["postID"];
-        $postID = $_SESSION["UserID"];
+        $userID = $_SESSION["UserID"];
 
         $postModel->addLike($postID, $userID);
+
+
+        break;
+
+    case "addDislike":
+
+        $postID = $_POST["postID"];
+        $userID = $_SESSION["UserID"];
+
+        $postModel->addDislike($postID, $userID);
 
 
         break;
     case "removeLike":
 
         $postID = $_POST["postID"];
-        $postID = $_SESSION["UserID"];
+        $userID = $_SESSION["UserID"];
         $postModel->removeLike($postID, $userID);
 
         break;

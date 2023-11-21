@@ -37,8 +37,9 @@ class SidebarModel extends BaseModel
 
         try {
             $cxn = parent::connectToDB();
-            $getFeed = "CALL getFeed()";
+            $getFeed = "CALL getFeed(:UserID)";
             $handle_getFeed = $cxn->prepare($getFeed);
+            $handle_getFeed->bindParam(":UserID", $_SESSION["UserID"]);
             $handle_getFeed->execute();
             $results = $handle_getFeed->fetchAll(\PDO::FETCH_ASSOC);
 

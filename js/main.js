@@ -252,6 +252,22 @@ $(document).ready(function () {
     });
   });
 
+  // Admin
+  $(document).on("click", ".admin_btn", function () {
+    const data = {
+      action: "admin",
+    };
+
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
+
   $(document).on("click", ".submit_comment", function () {
     const container = $(this).closest(".postComment_Container");
     const comment = container.find(".comment_textArea").val();
@@ -345,7 +361,7 @@ $(document).ready(function () {
     };
 
     $.ajax({
-      url: url_sidebar,
+      url: url_user,
       type: "POST",
       data: data,
     }).done(function (data) {
@@ -427,5 +443,131 @@ $(document).ready(function () {
     }).done(function (data) {
       console.log(data);
     });
+  });
+
+  $(document).on("click", ".reply_comment_container", function () {
+    $(this).toggleClass("open");
+  });
+
+  $(document).on("click", ".reply_to_comment_container", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+  });
+
+  $(document).on("click", ".close_popup", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    $(this).closest(".reply_comment_container").removeClass("open");
+  });
+
+  $(document).on("click", ".submit_reply", function () {
+    const container = $(this).closest(".reply_to_comment_container");
+
+    let reply = container.find(".std_input").val();
+    let commentID = $(this).data("id");
+
+    const data = {
+      action: "createComment",
+      comment: reply,
+      postID: commentID,
+    };
+
+    $.ajax({
+      url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      container.find(".std_input").val("");
+      container.closest(".reply_comment_container").removeClass("open");
+    });
+  });
+
+  $(document).on("click", ".like_post", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    let elem = $(this); // put the event element into a variable, to be able to access it in the ajax request
+    let action = "addLike";
+    let postID = $(this).data("id");
+
+    // Check if the post has been liked by the user
+    if ($(elem).hasClass("liked")) {
+      action = "removeLike";
+    }
+
+    const data = {
+      action: action,
+      postID: postID,
+    };
+
+    console.log(data);
+
+    $.ajax({
+      url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
+
+      // // Check if the post has been liked by the user
+      // if ($(elem).hasClass("liked")) {
+      //   // prepare data obj for removinf the like
+      //   // remove "like" class so icon wont be red
+      //   $(elem).removeClass("like");
+      // } else {
+      //   // add "like" class to icon will be red
+      //   $(elem).addClass("like");
+      // }
+    });
+  });
+  $(document).on("click", ".dislike_post", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    let elem = $(this); // put the event element into a variable, to be able to access it in the ajax request
+    let action = "addDislike";
+    let postID = $(this).data("id");
+
+    // Check if the post has been liked by the user
+    if ($(elem).hasClass("liked")) {
+      action = "removeLike";
+    }
+
+    const data = {
+      action: action,
+      postID: postID,
+    };
+
+    console.log(data);
+
+    $.ajax({
+      url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
+
+      // // Check if the post has been liked by the user
+      // if ($(elem).hasClass("liked")) {
+      //   // prepare data obj for removinf the like
+      //   // remove "like" class so icon wont be red
+      //   $(elem).removeClass("like");
+      // } else {
+      //   // add "like" class to icon will be red
+      //   $(elem).addClass("like");
+      // }
+    });
+  });
+
+  $(document).on("click", ".tab_elem", function () {
+    const type = $(this).data("type");
+    const container = $(this).closest(".profile_page");
+    $(this).siblings().removeClass("selected");
+    $(this).addClass("selected");
+    container.find(".profile_content").removeClass("selected");
+    container
+      .find('.profile_content[data-type="' + type + '"]')
+      .addClass("selected");
   });
 });

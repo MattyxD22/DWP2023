@@ -1,7 +1,5 @@
 <div class="feed_item" data-id="<?php echo $value[0] ?>">
-    <?php foreach ($imgObj as $key => $test) {
-        echo $test;
-    } ?>
+
     <div class="feed_header h-1/6 align-center">
         <i class="bi bi-person-circle text-4xl"></i>
         <span class="ms-3 font-bold"><?php echo $value[4] ?></span>
@@ -17,7 +15,15 @@
         </div>
 
 
+        <div class="feed_image_container h-full overflow-hidden flex">
 
+            <?php if (!empty($value[5])) { ?>
+                <div class="feed_img_container  h-full flex flex-row justify-center items-center my-auto mx-auto">
+                    <img class="object-contain h-full" src="data:image/jpeg;base64,<?php echo base64_encode($value[5]); ?>">
+                </div>
+            <?php } ?>
+
+        </div>
 
 
     </div>
@@ -25,13 +31,13 @@
 
         <div class="likes_div pe-4 my-auto">
 
-            <span class="text-red-600 text-l font-bold">600</span>
+            <span class="text-red-600 text-l font-bold"><?php echo $value[7] ?></span>
             <span class="text-white text-l font-bold ms-1">Likes</span>
 
         </div>
 
         <div class="dislikes_div pe-4 my-auto">
-            <span class="text-red-600 text-l font-bold">32</span>
+            <span class="text-red-600 text-l font-bold"><?php echo $value[8] ?></span>
             <span class="text-white text-l font-bold ms-1">Dislikes</span>
         </div>
 
@@ -42,7 +48,7 @@
         </div>
 
         <div class="comments_div pe-4 my-auto">
-            <span class="text-red-600 text-l font-bold">1024</span>
+            <span class="text-red-600 text-l font-bold"><?php echo $value[6] ?></span>
             <span class="text-white text-l font-bold ms-1">Comments</span>
         </div>
 
@@ -50,7 +56,7 @@
 
             <div class="action_like">
                 <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
-                <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $value[0] ?>"></i>
+                <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post liked" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $value[0] ?>"></i>
 
             </div>
 
