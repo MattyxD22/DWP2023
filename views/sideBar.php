@@ -35,7 +35,7 @@
 
 
     <div class="justify-center flex flex-row py-3 mt-auto">
-        <button class="flex flex-row std_button">
+        <button class="flex flex-row std_button admin_btn">
             <h3 class="text-red-600 text-2xl font-bold">Ad</h3>
             <h3 class="text-white text-2xl font-bold">min</h3>
         </button>

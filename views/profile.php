@@ -7,7 +7,12 @@ $userController = new UserController();
 
 // Assuming you have the $userID you want to fetch followers for
 // If you don't have a $userID yet, you need to set it to the appropriate value
-$userID = $_SESSION['UserID'];
+if (isset($_GET['userid'])) {
+    $userID = $_GET['userid'];
+} else {
+    $userID = $_SESSION['UserID'];
+}
+
 
 // Call the fetchFollowers method
 $followerCount = $userController->fetchFollowers($userID);
@@ -40,6 +45,25 @@ $userComments = $userController->fetchUserComments();
                 <p>Following</p>
             </div>
         </div>
+        <?php 
+            if (isset($_GET['userid']) && $_SESSION['UserID'] != $userID) {
+        ?>
+        <div>
+            <button type="button" class="std_button followUnfollowBtn">
+                <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
+            </button>
+        </div>
+        <?php 
+            } else {
+        ?>
+            <button type="button" class="std_button opacity-0">
+                <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
+            </button>
+        </div>
+        <?php 
+            }
+        ?>
+        
     </section>
     <section>
         <?php // var_dump($userPosts); // Uncomment for debugging purposes 
