@@ -23,7 +23,6 @@ CREATE TABLE UserTable(
 
 
 CREATE TABLE PostTable(
-
     PostID INT(11) AUTO_INCREMENT PRIMARY KEY,
     ParentID INT(11),
     Description TEXT,
