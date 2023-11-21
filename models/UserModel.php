@@ -50,6 +50,9 @@ class UserModel extends BaseModel
         try {
             $cxn = parent::connectToDB();
 
+
+
+
             // First, try treating the input as a username
             $statement = "SELECT UserID, password FROM usertable WHERE username = :input LIMIT 1";
             $handle = $cxn->prepare($statement);
@@ -165,13 +168,82 @@ class UserModel extends BaseModel
     {
         try {
             $cxn = parent::connectToDB();
-            $statement = "SELECT PostID, Description, CreatedDate, CreatedBy, Title, CategoryID FROM PostTable WHERE ParentID IS NULL AND CreatedBy = :userID ORDER BY PostID DESC;";
+            $statement = "SELECT PostID, Description, CreatedDate, CreatedBy, Title, CategoryID, mediatable.ImgData FROM PostTable LEFT JOIN mediatable ON mediatable.PostID = PostTable.PostID WHERE ParentID IS NULL AND CreatedBy = :userID ORDER BY PostID DESC;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetchAll(\PDO::FETCH_ASSOC);
             $cxn = null;
             return $result;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchLikesById($userID)
+    {
+        try {
+            $cxn = parent::connectToDB();
+
+            $statement = "CALL fetchLikesByID(:UserID)";
+            $query = $cxn->prepare($statement);
+            $query->bindValue(":UserID", $userID);
+            $query->execute();
+            $likes = $query->fetchAll(\PDO::FETCH_ASSOC);
+
+            // $statement = "CALL fetchLikesByID(:UserID)";
+            // $query = $cxn->prepare($statement);
+            // $query->bindValue(":userID", $userID);
+            // $query->execute();
+            // $result = $query->fetchAll(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $likes;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchDislikesById($userID)
+    {
+        try {
+            $cxn = parent::connectToDB();
+
+            $statement = "CALL fetchDislikesByID(:UserID)";
+            $query = $cxn->prepare($statement);
+            $query->bindValue(":UserID", $userID);
+            $query->execute();
+            $dislikes = $query->fetchAll(\PDO::FETCH_ASSOC);
+
+            // $statement = "CALL fetchLikesByID(:UserID)";
+            // $query = $cxn->prepare($statement);
+            // $query->bindValue(":userID", $userID);
+            // $query->execute();
+            // $result = $query->fetchAll(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $dislikes;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchUserCommentsByID($userID)
+    {
+        try {
+            $cxn = parent::connectToDB();
+
+            $statement = "CALL fetchUserCommentsByID(:UserID)";
+            $query = $cxn->prepare($statement);
+            $query->bindValue(":UserID", $userID);
+            $query->execute();
+            $comments = $query->fetchAll(\PDO::FETCH_ASSOC);
+
+            // $statement = "CALL fetchLikesByID(:UserID)";
+            // $query = $cxn->prepare($statement);
+            // $query->bindValue(":userID", $userID);
+            // $query->execute();
+            // $result = $query->fetchAll(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $comments;
         } catch (\PDOException $e) {
             echo $e->getMessage();
         }

@@ -1,6 +1,14 @@
-<div class="profile_item flex flex-col w-full aspect-square py-2 px-2" data-id="<?php echo $post["PostID"]; ?>">
+<div class="profile_item flex flex-col w-full aspect-square py-2 px-2" data-id="<?php echo $postID; ?>">
 
-    <div class="profileItem_Header mb-auto"></div>
+    <div class="profileItem_Header mb-auto">
+        <div class="profileItem_image_container h-full overflow-hidden flex">
+
+            <div class="profileItem_img_container  h-full flex flex-row justify-center items-center my-auto mx-auto">
+                <img class="object-contain h-full" src="data:image/jpeg;base64,<?php echo base64_encode($img); ?>">
+            </div>
+
+        </div>
+    </div>
     <div class="profileItem_Content py-2">
         <h2><?php echo htmlspecialchars($title); ?></h2>
         <p><?php echo htmlspecialchars($description); ?></p>

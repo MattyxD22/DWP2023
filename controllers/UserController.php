@@ -1,6 +1,7 @@
 <?php
 
 namespace controllers;
+
 require("../models/UserModel.php");
 
 use models\UserModel;
@@ -90,39 +91,80 @@ switch ($action) {
         }
         break;
     case "fetchFollowers":
-        
-        break;
 
+        break;
 }
 
-class UserController {
-    function fetchFollowers($userID) {
+class UserController
+{
+    function fetchFollowers($userID)
+    {
         global $userModel;
         $followersCount = $userModel->fetchAmountOfFollowers($userID);
         return $followersCount;
     }
 
-    function fetchFollowing($userID) {
+    function fetchFollowing($userID)
+    {
         global $userModel;
         $followingCount = $userModel->fetchAmountOfFollowing($userID);
         return $followingCount;
     }
-    
-    function fetchPostsAmount($userID) {
+
+    function fetchPostsAmount($userID)
+    {
         global $userModel;
         $followingCount = $userModel->fetchAmountOfPosts($userID);
         return $followingCount;
     }
 
-    function fetchUsername($userID) {
+    function fetchUsername($userID)
+    {
         global $userModel;
         $username = $userModel->fetchUsernameById($userID);
         return $username;
     }
 
-    function fetchPosts($userID) {
+    function fetchPosts($userID)
+    {
         global $userModel;
         $posts = $userModel->fetchPostsById($userID);
         return $posts;
     }
+
+    function fetchLikes()
+    {
+        global $userModel;
+        $userID = $_SESSION["UserID"];
+
+        $likes = $userModel->fetchLikesById($userID);
+        return $likes;
+    }
+
+    function fetchDislikes()
+    {
+        global $userModel;
+        $userID = $_SESSION["UserID"];
+
+
+
+        $dislikes = $userModel->fetchDisLikesById($userID);
+        return $dislikes;
+    }
+
+    function fetchUserComments()
+    {
+        global $userModel;
+
+        $userID = $_SESSION["UserID"];
+        $comments = $userModel->fetchUserCommentsByID($userID);
+        return $comments;
+    }
+
+    // function fetchReposts($userID)
+    // {
+    //     global $userModel;
+    //     $posts = $userModel->fetchRepostsById($userID);
+    //     return $posts;
+    // }
 }

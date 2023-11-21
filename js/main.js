@@ -327,22 +327,73 @@ $(document).ready(function () {
       postID: postID,
     };
 
+    console.log(data);
+
     $.ajax({
-      url: url_sidebar,
+      url: url_post,
       type: "POST",
       data: data,
     }).done(function (data) {
       console.log(data);
 
-      // Check if the post has been liked by the user
-      if ($(elem).hasClass("liked")) {
-        // prepare data obj for removinf the like
-        // remove "like" class so icon wont be red
-        $(elem).removeClass("like");
-      } else {
-        // add "like" class to icon will be red
-        $(elem).addClass("like");
-      }
+      // // Check if the post has been liked by the user
+      // if ($(elem).hasClass("liked")) {
+      //   // prepare data obj for removinf the like
+      //   // remove "like" class so icon wont be red
+      //   $(elem).removeClass("like");
+      // } else {
+      //   // add "like" class to icon will be red
+      //   $(elem).addClass("like");
+      // }
     });
+  });
+  $(document).on("click", ".dislike_post", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    let elem = $(this); // put the event element into a variable, to be able to access it in the ajax request
+    let action = "addDislike";
+    let postID = $(this).data("id");
+
+    // Check if the post has been liked by the user
+    if ($(elem).hasClass("liked")) {
+      action = "removeLike";
+    }
+
+    const data = {
+      action: action,
+      postID: postID,
+    };
+
+    console.log(data);
+
+    $.ajax({
+      url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
+
+      // // Check if the post has been liked by the user
+      // if ($(elem).hasClass("liked")) {
+      //   // prepare data obj for removinf the like
+      //   // remove "like" class so icon wont be red
+      //   $(elem).removeClass("like");
+      // } else {
+      //   // add "like" class to icon will be red
+      //   $(elem).addClass("like");
+      // }
+    });
+  });
+
+  $(document).on("click", ".tab_elem", function () {
+    const type = $(this).data("type");
+    const container = $(this).closest(".profile_page");
+    $(this).siblings().removeClass("selected");
+    $(this).addClass("selected");
+    container.find(".profile_content").removeClass("selected");
+    container
+      .find('.profile_content[data-type="' + type + '"]')
+      .addClass("selected");
   });
 });
