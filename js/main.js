@@ -426,13 +426,13 @@ $(document).ready(function () {
   $(document).on("click", ".updateContactBtn", function () {
     const container = $(this).closest(".updateContact");
 
-    const fName = container.find(".").val;
-    const lName = container.find(".").val;
-    const email = container.find(".").val;
-    const phoneNumber = container.find(".").val;
-    const city = container.find(".").val;
-    const houseNumber = container.find(".").val;
-    const streetName = container.find(".").val;
+    const fName = container.find(".contactInfoFirstName").val();
+    const lName = container.find(".contactInfoLastName").val();
+    const email = container.find(".contactInfoEmail").val();
+    const phoneNumber = container.find(".contactInfoPhoneNumber").val();
+    const city = container.find(".contactInfoCity").val();
+    const houseNumber = container.find(".contactInfoHouseNumber").val();
+    const streetName = container.find(".contactInfoStreetName").val();
 
     const data = {
       action: "updateContact",
@@ -445,15 +445,14 @@ $(document).ready(function () {
       streetName: streetName
     }
 
-    $ajax({
+   $.ajax({
       url: url_admin,
       type: "POST",
       data: data,
     }).done(function (data) {
       console.log(data);
-    })
-
-  })
+    });
+  });
 
   $(document).on("click", ".followUnfollowBtn", function (e) {
     e.stopPropagation();

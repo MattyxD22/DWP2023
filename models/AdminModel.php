@@ -38,6 +38,39 @@ class AdminModel extends BaseModel{
         }
     }
 
+    function updateContact($contactData) {
+
+        try {
+            $fName = htmlspecialchars($contactData['fName']);
+            $lName = htmlspecialchars($contactData['lName']);
+            $email = htmlspecialchars($contactData['email']);
+            $phoneNumber = htmlspecialchars($contactData['phoneNumber']);
+            $city = htmlspecialchars($contactData['city']);
+            $houseNumber = htmlspecialchars($contactData['houseNumber']);
+            $streetName = htmlspecialchars($contactData['streetName']);
+
+            $cxn = parent::connectToDB();
+            $statement = "UPDATE contactinfotable SET Email = :email, FName = :fname, LName = lname,
+             PhoneNumber = :phoneNumber, City = :city, StreetName = :streetName, HouseNumber = :houseNumber;";
+             $query = $cxn->prepare($statement);
+             $query->bindParam(":fname", $fName);
+             $query->bindParam(":email", $email);
+             $query->bindParam(":lname", $lName);
+             $query->bindParam(":phoneNumber", $phoneNumber);
+             $query->bindParam(":city", $city);
+             $query->bindParam(":houseNumber", $houseNumber);
+             $query->bindParam(":streetName", $streetName);
+             $query->execute();
+             $cxn = null;
+             return true;
+        }
+        catch (\Exception $e) {
+            print($e->getMessage());
+            return false;
+        }
+        
+    }
+
     function getUser($userID) {
         try {
             $cxn = parent::connectToDB();
