@@ -82,6 +82,25 @@ CREATE TABLE RepostTable(
     FOREIGN KEY(PostID) REFERENCES PostTable(PostID)
 ) ENGINE = INNODB;
 
+CREATE TABLE RulesTable(
+    RuleID INT(11) AUTO_INCREMENT PRIMARY KEY,
+    Rule TEXT
+) ENGINE = INNODB;
+
+CREATE TABLE AboutTable(
+    Description TEXT
+) ENGINE = INNODB;
+
+CREATE TABLE ContactInfoTable(
+    Email VARCHAR(100) PRIMARY KEY,
+    FName TEXT,
+    LName TEXT,
+    PhoneNumber TEXT,
+    City Text,
+    StreetName Text,
+    HouseNumber Text
+) ENGINE = INNODB;
+
 ALTER TABLE UserTable ADD FOREIGN KEY (MediaID) REFERENCES MediaTable(MediaID);
 ALTER TABLE PostTable ADD FOREIGN KEY (CategoryID) REFERENCES CategoryPostTable(ID);
 
