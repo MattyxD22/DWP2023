@@ -150,8 +150,6 @@ $(document).ready(function () {
   });
 
   $(document).on("click", ".mainBG", function (e) {
-    console.log(e.target);
-
     if (!$(e.target).closest(".categoryDropdownContainer")) {
       alert("!");
       $(".categoryContainer").removeClass("open");

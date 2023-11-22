@@ -7,13 +7,37 @@ $users = [""];
 ?>
 
 <article class="p-8 h-full text-white">   
-    <section class="h-full w-full gap-8 flex flex-col updateUserContainer" style="background-color: #3D3D3D;">
+    <section class="h-full w-full gap-8 flex flex-col updateUserContainer profile_page" style="background-color: #3D3D3D;">
 
     <?php
         if (isset($_SESSION["isAdmin"]) && $_SESSION["isAdmin"] == 1) {
             $users = $adminController->fetchUsers($_SESSION["UserID"]);
         ?>
-        <section class="p-4 gap-2">
+
+            <div class="profile_tab_container px-1 pt-2 flex flex-row w-full justify-between ">
+
+                <div class="tab_elem selected" data-type="1">
+                    <span class="tab_first_text me-2">Update</span>
+                    <span>User</span>
+                </div>
+
+                <div class="tab_elem" data-type="2">
+                    <span class="tab_first_text me-2">Update</span>
+                    <span>Rules</span>
+                </div>
+
+                <div class="tab_elem" data-type="3">
+                    <span class="tab_first_text me-2">Update</span>
+                    <span>Contact</span>
+                </div>
+
+                <div class="tab_elem" data-type="4">
+                    <span class="tab_first_text me-2">Update</span>
+                    <span>Description</span>
+                </div>
+            </div>
+
+        <section class="p-4 gap-2 selected profile_content" data-type="1">
             <label for="users" class="mb-2">Select a user:</label>
             <select name="users" id="users" class="w-full text-black pl-4 selectedUserToUpdate" onchange="updateBanStatus()">
                 <?php foreach ($users as $user): ?>
@@ -31,43 +55,89 @@ $users = [""];
                     </option>
                 <?php endforeach; ?>
             </select>
+
+            <section class="flex flex-col w-full gap-8">
+                <section class="flex justify-between px-4 gap-2">
+                <span>Ban User</span>
+                <label class="switch">
+                    <input type="checkbox" id="banCheckbox" class="selectedUserBanStatus">
+                    <span class="slider round"></span>
+                </label>
+            </section>
+
+            <script>
+                function updateBanStatus() {
+                    var select = document.getElementById('users');
+                    var user = JSON.parse(select.options[select.selectedIndex].value);
+                    // Assuming 'Banned' is 1 when the user is banned and 0 or null otherwise
+                    document.getElementById('banCheckbox').checked = user.Banned == 1;
+                }
+            </script>
+
+                <?php
+                    echo '
+                    <section class="flex flex-col px-4 gap-2">
+                        <span>Change Email</span>
+                        <input type="text" id="NewEmail" class="newEmail text-red-600">
+                    </section>
+
+                    <section class="flex flex-col px-4 gap-2">
+                        <span>Change Password</span>
+                        <input type="password" id="newPassword" class="newPassword text-red-600">
+                    </section>
+
+                    <section class="flex justify-center">
+                        <button type="button" class="std_button updateUserBtn">
+                                <span class="createPost_Span text-2xl font-bold text-red-600">Save</span>
+                        </button>
+                    </section>';
+                ?>
+            </section>
+        </section>
+    
+        <section class="p-4 gap-2 profile_content" data-type="2">
+            <?php 
+                include("./updateRules.php");
+            ?>
         </section>
 
-        <section class="flex justify-between px-4 gap-2">
-            <span>Ban User</span>
-            <label class="switch">
-                <input type="checkbox" id="banCheckbox" class="selectedUserBanStatus">
-                <span class="slider round"></span>
-            </label>
+        <section class="p-4 gap-2 profile_content" data-type="3">
+            <?php 
+                include("./updateContact.php");
+            ?>
         </section>
 
-        <script>
-            function updateBanStatus() {
-                var select = document.getElementById('users');
-                var user = JSON.parse(select.options[select.selectedIndex].value);
-                // Assuming 'Banned' is 1 when the user is banned and 0 or null otherwise
-                document.getElementById('banCheckbox').checked = user.Banned == 1;
-            }
-        </script>
+        <section class="p-4 gap-2 profile_content" data-type="4">
+            <?php 
+                include("./updateDescription.php");
+            ?>
+        </section>
 
         <?php
         }
         ?>
 
-        <section class="flex flex-col px-4 gap-2">
-            <span>Change Email</span>
-            <input type="text" id="NewEmail" class="newEmail text-red-600">
-        </section>
 
-        <section class="flex flex-col px-4 gap-2">
-            <span>Change Password</span>
-            <input type="password" id="newPassword" class="newPassword text-red-600">
-        </section>
+        <?php
+            if(!isset($_SESSION["isAdmin"]) || $_SESSION["isAdmin"] != 1) {
+                echo '
+                    <section class="flex flex-col px-4 gap-2">
+                        <span>Change Email</span>
+                        <input type="text" id="NewEmail" class="newEmail text-red-600">
+                    </section>
 
-        <section class="flex justify-center">
-            <button type="button" class="std_button updateUserBtn">
-                    <span class="createPost_Span text-2xl font-bold text-red-600">Save</span>
-            </button>
-        </section>
+                    <section class="flex flex-col px-4 gap-2">
+                        <span>Change Password</span>
+                        <input type="password" id="newPassword" class="newPassword text-red-600">
+                    </section>
+
+                    <section class="flex justify-center">
+                        <button type="button" class="std_button updateUserBtn">
+                                <span class="createPost_Span text-2xl font-bold text-red-600">Save</span>
+                        </button>
+                    </section>';
+            }
+        ?>
+        
     </section>
 </article>
