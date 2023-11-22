@@ -6,6 +6,38 @@ require_once 'BaseModel.php';
 
 class AdminModel extends BaseModel{
 
+    function getRules() {
+        try {
+            $cxn = parent::connectToDB();
+            $statement = "SELECT * FROM rulestable";
+            $query = $cxn->prepare($statement);
+            $query->execute();
+            $result = $query->fetchAll(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $result;
+        } catch (\Exception $e) {
+            print($e->getMessage());
+            $cxn = null;
+            return false;
+        }
+    }
+
+    function getContactInfo() {
+        try {
+            $cxn = parent::connectToDB();
+            $statement = "SELECT * FROM contactinfotable LIMIT 1";
+            $query = $cxn->prepare($statement);
+            $query->execute();
+            $result = $query->fetch();
+            $cxn = null;
+            return $result;
+        } catch (\Exception $e) {
+            print($e->getMessage());
+            $cxn = null;
+            return false;
+        }
+    }
+
     function getUser($userID) {
         try {
             $cxn = parent::connectToDB();

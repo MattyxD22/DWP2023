@@ -53,5 +53,15 @@ class AdminController {
         $users = $this->adminModel->getUser($userID);
         return $users;
     }
+
+    function fetchRules() {
+        $rules = $this->adminModel->getRules();
+        return $rules;
+    }
+
+    function fetchContact() {
+        $contactInfo = $this->adminModel->getContactInfo();
+        return $contactInfo;
+    }
     
 }

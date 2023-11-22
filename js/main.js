@@ -423,6 +423,38 @@ $(document).ready(function () {
     });
   });
 
+  $(document).on("click", ".updateContactBtn", function () {
+    const container = $(this).closest(".updateContact");
+
+    const fName = container.find(".").val;
+    const lName = container.find(".").val;
+    const email = container.find(".").val;
+    const phoneNumber = container.find(".").val;
+    const city = container.find(".").val;
+    const houseNumber = container.find(".").val;
+    const streetName = container.find(".").val;
+
+    const data = {
+      action: "updateContact",
+      fName: fName,
+      lName: lName,
+      email: email,
+      phoneNumber: phoneNumber,
+      city: city,
+      houseNumber: houseNumber,
+      streetName: streetName
+    }
+
+    $ajax({
+      url: url_admin,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
+    })
+
+  })
+
   $(document).on("click", ".followUnfollowBtn", function (e) {
     e.stopPropagation();
     e.preventDefault();
