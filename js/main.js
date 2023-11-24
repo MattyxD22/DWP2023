@@ -514,40 +514,6 @@ $(document).ready(function () {
     });
   });
 
-  $(document).on("click", ".reply_to_comment_container", function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-<<<<<<< HEAD
-    const userID = $(this).data("user");
-
-    const data = {
-      action: "follow",
-      followUser: userID,
-    };
-=======
-    const userID = $(this).data("userid");
-
-    const data = {
-      action: "followUser",
-      userID: userID
-    }
->>>>>>> emilos-2
-
-    $.ajax({
-      url: url_user,
-      type: "POST",
-      data: data,
-    }).done(function (data) {
-<<<<<<< HEAD
-      //$(".state_col").empty();
-      //$(".state_col").append(data);
-=======
-      console.log(data);
->>>>>>> emilos-2
-    });
-  });
-
   $(document).on("click", ".close_popup", function (e) {
     e.stopPropagation();
     e.preventDefault();

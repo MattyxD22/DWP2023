@@ -92,19 +92,19 @@ $users = [""];
     
         <section class="p-4 gap-2 profile_content" data-type="2">
             <?php 
-                include("./updateRules.php");
+                include("../views/updateRules.php");
             ?>
         </section>
 
         <section class="p-4 gap-2 profile_content" data-type="3">
             <?php 
-                include("./updateContact.php");
+                include("../views/updateContact.php");
             ?>
         </section>
 
         <section class="p-4 gap-2 profile_content" data-type="4">
             <?php 
-                include("./updateDescription.php");
+                include("../views/updateDescription.php");
             ?>
         </section>
 
