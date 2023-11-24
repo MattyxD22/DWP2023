@@ -83,6 +83,10 @@ switch ($action) {
         return $adminModel2->addNewRule($rule);
 
         break;
+    case 'updateDescription':
+        $description = base64_encode($_POST["description"]);
+        return $adminModel2->updateDescription($description);
+        break;
 }
 
 class AdminController

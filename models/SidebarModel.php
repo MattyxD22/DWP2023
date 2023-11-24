@@ -121,6 +121,13 @@ class SidebarModel extends BaseModel
             $handle_request->execute();
             $rules = $handle_request->fetchAll(\PDO::FETCH_ASSOC);
 
+            $handle_request->closeCursor();
+
+            $aboutsql = "SELECT * FROM abouttable LIMIT 1";
+            $prep = $cnx->prepare($aboutsql);
+            $prep->execute();
+            $aboutDescription = $prep->fetch(\PDO::FETCH_ASSOC);
+
             return include("../views/adminPage.php");
 
             $cnx = $this->closeDB();

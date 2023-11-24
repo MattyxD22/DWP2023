@@ -190,4 +190,19 @@ class AdminModel extends BaseModel
             print_r($err->getMessage());
         }
     }
+
+    function updateDescription($description) {
+        try {
+            $cnx = $this->connectToDB();
+            $sql = "UPDATE abouttable SET Description = :description";
+            $query = $cnx->prepare($sql);
+            $query->bindParam(":description", $description);
+            $query->execute();
+            $cnx = null;
+            return true;
+        } catch (\PDOException $err) {
+            print_r($err->getMessage());
+            return false;
+        }
+    }
 }

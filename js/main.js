@@ -1,5 +1,6 @@
 $(document).ready(function () {
   var quillEditor;
+  var quillEditor2;
 
   const url_user = "../controllers/UserController.php";
   const url_post = "../controllers/PostController.php";
@@ -301,6 +302,34 @@ $(document).ready(function () {
     }).done(function (data) {
       $(".state_col").empty();
       $(".state_col").append(data);
+
+      const toolbarOptions = [
+        ["bold", "italic", "underline", "strike"], // toggled buttons
+        ["blockquote", "code-block"],
+
+        [{ header: 1 }, { header: 2 }], // custom button values
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ script: "sub" }, { script: "super" }], // superscript/subscript
+        [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+        [{ direction: "rtl" }], // text direction
+
+        [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+        [{ font: [] }],
+        [{ align: [] }],
+
+        ["clean"], // remove formatting button
+      ];
+
+      quillEditor2 = new Quill(".updateSiteDescription", {
+        modules: {
+          toolbar: toolbarOptions,
+        },
+        placeholder: "Write a comment...",
+        theme: "snow",
+      });
     });
   });
 
@@ -319,6 +348,24 @@ $(document).ready(function () {
 
     $.ajax({
       url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
+    });
+  });
+
+  //Save site description
+  $(document).on("click", ".saveSiteDescription", function () {
+    const description = quillEditor2.root.innerHTML;
+
+    const data = {
+      action: "updateDescription",
+      description: description
+    };
+
+    $.ajax({
+      url: url_admin,
       type: "POST",
       data: data,
     }).done(function (data) {
