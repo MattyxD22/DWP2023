@@ -34,6 +34,13 @@
     </div>
 
     <div class="justify-center flex flex-row py-3">
+        <button class="flex flex-row std_button btn_aboutUs">
+            <h3 class="text-red-600 text-2xl font-bold">About</h3>
+            <h3 class="text-white text-2xl font-bold ms-1">us</h3>
+        </button>
+    </div>
+
+    <div class="justify-center flex flex-row py-3">
         <button class="flex flex-row std_button btn_rules">
             <h3 class="text-red-600 text-2xl font-bold">Rul</h3>
             <h3 class="text-white text-2xl font-bold">es</h3>

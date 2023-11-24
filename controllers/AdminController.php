@@ -42,6 +42,18 @@ switch ($action) {
 
         // return $adminModel2->createComment($postID, $comment, $userID);
         break;
+    case "updateContact":
+        $contactData = [
+            'fName' => $_POST["fName"],
+            'lName' => $_POST["lName"],
+            'email' => $_POST["email"],
+            'phoneNumber' => $_POST["phoneNumber"],
+            'city' => $_POST["city"],
+            'houseNumber' => $_POST["houseNumber"],
+            'streetName' => $_POST["streetName"]
+        ];
+        $result = $adminModel2->updateContact($contactData);
+        break;
 
     case "removeRule":
 
@@ -87,4 +99,15 @@ class AdminController
         $users = $this->adminModel->getUser($userID);
         return $users;
     }
+
+    function fetchRules() {
+        $rules = $this->adminModel->getRules();
+        return $rules;
+    }
+
+    function fetchContact() {
+        $contactInfo = $this->adminModel->getContactInfo();
+        return $contactInfo;
+    }
+    
 }

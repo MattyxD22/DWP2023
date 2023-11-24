@@ -482,10 +482,10 @@ $(document).ready(function () {
       phoneNumber: phoneNumber,
       city: city,
       houseNumber: houseNumber,
-      streetName: streetName,
-    };
+      streetName: streetName
+    }
 
-    $.ajax({
+   $.ajax({
       url: url_admin,
       type: "POST",
       data: data,
@@ -502,10 +502,10 @@ $(document).ready(function () {
 
     const data = {
       action: "followUser",
-      userID: userID,
-    };
+      userID: userID
+    }
 
-    $.ajax({
+   $.ajax({
       url: url_admin,
       type: "POST",
       data: data,
@@ -514,11 +514,42 @@ $(document).ready(function () {
     });
   });
 
-  $(document).on("click", ".close_popup", function (e) {
+  $(document).on("click", ".reply_to_comment_container", function (e) {
     e.stopPropagation();
     e.preventDefault();
 
-    $(this).closest(".reply_comment_container").removeClass("open");
+<<<<<<< HEAD
+    const userID = $(this).data("userid");
+
+    const data = {
+      action: "follow",
+      followUser: userID,
+    };
+=======
+    const userID = $(this).data("userid");
+
+    const data = {
+      action: "followUser",
+      userID: userID
+    }
+>>>>>>> emilos-2
+
+   $.ajax({
+      url: url_admin,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+<<<<<<< HEAD
+      console.log(data);
+=======
+      console.log(data);
+>>>>>>> emilos-2
+    });
+  });
+
+  $(document).on("click", ".close_popup", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
   });
 
   $(document).on("click", ".submit_reply", function () {

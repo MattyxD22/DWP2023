@@ -410,6 +410,10 @@
     display: flex;
 }
 
+.about_us_wrapper {
+    background-color: #3d3d3d;
+}
+
 .ql-picker-label{
     color: var(--red) !important;
 }

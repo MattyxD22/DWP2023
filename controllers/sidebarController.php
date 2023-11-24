@@ -36,6 +36,9 @@ switch ($action) {
     case "admin":
         $sidebarModel->loadAdminPage();
         break;
+    case "aboutUs":
+        $sidebarModel->loadAboutUs();
+        break;
 
     case "rules":
         $sidebarModel->rules();
