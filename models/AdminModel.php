@@ -50,7 +50,7 @@ class AdminModel extends BaseModel{
             $streetName = htmlspecialchars($contactData['streetName']);
 
             $cxn = parent::connectToDB();
-            $statement = "UPDATE contactinfotable SET Email = :email, FName = :fname, LName = lname,
+            $statement = "UPDATE contactinfotable SET Email = :email, FName = :fname, LName = :lname,
              PhoneNumber = :phoneNumber, City = :city, StreetName = :streetName, HouseNumber = :houseNumber;";
              $query = $cxn->prepare($statement);
              $query->bindParam(":fname", $fName);

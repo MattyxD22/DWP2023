@@ -50,7 +50,6 @@ switch ($action) {
             'houseNumber' => $_POST["houseNumber"],
             'streetName' => $_POST["streetName"]
         ];
-
         $result = $adminModel2->updateContact($contactData);
         break;
 }
