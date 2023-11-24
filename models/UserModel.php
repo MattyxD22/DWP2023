@@ -256,29 +256,34 @@ class UserModel extends BaseModel
     function userPage($userID)
     {
         header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/profile.php?userid=' . urlencode($userID));
-    }
+    }  
+    
+    function followUser($userID) {
+    try {
+        $currentUser = $_SESSION["UserID"];
 
-    function follow($followUser, $userID)
-    {
-        try {
-            $cxn = $this->openDB();
+        $cxn = parent::connectToDB();
 
-            $statement = "CALL followUser(:followUser, :userID)";
-            $query = $cxn->prepare($statement);
-            $query->bindValue("followUser", $followUser);
-            $query->bindValue("userID", $userID);
-            $query->execute();
-            $comments = $query->fetchAll(\PDO::FETCH_ASSOC);
+        $checkStatement = "SELECT * FROM FollowingTable WHERE UserID = :currentUser AND FollowingID = :targetUser";
+        $checkQuery = $cxn->prepare($checkStatement);
+        $checkQuery->bindParam(":currentUser", $currentUser);
+        $checkQuery->bindParam(":targetUser", $userID);
+        $checkQuery->execute();
 
-            // $statement = "CALL fetchLikesByID(:UserID)";
-            // $query = $cxn->prepare($statement);
-            // $query->bindValue(":userID", $userID);
-            // $query->execute();
-            // $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-            $cxn = $this->closeDB();
-            return $comments;
-        } catch (\PDOException $e) {
-            echo $e->getMessage();
+        if ($checkQuery->rowCount() > 0) {
+            $statement = "DELETE FROM FollowingTable WHERE UserID = :currentUser AND FollowingID = :targetUser";
+        } else {
+            $statement = "INSERT INTO FollowingTable (UserID, FollowingID) VALUES (:currentUser, :targetUser)";
         }
+
+        $query = $cxn->prepare($statement);
+        $query->bindParam(":currentUser", $currentUser);
+        $query->bindParam(":targetUser", $userID);
+        $query->execute();
+
+    } catch (\PDOException $e) {
+        echo $e->getMessage();
     }
+}
+
 }

@@ -6,9 +6,11 @@ use controllers\AdminController;
 $adminController = new AdminController();
 $users = [""];
 ?>
-<article class="p-8 h-full text-white">
+
+<article class="p-8 h-full text-white">   
     <section class="h-full w-full gap-8 flex flex-col updateUserContainer profile_page" style="background-color: #3D3D3D;">
-        <?php
+
+    <?php
         if (isset($_SESSION["isAdmin"]) && $_SESSION["isAdmin"] == 1) {
             $users = $adminController->fetchUsers($_SESSION["UserID"]);
         ?>
@@ -44,77 +46,93 @@ $users = [""];
                             if ($_SESSION["UserID"] === $user["UserID"]) {
                                 echo ' (You)';
                             }
-                            ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <section class="flex flex-col w-full gap-8">
-                    <section class="flex justify-between px-4 gap-2">
-                        <span>Ban User</span>
-                        <label class="switch">
-                            <input type="checkbox" id="banCheckbox" class="selectedUserBanStatus">
-                            <span class="slider round"></span>
-                        </label>
-                    </section>
-                    <script>
-                        function updateBanStatus() {
-                            var select = document.getElementById('users');
-                            var user = JSON.parse(select.options[select.selectedIndex].value);
-                            // Assuming 'Banned' is 1 when the user is banned and 0 or null otherwise
-                            document.getElementById('banCheckbox').checked = user.Banned == 1;
-                        }
-                    </script>
-                    <?php
+                        ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <section class="flex flex-col w-full gap-8">
+                <section class="flex justify-between px-4 gap-2">
+                <span>Ban User</span>
+                <label class="switch">
+                    <input type="checkbox" id="banCheckbox" class="selectedUserBanStatus">
+                    <span class="slider round"></span>
+                </label>
+            </section>
+
+            <script>
+                function updateBanStatus() {
+                    var select = document.getElementById('users');
+                    var user = JSON.parse(select.options[select.selectedIndex].value);
+                    // Assuming 'Banned' is 1 when the user is banned and 0 or null otherwise
+                    document.getElementById('banCheckbox').checked = user.Banned == 1;
+                }
+            </script>
+
+                <?php
                     echo '
                     <section class="flex flex-col px-4 gap-2">
                         <span>Change Email</span>
                         <input type="text" id="NewEmail" class="newEmail text-red-600">
                     </section>
+
                     <section class="flex flex-col px-4 gap-2">
                         <span>Change Password</span>
                         <input type="password" id="newPassword" class="newPassword text-red-600">
                     </section>
+
                     <section class="flex justify-center">
                         <button type="button" class="std_button updateUserBtn">
                                 <span class="createPost_Span text-2xl font-bold text-red-600">Save</span>
                         </button>
                     </section>';
-                    ?>
-                </section>
+                ?>
             </section>
-            <section class="p-4 gap-2 profile_content overflow-hidden" data-type="2">
-                <?php include('../views/updateRules.php'); ?>
-            </section>
-            <section class="p-4 gap-2 profile_content" data-type="3">
-                <?php
+        </section>
+    
+        <section class="p-4 gap-2 profile_content" data-type="2">
+            <?php 
+                include("./updateRules.php");
+            ?>
+        </section>
+
+        <section class="p-4 gap-2 profile_content" data-type="3">
+            <?php 
                 include("./updateContact.php");
-                ?>
-            </section>
-            <section class="p-4 gap-2 profile_content" data-type="4">
-                <?php
+            ?>
+        </section>
+
+        <section class="p-4 gap-2 profile_content" data-type="4">
+            <?php 
                 include("./updateDescription.php");
-                ?>
-            </section>
+            ?>
+        </section>
+
         <?php
         }
         ?>
+
+
         <?php
-        if (!isset($_SESSION["isAdmin"]) || $_SESSION["isAdmin"] != 1) {
-            echo '
+            if(!isset($_SESSION["isAdmin"]) || $_SESSION["isAdmin"] != 1) {
+                echo '
                     <section class="flex flex-col px-4 gap-2">
                         <span>Change Email</span>
                         <input type="text" id="NewEmail" class="newEmail text-red-600">
                     </section>
+
                     <section class="flex flex-col px-4 gap-2">
                         <span>Change Password</span>
                         <input type="password" id="newPassword" class="newPassword text-red-600">
                     </section>
+
                     <section class="flex justify-center">
                         <button type="button" class="std_button updateUserBtn">
                                 <span class="createPost_Span text-2xl font-bold text-red-600">Save</span>
                         </button>
                     </section>';
-        }
+            }
         ?>
+        
     </section>
 </article>

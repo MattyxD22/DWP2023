@@ -106,6 +106,10 @@ switch ($action) {
         $userID = $_POST["userID"];
         $userModel->userPage($userID);
         break;
+    case "followUser":
+        $userIDToFollow = $_POST["userID"];
+        $userModel->followUser($userIDToFollow);
+        break;
 }
 
 class UserController

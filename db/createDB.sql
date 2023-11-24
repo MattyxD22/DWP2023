@@ -17,7 +17,8 @@ CREATE TABLE UserTable(
     Password VARCHAR(100),
     SignedUpDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     Banned INT(11),
-    MediaID INT(11)
+    MediaID INT(11),
+    IsAdmin INT(1) DEFAULT 0
 ) ENGINE = INNODB;
 
 
@@ -94,6 +95,7 @@ CREATE TABLE ContactInfoTable(
     Email VARCHAR(100) PRIMARY KEY,
     FName TEXT,
     LName TEXT,
+    PhoneNumber TEXT,
     City Text,
     StreetName Text,
     HouseNumber Text
@@ -188,25 +190,6 @@ CREATE PROCEDURE createComment(IN postID INT(11), IN userComment VARCHAR(500), I
 BEGIN 
 
 INSERT INTO PostTable(PostTable.ParentID, PostTable.Description, PostTable.CreatedDate, PostTable.CreatedBy) VALUES (postID, userComment, NOW(), userID);
-
-END //
-
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE updateLikePost(IN postID INT(11), IN UserID INT(11), IN Type INT(11))
-BEGIN 
-
-SET @Exists = NULL;
-
-SELECT LikesTable.PostID INTO @Exists FROM LikesTable WHERE LikesTable.PostID = PostID AND LikesTable.UserID = UserID; 
-
-IF @Exists IS NULL THEN
-    INSERT INTO LikesTable(LikesTable.PostID, LikesTable.UserID, LikesTable.Type) VALUES (PostID, UserID, Type);
-ELSE 
-    UPDATE LikesTable SET LikesTable.Type = Type WHERE LikesTable.postID = PostID AND LikesTable.UserID = UserID;
-END IF;
-
 
 END //
 
@@ -316,14 +299,6 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE createComment(IN postID INT(11), IN userComment VARCHAR(500), IN userID INT(11))
-BEGIN 
-
-INSERT INTO posttable(posttable.ParentID, posttable.Description, posttable.CreatedDate, posttable.CreatedBy) VALUES (postID, userComment, NOW(), userID);
-
-END //
-
-DELIMITER //
 CREATE PROCEDURE getPostImgs(IN PostID INT(11))
 BEGIN 
 
@@ -354,79 +329,6 @@ SELECT @Exists AS 'exists';
 END //
 
 DELIMITER ;
-
-
-DELIMITER //
-CREATE PROCEDURE deleteFromLikesTable(IN postID INT(11), IN UserID INT(11))
-BEGIN 
-
-DELETE FROM likestable WHERE likestable.PostID = PostID AND likestable.UserID = UserID;
-
-
-END //
-
-DELIMITER ;
-
-
-
-DELIMITER //
-CREATE PROCEDURE getCategories()
-BEGIN 
-
-SELECT * FROM categorytable; 
-
-
-END //
-
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE addFileToPost(IN Type INT(11), IN PostID INT(11), IN FileData LONGBLOB)
-BEGIN 
-
-INSERT INTO mediatable(mediatable.MediaType, mediatable.UploadDate, mediatable.PostID, mediatable.ImgData) VALUES (Type, NOW(), PostID, FileData);
-
-
-END //
-
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE addPostToCategory(IN CategoryID INT(11), IN PostID INT(11))
-BEGIN 
-
-INSERT INTO CategoryPostTable(CategoryPostTable.PostID, CategoryPostTable.CategoryID) VALUES (PostID, CategoryID);
-
-
-END //
-
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE getPostsInCategory(IN CategoryID INT(11))
-BEGIN 
-
-SELECT posttable.PostID, posttable.CreatedDate, posttable.CreatedBy, posttable.Title, usertable.Username, (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 2) AS 'Dislikes', (SELECT COUNT(posttable.Description) FROM posttable WHERE posttable.ParentID IS NOT NULL AND posttable.PostID = categoryposttable.PostID) AS 'Comments', mediatable.ImgData FROM categorytable
-LEFT JOIN categoryposttable ON categoryposttable.CategoryID = categorytable.CategoryID
-LEFT JOIN posttable ON posttable.PostID = categoryposttable.PostID
-LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy
-LEFT JOIN mediatable ON mediatable.PostID = posttable.PostID
-WHERE categorytable.CategoryID = CategoryID
-
-END //
-
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE getPostImgs(IN PostID INT(11))
-BEGIN 
-
-SELECT mediatable.ImgData, mediatable.MediaID FROM mediatable WHERE mediatable.PostID = PostID;
-
-END //
-
-DELIMITER ;
-
 
 DELIMITER //
 CREATE PROCEDURE getUncatorizedPosts()

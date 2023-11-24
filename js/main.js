@@ -22,6 +22,22 @@ $(document).ready(function () {
     });
   });
 
+  $(document).on("click", ".btn_aboutUs", function () {
+    const data = {
+      action: "aboutUs",
+    };
+
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log($(".state_col"));
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
+
   $(document).on("click", ".login_btn", function () {
     const container = $(this).closest(".login_container");
 
@@ -154,8 +170,6 @@ $(document).ready(function () {
   });
 
   $(document).on("click", ".mainBG", function (e) {
-    console.log(e.target);
-
     if (!$(e.target).closest(".categoryDropdownContainer")) {
       alert("!");
       $(".categoryContainer").removeClass("open");
@@ -449,34 +463,96 @@ $(document).ready(function () {
     });
   });
 
+  $(document).on("click", ".updateContactBtn", function () {
+    const container = $(this).closest(".updateContact");
+
+    const fName = container.find(".contactInfoFirstName").val();
+    const lName = container.find(".contactInfoLastName").val();
+    const email = container.find(".contactInfoEmail").val();
+    const phoneNumber = container.find(".contactInfoPhoneNumber").val();
+    const city = container.find(".contactInfoCity").val();
+    const houseNumber = container.find(".contactInfoHouseNumber").val();
+    const streetName = container.find(".contactInfoStreetName").val();
+
+    const data = {
+      action: "updateContact",
+      fName: fName,
+      lName: lName,
+      email: email,
+      phoneNumber: phoneNumber,
+      city: city,
+      houseNumber: houseNumber,
+      streetName: streetName
+    }
+
+   $.ajax({
+      url: url_admin,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
+    });
+  });
+
   $(document).on("click", ".followUnfollowBtn", function (e) {
     e.stopPropagation();
     e.preventDefault();
 
+    const userID = $(this).data("userid");
+
+    const data = {
+      action: "followUser",
+      userID: userID
+    }
+
+   $.ajax({
+      url: url_admin,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
+    });
+  });
+
+  $(document).on("click", ".reply_to_comment_container", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+<<<<<<< HEAD
     const userID = $(this).data("user");
 
     const data = {
       action: "follow",
       followUser: userID,
     };
+=======
+    const userID = $(this).data("userid");
+
+    const data = {
+      action: "followUser",
+      userID: userID
+    }
+>>>>>>> emilos-2
 
     $.ajax({
       url: url_user,
       type: "POST",
       data: data,
     }).done(function (data) {
+<<<<<<< HEAD
       //$(".state_col").empty();
       //$(".state_col").append(data);
+=======
+      console.log(data);
+>>>>>>> emilos-2
     });
   });
 
-  // $(document).on("click", ".reply_comment_container", function () {
-  //   $(this).toggleClass("open");
-  // });
-
-  $(document).on("click", ".reply_to_comment_container", function (e) {
+  $(document).on("click", ".close_popup", function (e) {
     e.stopPropagation();
     e.preventDefault();
+
+    $(this).closest(".reply_comment_container").removeClass("open");
   });
 
   $(document).on("click", ".submit_reply", function () {
