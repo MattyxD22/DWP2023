@@ -5,7 +5,7 @@ namespace models;
 require_once 'BaseModel.php';
 class PostModel extends BaseModel
 {
-    function createPost($userID, $title, $description, $categories, $fileData)
+    function createPost($userID, $title, $description, $categories, $filesArr)
     {
 
         try {
@@ -39,23 +39,30 @@ class PostModel extends BaseModel
             }
 
 
+            // Upload file to database if exists
+            if (!empty($filesArr)) {
 
-            if (!empty($fileData)) {
-
-                // Upload file to database if exists
 
                 // FileType / Type is currently hardcoded to 1, once there is time, create functions to determine filetype and adjust accordingly, 1 = img (for now)
                 // PostID = ID which should be returned by previous database call
                 // file = file to upload
 
-                $cxn = parent::connectToDB();
-                $addImg = "CALL addFileToPost(:type, :postID, :file)";
-                $handle_addImg = $cxn->prepare($addImg);
-                $handle_addImg->bindValue(":type", 1);
-                $handle_addImg->bindValue(":postID", $postID["PostID"]);
-                $handle_addImg->bindParam(":file", $fileData);
-                $handle_addImg->execute();
-                $cxn = null;
+                $count = 1;
+
+                // Use foreach loop, if multiple files exists
+                foreach ($filesArr as $key => $file) {
+
+                    $count++;
+                    $cxn = $this->connectToDB();
+                    $addImg = "CALL addFileToPost(:type, :postID, :file)";
+                    $handle_addImg = $cxn->prepare($addImg);
+                    $handle_addImg->bindValue(":type", 1);
+                    $handle_addImg->bindValue(":postID", $postID["PostID"]);
+                    $handle_addImg->bindParam(":file", $file["data"]);
+                    $handle_addImg->execute();
+
+                    $cxn = $this->closeDatabase();
+                }
             }
 
             //return

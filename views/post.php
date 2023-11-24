@@ -20,10 +20,19 @@
 
     </div>
 
-    <div class="post_comments_container px-3 py-3">
+    <div class="post_comments_container flex flex-col px-3 py-3">
 
+        <div class="RTE_comment w-full">
+            
+        </div>
 
-        <form>
+        <!-- <textarea id="comment" rows="4" class="w-full std_input comment_textArea" placeholder="Write a comment..."></textarea> -->
+
+        <button type="button" class="std_button submit_comment text-white ms-auto mt-2" data-id="<?php echo $post["PostID"] ?>">
+            Post comment
+        </button>
+
+        <!-- <form>
             <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 postComment_Container">
                 <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
                     <label for="comment" class="sr-only">Your comment</label>
@@ -33,7 +42,7 @@
                     <button type="button" class="std_button submit_comment text-white" data-id="<?php echo $post["PostID"] ?>">
                         Post comment
                     </button>
-                    <!-- <div class="flex pl-0 space-x-1 sm:pl-2">
+                    <div class="flex pl-0 space-x-1 sm:pl-2">
                         <button type="button" class="inline-flex justify-center items-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 20">
                                 <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M1 6v8a5 5 0 1 0 10 0V4.5a3.5 3.5 0 1 0-7 0V13a2 2 0 0 0 4 0V6" />
@@ -52,10 +61,10 @@
                             </svg>
                             <span class="sr-only">Upload image</span>
                         </button>
-                    </div> -->
+                    </div>
                 </div>
             </div>
-        </form>
+        </form> -->
     </div>
 
     <div class="comment_section flex flex-col">

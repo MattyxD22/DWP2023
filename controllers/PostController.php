@@ -23,22 +23,43 @@ if ($_POST) {
 
 switch ($action) {
     case "createPost":
-        print_r($_FILES);
-        print_r($_POST);
+        //print_r($_FILES);
+        //print_r($_POST);
         $title = $_POST["title"];
         $description = $_POST["description"];
         $categories = $_POST["categories"];
         $userID = $_SESSION["UserID"];
-        $file = $_FILES["file"]["tmp_name"];
-        $fileData = file_get_contents($file);
-        $returnDataTest = [
-            'title' => $title,
-            'description' => $description,
-            'userID' => $userID,
-            'file' => $file['name'],
-        ];
+        //$files = $_FILES["file"];
 
-        print_r($returnDataTest);
+        $filesArr = [];
+
+        $count = 0;
+        foreach ($_FILES as $file) {
+
+            //print_r($file);
+
+            //$temp = $target;
+            $tmp = $file['tmp_name'];
+            // $count = $count + 1;
+            // print_r($tmp . " : " . $count);
+            $tmp_name = file_get_contents($file["tmp_name"]);
+            // //move_uploaded_file($tmp, $temp);
+
+
+            $temp_arr = array('data' => $tmp_name);
+
+            print_r($temp_arr);
+
+            //array_merge($filesArr, $temp_arr);
+
+            array_push($filesArr, $temp_arr);
+
+            $tmp_name = '';
+            $tmp = '';
+        }
+        print_r('size: ' . count($filesArr));
+
+        print_r($filesArr);
 
         // $userID = $_SESSION["UserID"];
         // $title = $_POST["title"];
@@ -48,7 +69,7 @@ switch ($action) {
 
 
         //return $returnDataTest;
-        $postID = $postModel->createPost($userID, $title, $description, $categories, $fileData);
+        $postID = $postModel->createPost($userID, $title, $description, $categories, $filesArr);
 
         //return "It works???";
         break;
@@ -67,7 +88,11 @@ switch ($action) {
         $comment = $_POST["comment"];
         $userID = $_SESSION["UserID"];
 
-        return $postModel->createComment($postID, $comment, $userID);
+        $enc_Comment = base64_encode($comment);
+
+        //print_r(base64_encode($enc_Comment));
+
+        return $postModel->createComment($postID, $enc_Comment, $userID);
 
         break;
 

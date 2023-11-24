@@ -4,9 +4,11 @@ namespace models;
 
 require_once 'BaseModel.php';
 
-class AdminModel extends BaseModel{
+class AdminModel extends BaseModel
+{
 
-    function getUser($userID) {
+    function getUser($userID)
+    {
         try {
             $cxn = parent::connectToDB();
             $statement = "SELECT UserID, Username, FName, LName, Email, Banned FROM usertable WHERE IsAdmin = 0 OR UserID = :userID;";
@@ -23,7 +25,8 @@ class AdminModel extends BaseModel{
         }
     }
 
-    function updateUser($userID, $userBan, $userNewEmail, $userNewPassword) {
+    function updateUser($userID, $userBan, $userNewEmail, $userNewPassword)
+    {
         try {
             $cxn = parent::connectToDB();
             $query = $cxn->prepare("UPDATE UserTable
@@ -31,7 +34,7 @@ class AdminModel extends BaseModel{
                                     Email = :userNewEmail,
                                     Password = :userNewPassword
                                 WHERE UserID = :userID");
-        
+
             // Bind the parameters
             $query->bindParam(':userID', $userID);
             $query->bindParam(':userBan', $userBan);
@@ -39,8 +42,8 @@ class AdminModel extends BaseModel{
             $query->bindParam(':userNewPassword', $userNewPassword);
             $query->execute();
             if ($query->rowCount() > 0) {
-            $cxn = null;
-            return true;
+                $cxn = null;
+                return true;
             } else {
                 $cxn = null;
                 return false;
@@ -52,4 +55,91 @@ class AdminModel extends BaseModel{
         }
     }
 
+    function deleteRule($ruleID)
+    {
+        try {
+            $cnx = $this->connectToDB();
+
+            $request = "CALL deleteRule(:ruleID)";
+            $handle_request = $cnx->prepare($request);
+            $handle_request->bindParam(":ruleID", $ruleID);
+            $handle_request->execute();
+            $cnx = $this->closeDB();
+        } catch (\PDOException $err) {
+            print_r($err->getMessage());
+        }
+    }
+
+    // function addRule($rule)
+    // {
+    //     try {
+    //         $cnx = $this->connectToDB();
+
+    //         $request = "CALL insertRule(:rule)";
+    //         $handle_request = $cnx->prepare($request);
+    //         $handle_request->bindParam(":rule", $rule);
+    //         $handle_request->execute();
+    //         $cnx = $this->closeDB();
+    //     } catch (\PDOException $err) {
+    //         print_r($err->getMessage());
+    //     }
+    // }
+
+    function updateRule($ruleID, $ruleText)
+    {
+        try {
+            $cnx = $this->connectToDB();
+
+            $request = "CALL updateRule(:ruleID, :ruleText)";
+            $handle_request = $cnx->prepare($request);
+            $handle_request->bindParam(":ruleID", $ruleID);
+            $handle_request->bindParam(":ruleText", $ruleText);
+            $handle_request->execute();
+            $cnx = $this->closeDB();
+        } catch (\PDOException $err) {
+            print_r($err->getMessage());
+        }
+    }
+
+    function getNewRule()
+    {
+        return include('../views/new_rule.php');
+    }
+
+    function getRules()
+    {
+        try {
+            $cnx = $this->connectToDB();
+
+            $request = "CALL getRules()";
+            $handle_request = $cnx->prepare($request);
+            $handle_request->execute();
+            $rules = $handle_request->fetchAll(\PDO::FETCH_ASSOC);
+            return $rules;
+            $cnx = $this->closeDB();
+        } catch (\PDOException $err) {
+            print_r($err->getMessage());
+        }
+    }
+
+    function addNewRule($rule)
+    {
+        try {
+            $cnx = $this->connectToDB();
+
+            $ruleStmt = "CALL insertRule(:rule)";
+            $handle_addRule = $cnx->prepare($ruleStmt);
+            $handle_addRule->bindParam(":rule", $rule);
+            $handle_addRule->execute();
+
+            $request = "CALL getRules()";
+            $handle_request = $cnx->prepare($request);
+            $handle_request->execute();
+            $rules = $handle_request->fetchAll(\PDO::FETCH_ASSOC);
+            return include('../views/updateRules.php');
+            $cnx = $this->closeDB();
+        } catch (\PDOException $err) {
+            print_r($err->getMessage());
+        }
+    }
 }

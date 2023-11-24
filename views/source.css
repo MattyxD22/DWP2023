@@ -409,3 +409,106 @@
 .profile_content.selected{
     display: flex;
 }
+
+.ql-picker-label{
+    color: var(--red) !important;
+}
+
+.ql-snow .ql-stroke{
+    stroke: var(--red) !important;
+}
+
+.ql-fill{
+    fill: var(--red) !important;
+}
+
+.ql-editor.ql-blank::before{
+    color: #CACACA !important;
+}
+
+.ql-editor p{
+    color: white !important;
+}
+
+.ql-editor{
+    height: 15rem !important;
+}
+
+.ql-editor ol li::before{
+    color: white !important;
+}
+
+.ql-align-center{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ql-align-right{
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.rules_bg{
+    background-color: #3d3d3d;
+    border-radius: 10px;
+}
+
+.ruleNum{
+    font-size: 1.5rem;
+    color: var(--red);
+    font-weight: bold;
+}
+
+.ruleText{
+    font-size: 1.25rem;
+    color: var(--red);
+    font-weight: bold;
+}
+
+.tab_elem.admin{
+    min-height: 6rem !important;
+    max-height: 6rem !important;
+    height: 100% !important;
+}
+
+.profile_tab_container.admin{
+    min-height: 4rem !important;
+    max-height: 4rem !important;
+    height: 100% !important;
+}
+
+.imgDialog{
+    background-color: #3D3D3D;
+    border-radius: 6px;
+    min-height: 500px;
+    max-width: 750px;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.imgDialog::backdrop{
+    opacity: 0.60 !important;
+    background-color: black;
+}
+
+.modalImg{
+    display: none;
+}
+
+.modalImg.active{
+    display: flex;
+}
+
+.imgIndicator i{
+    color: #CACACA;
+}
+
+.imgIndicator.active i{
+    color: var(--red);
+}

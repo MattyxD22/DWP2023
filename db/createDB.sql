@@ -25,7 +25,7 @@ CREATE TABLE UserTable(
 CREATE TABLE PostTable(
     PostID INT(11) AUTO_INCREMENT PRIMARY KEY,
     ParentID INT(11),
-    Description TEXT,
+    Description LONGTEXT,
     CreatedDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     CreatedBy INT(11),
     Title VARCHAR(50),   
@@ -81,6 +81,24 @@ CREATE TABLE RepostTable(
     FOREIGN KEY(PostID) REFERENCES PostTable(PostID)
 ) ENGINE = INNODB;
 
+CREATE TABLE RulesTable(
+    RuleID INT(11) AUTO_INCREMENT PRIMARY KEY,
+    Rule TEXT
+) ENGINE = INNODB;
+
+CREATE TABLE AboutTable(
+    Description TEXT
+) ENGINE = INNODB;
+
+CREATE TABLE ContactInfoTable(
+    Email VARCHAR(100) PRIMARY KEY,
+    FName TEXT,
+    LName TEXT,
+    City Text,
+    StreetName Text,
+    HouseNumber Text
+) ENGINE = INNODB;
+
 ALTER TABLE UserTable ADD FOREIGN KEY (MediaID) REFERENCES MediaTable(MediaID);
 ALTER TABLE PostTable ADD FOREIGN KEY (CategoryID) REFERENCES CategoryPostTable(ID);
 
@@ -121,6 +139,18 @@ insert into CategoryTable(CategoryTable.Title) VALUES("Category 3");
 insert into CategoryTable(CategoryTable.Title) VALUES("Category 4");
 insert into CategoryTable(CategoryTable.Title) VALUES("Category 5");
 
+insert into RulesTable (Rule) values ('‪‪test‪');
+insert into RulesTable (Rule) values (null);
+insert into RulesTable (Rule) values ('　');
+insert into RulesTable (Rule) values ('-1/2');
+insert into RulesTable (Rule) values ('""');
+insert into RulesTable (Rule) values ('(｡◕ ∀ ◕｡)');
+insert into RulesTable (Rule) values ('✋🏿 💪🏿 👐🏿 🙌🏿 👏🏿 🙏🏿');
+insert into RulesTable (Rule) values ('̗̺͖̹̯͓Ṯ̤͍̥͇͈h̲́e͏͓̼̗̙̼̣͔ ͇̜̱̠͓͍ͅN͕͠e̗̱z̘̝̜̺͙p̤̺̹͍̯͚e̠̻̠͜r̨̤͍̺̖͔̖̖d̠̟̭̬̝͟i̦͖̩͓͔̤a̠̗̬͉̙n͚͜ ̻̞̰͚ͅh̵͉i̳̞v̢͇ḙ͎͟-҉̭̩̼͔m̤̭̫i͕͇̝̦n̗͙ḍ̟ ̯̲͕͞ǫ̟̯̰̲͙̻̝f ̪̰̰̗̖̭̘͘c̦͍̲̞͍̩̙ḥ͚a̮͎̟̙͜ơ̩̹͎s̤.̝̝ ҉Z̡̖̜͖̰̣͉̜a͖̰͙̬͡l̲̫̳͍̩g̡̟̼̱͚̞̬ͅo̗͜.̟');
+insert into RulesTable (Rule) values ('❤️ 💔 💌 💕 💞 💓 💗 💖 💘 💝 💟 💜 💛 💚 💙');
+insert into RulesTable (Rule) values ('👩🏽');
+
+
 DELIMITER //
 CREATE PROCEDURE addNewPost(IN Description VARCHAR(500), IN UserID INT(11), IN Title VARCHAR(50))
 BEGIN
@@ -132,10 +162,10 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE getFeed(IN UserID INT(11))
 BEGIN
-SELECT PostTable.PostID, PostTable.Description, PostTable.CreatedBy, PostTable.Title, UserTable.Username, UserTable.UserID, (SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = posttable.PostID) AS 'Comments', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'Dislikes', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike', mediatable.ImgData FROM PostTable 
+SELECT PostTable.PostID, PostTable.Description, PostTable.CreatedBy, PostTable.Title, UserTable.Username, UserTable.UserID, (SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = posttable.PostID) AS 'Comments', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'Dislikes', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike', mediatable.ImgData, posttable.CreatedDate FROM PostTable 
 LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy 
 LEFT JOIN MediaTable ON MediaTable.PostID = PostTable.PostID
-WHERE PostTable.ParentID IS NULL;
+WHERE PostTable.ParentID IS NULL ORDER BY posttable.CreatedDate DESC;
 END //
 
 DELIMITER ;
@@ -338,52 +368,6 @@ END //
 DELIMITER ;
 
 
-DELIMITER //
-CREATE PROCEDURE getComments(IN postID INT(11))
-BEGIN 
-
-BEGIN
-
-SELECT DISTINCT
-    posttable.PostID,
-    posttable.ParentID,
-    posttable.Description,
-    posttable.CreatedDate,
-    posttable.CreatedBy,
-    usertable.Username,
-    (SELECT COUNT(*) FROM likestable WHERE likestable.Type = 1 AND likestable.PostID = posttable.ParentID) AS 'Likes',
-    (SELECT COUNT(*) FROM likestable WHERE likestable.Type = 2 AND likestable.PostID = posttable.ParentID) AS 'Dislikes'
-FROM
-    posttable
-LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy
-WHERE
-    posttable.ParentID = PostID -- Assuming that the main posts have NULL ParentID
-
-UNION
-
-SELECT DISTINCT
-    p2.PostID,
-    p2.ParentID,
-    p2.Description,
-    p2.CreatedDate,
-    p2.CreatedBy,
-    u2.Username,
-    (SELECT COUNT(*) FROM likestable WHERE likestable.Type = 1 AND likestable.PostID = p2.ParentID) AS 'Likes',
-    (SELECT COUNT(*) FROM likestable WHERE likestable.Type = 2 AND likestable.PostID = p2.ParentID) AS 'Dislikes'
-FROM
-    posttable
-LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy
-LEFT JOIN posttable p2 ON p2.ParentID = posttable.PostID
-LEFT JOIN usertable u2 ON u2.UserID = p2.CreatedBy
-WHERE
-    posttable.ParentID = PostID;
-
-END
-
-
-END //
-
-DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE getCategories()
@@ -514,3 +498,51 @@ END //
 
 DELIMITER ;
 
+DELIMITER //
+
+CREATE PROCEDURE followUser(IN FollowID INT(11), IN UserID INT(11))
+BEGIN
+
+SELECT COUNT(*) INTO @Exists FROM followingtable WHERE followingtable.UserID = UserID AND followingtable.FollowingID = FollowID;
+
+IF @Exists = 0 THEN
+
+INSERT INTO followingtable(followingtable.UserID, followingtable.FollowingID) VALUES(UserID, FollowID);
+
+ELSE
+
+DELETE FROM followingtable WHERE followingtable.UserID = UserID AND followingtable.FollowingID = FollowID;
+
+END IF;
+
+END //
+
+DELIMITER ; 
+
+DELIMITER //
+CREATE PROCEDURE getRules()
+BEGIN
+SELECT * FROM RulesTable;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE deleteRule(IN RuleID INT(11))
+BEGIN
+DELETE FROM RulesTable WHERE RulesTable.RuleID = RuleID;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE insertRule(IN Rule LONGTEXT)
+BEGIN
+INSERT INTO RulesTable(RulesTable.Rule) VALUES (Rule);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE updateRule(IN RuleID INT(11), IN Rule LONGTEXT)
+BEGIN
+UPDATE RulesTable SET RulesTable.Rule = Rule WHERE RulesTable.RuleID = RuleID;
+END //
+DELIMITER ;

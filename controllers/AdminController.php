@@ -1,7 +1,9 @@
 <?php
+
 namespace controllers;
 
 require("../models/AdminModel.php");
+
 use models\AdminModel;
 
 $adminModel2 = new AdminModel();
@@ -32,7 +34,7 @@ switch ($action) {
             var_dump($_POST);
             $userID = $_SESSION["UserID"]; // Fall back to the session UserID
         }
-        
+
         $userBan = $_POST["userBan"];
         $userNewEmail = $_POST["userNewEmail"];
         $userNewPassword = password_hash($_POST["userNewPassword"], PASSWORD_DEFAULT);
@@ -40,18 +42,49 @@ switch ($action) {
 
         // return $adminModel2->createComment($postID, $comment, $userID);
         break;
+
+    case "removeRule":
+
+        $ruleID = $_POST["ruleID"];
+        $adminModel2->deleteRule($ruleID);
+
+        break;
+
+    case "updateRule":
+
+        $ruleID = $_POST["ruleID"];
+        $ruleText = $_POST["ruleText"];
+        $adminModel2->updateRule($ruleID, $ruleText);
+
+        break;
+
+    case "getNewRule":
+
+
+        return $adminModel2->getNewRule();
+
+        break;
+
+    case 'addNewRule':
+
+        $rule = $_POST['rule'];
+        return $adminModel2->addNewRule($rule);
+
+        break;
 }
 
-class AdminController {
+class AdminController
+{
     private $adminModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->adminModel = new AdminModel();
     }
 
-    function fetchUsers($userID) {
+    function fetchUsers($userID)
+    {
         $users = $this->adminModel->getUser($userID);
         return $users;
     }
-    
 }

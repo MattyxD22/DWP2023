@@ -110,14 +110,50 @@ class SidebarModel extends BaseModel
         //header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/categoryPage.php');
     }
 
-    function loadAdminPage(){
-        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/adminPage.php');
+    function loadAdminPage()
+    {
+
+        try {
+            $cnx = $this->openDB();
+
+            $request = "CALL getRules()";
+            $handle_request = $cnx->prepare($request);
+            $handle_request->execute();
+            $rules = $handle_request->fetchAll(\PDO::FETCH_ASSOC);
+
+            return include("../views/adminPage.php");
+
+            $cnx = $this->closeDB();
+        } catch (\PDOException $err) {
+            print_r($err->getMessage());
+        }
+
+        //header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/adminPage.php');
     }
 
     function logOut()
     {
         session_destroy();
         header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
+    }
+
+    function rules()
+    {
+
+        try {
+            $cnx = $this->openDB();
+
+            $request = "CALL getRules()";
+            $handle_request = $cnx->prepare($request);
+            $handle_request->execute();
+            $rules = $handle_request->fetchAll(\PDO::FETCH_ASSOC);
+
+            return include("../views/rules.php");
+
+            $cnx = $this->closeDB();
+        } catch (\PDOException $err) {
+            print_r($err->getMessage());
+        }
     }
 }
 

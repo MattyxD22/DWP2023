@@ -253,7 +253,32 @@ class UserModel extends BaseModel
         }
     }
 
-    function userPage($userID) {
+    function userPage($userID)
+    {
         header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/profile.php?userid=' . urlencode($userID));
-    }    
+    }
+
+    function follow($followUser, $userID)
+    {
+        try {
+            $cxn = $this->openDB();
+
+            $statement = "CALL followUser(:followUser, :userID)";
+            $query = $cxn->prepare($statement);
+            $query->bindValue("followUser", $followUser);
+            $query->bindValue("userID", $userID);
+            $query->execute();
+            $comments = $query->fetchAll(\PDO::FETCH_ASSOC);
+
+            // $statement = "CALL fetchLikesByID(:UserID)";
+            // $query = $cxn->prepare($statement);
+            // $query->bindValue(":userID", $userID);
+            // $query->execute();
+            // $result = $query->fetchAll(\PDO::FETCH_ASSOC);
+            $cxn = $this->closeDB();
+            return $comments;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
 }

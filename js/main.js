@@ -1,4 +1,6 @@
 $(document).ready(function () {
+  var quillEditor;
+
   const url_user = "../controllers/UserController.php";
   const url_post = "../controllers/PostController.php";
   const url_sidebar = "../controllers/sidebarController.php";
@@ -114,18 +116,20 @@ $(document).ready(function () {
       description: description,
       categories: categories,
     };
+    const input = document.getElementById("file_input");
+
+    $(input.files).each(function (index, value) {
+      // console.log($(this)[0]);
+      console.log($(input.files));
+      console.log($(this)[0], $(this)[0].name);
+
+      formData.append("file" + index, $(this)[0], $(this)[0].name);
+    });
 
     formData.append("action", "createPost");
     formData.append("title", title);
     formData.append("description", description);
     formData.append("categories", categories);
-
-    const input = document.getElementById("file_input");
-
-    $(input.files).each(function () {
-      // console.log($(this)[0]);
-      formData.append("file", $(this)[0], $(this)[0].name);
-    });
 
     console.log(formData);
 
@@ -181,6 +185,40 @@ $(document).ready(function () {
     }).done(function (data) {
       $(".state_col").empty();
       $(".state_col").append(data);
+
+      let comment_container = document.getElementsByClassName("RTE_comment");
+      //let comment_container = $(".state_col").find(".RTE_comment");
+      console.log("RTE_comment");
+
+      const toolbarOptions = [
+        ["bold", "italic", "underline", "strike"], // toggled buttons
+        ["blockquote", "code-block"],
+
+        [{ header: 1 }, { header: 2 }], // custom button values
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ script: "sub" }, { script: "super" }], // superscript/subscript
+        [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+        [{ direction: "rtl" }], // text direction
+
+        [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+        [{ font: [] }],
+        [{ align: [] }],
+
+        ["clean"], // remove formatting button
+      ];
+
+      console.log("RTE_comment");
+
+      quillEditor = new Quill(".RTE_comment", {
+        modules: {
+          toolbar: toolbarOptions,
+        },
+        placeholder: "Write a comment...",
+        theme: "snow",
+      });
     });
   });
 
@@ -235,22 +273,6 @@ $(document).ready(function () {
       $(".state_col").append(data);
     });
   });
-  
-  // Admin
-  $(document).on("click", ".admin_btn", function () {
-    const data = {
-      action: "admin",
-    };
-
-    $.ajax({
-      url: url_sidebar,
-      type: "POST",
-      data: data,
-    }).done(function (data) {
-      $(".state_col").empty();
-      $(".state_col").append(data);
-    });
-  });
 
   // Admin
   $(document).on("click", ".admin_btn", function () {
@@ -270,7 +292,7 @@ $(document).ready(function () {
 
   $(document).on("click", ".submit_comment", function () {
     const container = $(this).closest(".postComment_Container");
-    const comment = container.find(".comment_textArea").val();
+    const comment = quillEditor.root.innerHTML;
     const id = $(this).data("id");
 
     const data = {
@@ -278,6 +300,8 @@ $(document).ready(function () {
       comment: comment,
       postID: id,
     };
+
+    console.log(data);
 
     $.ajax({
       url: url_post,
@@ -385,8 +409,8 @@ $(document).ready(function () {
 
     const data = {
       action: "fromPost",
-      userID: userID
-    }
+      userID: userID,
+    };
 
     $.ajax({
       url: url_user,
@@ -400,11 +424,11 @@ $(document).ready(function () {
     // alert("cliked on user profile: " + userID);
   });
 
-    $(document).on("click", ".updateUserBtn", function () {
+  $(document).on("click", ".updateUserBtn", function () {
     const container = $(this).closest(".updateUserContainer");
 
     const user = container.find(".selectedUserToUpdate").val();
-    const userBan = container.find(".selectedUserBanStatus").is(':checked');
+    const userBan = container.find(".selectedUserBanStatus").is(":checked");
     const userNewEmail = container.find(".newEmail").val();
     const userNewPassword = container.find(".newPassword").val();
 
@@ -413,7 +437,7 @@ $(document).ready(function () {
       user: user,
       userBan: userBan,
       userNewEmail: userNewEmail,
-      userNewPassword: userNewPassword
+      userNewPassword: userNewPassword,
     };
 
     $.ajax({
@@ -429,37 +453,30 @@ $(document).ready(function () {
     e.stopPropagation();
     e.preventDefault();
 
-    /* const userID = $(this).data("userid");
+    const userID = $(this).data("user");
 
     const data = {
-      action: "fromPost",
-      userID: userID
-    }
+      action: "follow",
+      followUser: userID,
+    };
 
     $.ajax({
       url: url_user,
       type: "POST",
       data: data,
     }).done(function (data) {
-      $(".state_col").empty();
-      $(".state_col").append(data);
-    }); */
+      //$(".state_col").empty();
+      //$(".state_col").append(data);
+    });
   });
 
-  $(document).on("click", ".reply_comment_container", function () {
-    $(this).toggleClass("open");
-  });
+  // $(document).on("click", ".reply_comment_container", function () {
+  //   $(this).toggleClass("open");
+  // });
 
   $(document).on("click", ".reply_to_comment_container", function (e) {
     e.stopPropagation();
     e.preventDefault();
-  });
-
-  $(document).on("click", ".close_popup", function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    $(this).closest(".reply_comment_container").removeClass("open");
   });
 
   $(document).on("click", ".submit_reply", function () {
@@ -570,5 +587,165 @@ $(document).ready(function () {
     container
       .find('.profile_content[data-type="' + type + '"]')
       .addClass("selected");
+  });
+
+  $(document).on("click", ".post_image_container", function () {});
+
+  $(document).on("click", ".btn_rules", function () {
+    const data = {
+      action: "rules",
+    };
+
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
+
+  $(document).on("click", ".delete_rule", function () {
+    const row = $(this).closest(".rules_row");
+    const id = $(this).data("rule");
+
+    const data = {
+      action: "removeRule",
+      ruleID: id,
+    };
+
+    $.ajax({
+      url: url_admin,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      // Remove after request is completed successfully
+      row.remove();
+    });
+  });
+
+  $(document).on("click", ".update_rule", function () {
+    const row = $(this).closest(".rules_row");
+    const id = $(this).data("rule");
+    const ruleText = row.find(".std_input").val();
+
+    const data = {
+      action: "updateRule",
+      ruleID: id,
+      ruleText: ruleText,
+    };
+
+    $.ajax({
+      url: url_admin,
+      type: "POST",
+      data: data,
+    }).done(function (data) {});
+  });
+
+  $(document).on("click", ".get_new_rule", function () {
+    const container = $(this).closest(".rules_MainContainer");
+
+    const data = {
+      action: "getNewRule",
+    };
+
+    $.ajax({
+      url: url_admin,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      container.find(".rules_col").append(data);
+      //Scroll to bottom after rule insert
+      container
+        .find(".rules_ScrollContainer")
+        .scrollTop(container.find(".rules_ScrollContainer")[0].scrollHeight);
+    });
+  });
+
+  $(document).on("click", ".add_rule", function () {
+    const rules_container = $(this).closest(".rules_col");
+    const container = $(this).closest(".rules_row");
+    const ruleText = container.find(".std_input").val();
+
+    const data = {
+      action: "addNewRule",
+      rule: ruleText,
+    };
+
+    $.ajax({
+      url: url_admin,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $('.profile_content[data-type="2"]').empty();
+      $('.profile_content[data-type="2"]').append(data);
+    });
+  });
+
+  /**
+   * Open a dialog if the user has clicked on the picture
+   */
+  $(document).on("click", ".feed_image_container", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    let dialog = document.querySelector("dialog");
+    dialog.showModal();
+  });
+
+  /**
+   * Close the dialog when clicked on the backdrop
+   * If the user has clicked inside the container, dont close it
+   */
+  $(document).on("click", ".imgDialog", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    // Get the clicked element from the event-target
+    const clickElem = e.target;
+
+    // check if the clicked element is the dialog element itself
+    if ($(clickElem).hasClass("imgDialog")) {
+      // if true, close the dialog
+      let dialog = document.querySelector("dialog");
+      dialog.close();
+    }
+  });
+
+  $(document).on("click", ".direction_scroll", function () {
+    const direction = $(this).data("direction");
+    const container = $(this).closest(".dialogContainer");
+    let currentImgID = container.find(".modalImg.active").data("img");
+    const images = container.find(".modalImg").length;
+    //alert(images);
+
+    switch (direction) {
+      case "back":
+        if (currentImgID > 1) {
+          currentImgID--;
+          container.find(".modalImg").removeClass("active");
+          container
+            .find(".modalImg[data-img=" + currentImgID + "]")
+            .addClass("active");
+        }
+        break;
+
+      case "forward":
+        if (currentImgID < images) {
+          currentImgID++;
+          container.find(".modalImg").removeClass("active");
+          container
+            .find(".modalImg[data-img=" + currentImgID + "]")
+            .addClass("active");
+        }
+
+        break;
+    }
+
+    container.find(".imgIndicator").removeClass("active");
+    container
+      .find('.imgIndicator[data-img="' + currentImgID + '"]')
+      .addClass("active");
   });
 });

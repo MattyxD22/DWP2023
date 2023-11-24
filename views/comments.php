@@ -18,9 +18,8 @@
                 </div>
                 <div class="comment_content pb-4">
 
-                    <span class="comment_span">
-                        <?php echo $comment["Description"] ?>
-                    </span>
+                    <!-- Keep content of "pre" on the same line, to keep it consistent -->
+                    <pre class="comment_span"><?php echo base64_decode($comment["Description"]) ?></pre>
 
                 </div>
                 <div class="comment_footer flex flex-row py-2">

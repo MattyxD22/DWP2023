@@ -20,9 +20,9 @@ $followingCount = $userController->fetchFollowing($userID);
 $postCount = $userController->fetchPostsAmount($userID);
 $username = $userController->fetchUsername($userID);
 $userPosts = $userController->fetchPosts($userID);
-$userLikes = $userController->fetchLikes();
-$userDislikes = $userController->fetchDislikes();
-$userComments = $userController->fetchUserComments();
+$userLikes = $userController->fetchLikes($userID);
+$userDislikes = $userController->fetchDislikes($userID);
+$userComments = $userController->fetchUserComments($userID);
 ?>
 
 <article class="text-white profile_page">
@@ -45,25 +45,25 @@ $userComments = $userController->fetchUserComments();
                 <p>Following</p>
             </div>
         </div>
-        <?php 
-            if (isset($_GET['userid']) && $_SESSION['UserID'] != $userID) {
+        <?php
+        if (isset($_GET['userid']) && $_SESSION['UserID'] != $userID) {
         ?>
-        <div>
-            <button type="button" class="std_button followUnfollowBtn">
-                <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
-            </button>
-        </div>
-        <?php 
-            } else {
+            <div>
+                <button type="button" class="std_button followUnfollowBtn" data-user="<?php echo $userID ?>">
+                    <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
+                </button>
+            </div>
+        <?php
+        } else {
         ?>
             <button type="button" class="std_button opacity-0">
                 <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
             </button>
-        </div>
-        <?php 
-            }
+            </div>
+        <?php
+        }
         ?>
-        
+
     </section>
     <section>
         <?php // var_dump($userPosts); // Uncomment for debugging purposes 
@@ -74,28 +74,33 @@ $userComments = $userController->fetchUserComments();
             <div class="profile_tab_container px-1 pt-2 flex flex-row w-full justify-between">
 
                 <div class="tab_elem selected" data-type="1">
-                    <span class="tab_first_text me-2">Your</span>
+                    <!-- <span class="tab_first_text me-2">Your</span> -->
                     <span>Posts</span>
                 </div>
 
                 <div class="tab_elem" data-type="2">
-                    <span class="tab_first_text me-2">Your</span>
+                    <!-- <span class="tab_first_text me-2">Your</span> -->
                     <span>Likes</span>
                 </div>
 
                 <div class="tab_elem" data-type="3">
-                    <span class="tab_first_text me-2">Your</span>
+                    <!-- <span class="tab_first_text me-2">Your</span> -->
                     <span>Dislikes</span>
                 </div>
 
                 <div class="tab_elem" data-type="4">
-                    <span class="tab_first_text me-2">Your</span>
+                    <!-- <span class="tab_first_text me-2">Your</span> -->
                     <span>Comments</span>
                 </div>
 
                 <div class="tab_elem" data-type="5">
-                    <span class="tab_first_text me-2">Your</span>
+                    <!-- <span class="tab_first_text me-2">Your</span> -->
                     <span>Reposts</span>
+                </div>
+
+                <div class="tab_elem" data-type="6">
+                    <!-- <span class="tab_first_text me-2">Your</span> -->
+                    <span>Following</span>
                 </div>
 
 
@@ -110,7 +115,7 @@ $userComments = $userController->fetchUserComments();
                         // Set variables with the information from the current post
                         $title = $post['Title']; // Assuming 'Title' is the correct key
                         $description = $post['Description']; // And so on for other variables
-                        $img = $post["ImgData"];
+                        $img = ""; //$post["ImgData"];
                         $postID = $post["PostID"];
 
                         // Now include the profileItem.php file, which will use the variables above
@@ -179,6 +184,10 @@ $userComments = $userController->fetchUserComments();
             </div>
 
             <div class="profile_content" data-type="5">
+
+            </div>
+
+            <div class="profile_content" data-type="6">
 
             </div>
 

@@ -22,6 +22,15 @@ if ($_POST) {
 
 
 switch ($action) {
+
+    case "follow":
+
+        $followUser = $_POST["followUser"];
+        $userID = $_SESSION["UserID"];
+        $userModel->follow($followUser, $userID);
+        break;
+        break;
+
     case "logout":
 
         $userID = $_POST["userID"];
@@ -136,19 +145,17 @@ class UserController
         return $posts;
     }
 
-    function fetchLikes()
+    function fetchLikes($userID)
     {
         global $userModel;
-        $userID = $_SESSION["UserID"];
 
         $likes = $userModel->fetchLikesById($userID);
         return $likes;
     }
 
-    function fetchDislikes()
+    function fetchDislikes($userID)
     {
         global $userModel;
-        $userID = $_SESSION["UserID"];
 
 
 
@@ -156,11 +163,10 @@ class UserController
         return $dislikes;
     }
 
-    function fetchUserComments()
+    function fetchUserComments($userID)
     {
         global $userModel;
 
-        $userID = $_SESSION["UserID"];
         $comments = $userModel->fetchUserCommentsByID($userID);
         return $comments;
     }
