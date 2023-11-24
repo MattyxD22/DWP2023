@@ -20,6 +20,22 @@ $(document).ready(function () {
     });
   });
 
+  $(document).on("click", ".btn_aboutUs", function () {
+    const data = {
+      action: "aboutUs",
+    };
+
+    $.ajax({
+      url: url_sidebar,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log($(".state_col"));
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+  });
+
   $(document).on("click", ".login_btn", function () {
     const container = $(this).closest(".login_container");
 

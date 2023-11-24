@@ -409,3 +409,7 @@
 .profile_content.selected{
     display: flex;
 }
+
+.about_us_wrapper {
+    background-color: #3d3d3d;
+}

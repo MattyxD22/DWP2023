@@ -114,6 +114,10 @@ class SidebarModel extends BaseModel
         header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/adminPage.php');
     }
 
+    function loadAboutUs() {
+        header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/aboutUs.php');
+    }
+
     function logOut()
     {
         session_destroy();
