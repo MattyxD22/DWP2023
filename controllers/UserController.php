@@ -175,6 +175,13 @@ class UserController
         return $comments;
     }
 
+    function fetchReposts($userID) {
+        global $userModel;
+
+        $reposts = $userModel->fetchRepostsByUserID($userID);
+        return $reposts;
+    }
+
     // function fetchReposts($userID)
     // {
     //     global $userModel;

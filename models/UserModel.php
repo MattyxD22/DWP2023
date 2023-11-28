@@ -172,7 +172,7 @@ class UserModel extends BaseModel
     {
         try {
             $cxn = parent::connectToDB();
-            $statement = "SELECT PostID, Description, CreatedDate, CreatedBy, Title, CategoryID, mediatable.ImgData FROM PostTable LEFT JOIN mediatable ON mediatable.PostID = PostTable.PostID WHERE ParentID IS NULL AND CreatedBy = :userID ORDER BY PostID DESC;";
+            $statement = "CALL fetchUserPosts(:userID);";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
@@ -181,7 +181,7 @@ class UserModel extends BaseModel
             return $result;
         } catch (\PDOException $e) {
             echo $e->getMessage();
-        }
+        }        
     }
 
     function fetchLikesById($userID)
@@ -225,6 +225,22 @@ class UserModel extends BaseModel
             // $result = $query->fetchAll(\PDO::FETCH_ASSOC);
             $cxn = null;
             return $dislikes;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchRepostsByUserID($userID) {
+        try {
+            $cxn = parent::connectToDB();
+
+            $sql = "CALL fetchUserReposts(:userID);";
+            $query = $cxn->prepare($sql);
+            $query->bindValue(":userID", $userID);
+            $query->execute();
+            $reposts = $query->fetchALL(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $reposts;
         } catch (\PDOException $e) {
             echo $e->getMessage();
         }

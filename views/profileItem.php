@@ -16,16 +16,21 @@
     <div class="profileItem_Footer flex flex-row py-2">
         <div class="actions_div flex flex-row my-auto">
 
+            <div class="flex flex-row pe-2">
+                <i class="bi bi-arrow-down-up text-xl text-red-600 flex repost_post cursor-pointer" data-id="<?php echo $postID ?>"></i>
+                <span class="mx-2 text-red-600 <?php echo $userReposted == 1 ? 'underline' : ''; ?>"><?php echo $repostAmount; ?></span>
+            </div>
+
             <div class="action_like flex flex-row pe-2">
                 <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
-                <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-id="<?php echo $post["PostID"] ?>"></i>
-                <span class="mx-2 text-red-600">0</span>
+                <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-id="<?php echo $postID ?>"></i>
+                <span class="mx-2 text-red-600 <?php echo $userLike == 1 ? 'underline' : ''; ?>"><?php echo $likesAmount; ?></span>
             </div>
 
             <div class="action_dislike flex flex-row pe-2">
                 <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex"></i>
-                <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-id="<?php echo $post["PostID"] ?>"></i>
-                <span class="mx-2 text-red-600">0</span>
+                <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-id="<?php echo $postID ?>"></i>
+                <span class="mx-2 text-red-600 <?php echo $userDislike == 1 ? 'underline' : ''; ?>"><?php echo $dislikesAmount; ?></span>
             </div>
         </div>
         <div class="flex flex-row repost_comment_container px-2" title="repost this comment">

@@ -368,32 +368,141 @@ END //
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE fetchLikesByID(IN UserID INT(11))
 BEGIN 
 
-SELECT PostTable.PostID, PostTable.Description, PostTable.CreatedBy, PostTable.Title, UserTable.Username, (SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = posttable.PostID) AS 'Comments', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'Dislikes', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike', mediatable.ImgData FROM LikesTable
-LEFT JOIN PostTable ON PostTable.PostID = LikesTable.PostID
-LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy
-LEFT JOIN mediatable ON mediatable.PostID = posttable.PostID
-WHERE LikesTable.UserID = UserID AND LikesTable.Type = 1 AND PostTable.ParentID IS NULL;
+SELECT 
+    PostTable.PostID, 
+    PostTable.Description, 
+    PostTable.CreatedBy, 
+    PostTable.Title, 
+    UserTable.Username, 
+    (SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = posttable.PostID) AS 'Comments', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'Dislikes', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike', 
+    (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = posttable.PostID) AS 'Reposts',
+    (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.UserID = UserID AND RepostTable.PostID = posttable.PostID) AS 'UserReposted',
+    MediaTable.ImgData 
+FROM 
+    LikesTable
+LEFT JOIN 
+    PostTable ON PostTable.PostID = LikesTable.PostID
+LEFT JOIN 
+    UserTable ON UserTable.UserID = PostTable.CreatedBy
+LEFT JOIN 
+    MediaTable ON MediaTable.PostID = PostTable.PostID
+WHERE 
+    LikesTable.UserID = UserID AND LikesTable.Type = 1 AND PostTable.ParentID IS NULL;
 
 END //
 
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE fetchDislikesByID(IN UserID INT(11))
 BEGIN 
 
-SELECT PostTable.PostID, PostTable.Description, PostTable.CreatedBy, PostTable.Title, UserTable.Username, (SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = posttable.PostID) AS 'Comments', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'Dislikes', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike', mediatable.ImgData FROM LikesTable
-LEFT JOIN PostTable ON PostTable.PostID = LikesTable.PostID
-LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy 
-LEFT JOIN mediatable ON mediatable.PostID = posttable.PostID
-WHERE LikesTable.UserID = UserID AND LikesTable.Type = 0 AND PostTable.ParentID IS NULL;
+SELECT 
+    PostTable.PostID, 
+    PostTable.Description, 
+    PostTable.CreatedBy, 
+    PostTable.Title, 
+    UserTable.Username, 
+    (SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = posttable.PostID) AS 'Comments', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'Dislikes', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike', 
+    (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = posttable.PostID) AS 'Reposts',
+    (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.UserID = UserID AND RepostTable.PostID = posttable.PostID) AS 'UserReposted',
+    MediaTable.ImgData 
+FROM 
+    LikesTable
+LEFT JOIN 
+    PostTable ON PostTable.PostID = LikesTable.PostID
+LEFT JOIN 
+    UserTable ON UserTable.UserID = PostTable.CreatedBy 
+LEFT JOIN 
+    MediaTable ON MediaTable.PostID = PostTable.PostID
+WHERE 
+    LikesTable.UserID = UserID AND LikesTable.Type = 0 AND PostTable.ParentID IS NULL;
 
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE fetchUserPosts(IN UserID INT(11))
+BEGIN 
+
+SELECT 
+    PostTable.PostID, 
+    PostTable.Description, 
+    PostTable.CreatedDate, 
+    PostTable.CreatedBy, 
+    PostTable.Title, 
+    PostTable.CategoryID, 
+    MediaTable.ImgData,
+    (SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = PostTable.PostID) AS 'Comments', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = PostTable.PostID AND likestable.Type = 1) AS 'Likes', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = PostTable.PostID AND likestable.Type = 0) AS 'Dislikes', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = PostTable.PostID AND likestable.Type = 1) AS 'UserLike', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = PostTable.PostID AND likestable.Type = 0) AS 'UserDislike', 
+    (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = PostTable.PostID) AS 'Reposts',
+    (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.UserID = UserID AND RepostTable.PostID = PostTable.PostID) AS 'UserReposted'
+FROM 
+    PostTable 
+LEFT JOIN 
+    MediaTable ON MediaTable.PostID = PostTable.PostID
+WHERE 
+    PostTable.ParentID IS NULL AND PostTable.CreatedBy = UserID
+ORDER BY 
+    PostTable.PostID DESC;
+
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE PROCEDURE fetchUserReposts(IN UserID INT(11))
+BEGIN 
+
+SELECT 
+    PostTable.PostID, 
+    PostTable.Description, 
+    PostTable.CreatedBy, 
+    PostTable.Title, 
+    UserTable.Username, 
+    (SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = PostTable.PostID) AS 'Comments', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = PostTable.PostID AND likestable.Type = 1) AS 'Likes', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = PostTable.PostID AND likestable.Type = 0) AS 'Dislikes', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = PostTable.PostID AND likestable.Type = 1) AS 'UserLike', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = PostTable.PostID AND likestable.Type = 0) AS 'UserDislike', 
+    (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = PostTable.PostID) AS 'Reposts',
+    (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.UserID = UserID AND RepostTable.PostID = PostTable.PostID) AS 'UserReposted',
+    MediaTable.ImgData 
+FROM 
+    PostTable 
+LEFT JOIN 
+    UserTable ON UserTable.UserID = PostTable.CreatedBy 
+LEFT JOIN 
+    MediaTable ON MediaTable.PostID = PostTable.PostID
+JOIN 
+    RepostTable ON RepostTable.PostID = PostTable.PostID
+WHERE 
+    RepostTable.UserID = UserID;
+
+END //
+
+DELIMITER ;
+
 
 DELIMITER //
 CREATE PROCEDURE fetchUserCommentsByID(IN UserID INT(11))
