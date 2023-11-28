@@ -553,7 +553,7 @@ $(document).ready(function () {
     }
 
    $.ajax({
-      url: url_admin,
+      url: url_user,
       type: "POST",
       data: data,
     }).done(function (data) {
