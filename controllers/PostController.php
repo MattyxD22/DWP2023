@@ -122,4 +122,10 @@ switch ($action) {
         $postModel->removeLike($postID, $userID);
 
         break;
+
+    case "repost":
+        $postID = $_POST["postID"];
+        $userID = $_SESSION["UserID"];
+        $postModel->repost($postID, $userID);
+        break;
 }

@@ -164,7 +164,7 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE getFeed(IN UserID INT(11))
 BEGIN
-SELECT PostTable.PostID, PostTable.Description, PostTable.CreatedBy, PostTable.Title, UserTable.Username, UserTable.UserID, (SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = posttable.PostID) AS 'Comments', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'Dislikes', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike', mediatable.ImgData, posttable.CreatedDate FROM PostTable 
+SELECT PostTable.PostID, PostTable.Description, PostTable.CreatedBy, PostTable.Title, UserTable.Username, UserTable.UserID, (SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = posttable.PostID) AS 'Comments', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'Dislikes', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike', (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = posttable.PostID) AS 'Reposts', mediatable.ImgData, posttable.CreatedDate FROM PostTable 
 LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy 
 LEFT JOIN MediaTable ON MediaTable.PostID = PostTable.PostID
 WHERE PostTable.ParentID IS NULL ORDER BY posttable.CreatedDate DESC;
@@ -447,4 +447,17 @@ CREATE PROCEDURE updateRule(IN RuleID INT(11), IN Rule LONGTEXT)
 BEGIN
 UPDATE RulesTable SET RulesTable.Rule = Rule WHERE RulesTable.RuleID = RuleID;
 END //
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE repostPost(IN p_PostID INT(11), IN p_UserID INT(11))
+BEGIN
+    IF EXISTS (SELECT * FROM RepostTable WHERE UserID = p_UserID AND PostID = p_PostID) THEN
+        DELETE FROM RepostTable WHERE UserID = p_UserID AND PostID = p_PostID;
+    ELSE
+        INSERT INTO RepostTable (UserID, PostID) VALUES (p_UserID, p_PostID);
+    END IF;
+END //
+
 DELIMITER ;

@@ -590,6 +590,28 @@ $(document).ready(function () {
     });
   });
 
+  //Repost button
+  $(document).on("click", ".repost_post", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    let elem = $(this);
+    let postID = $(this).data("id");
+
+    const data = {
+      action: "repost",
+      postID: postID
+    }
+
+    $.ajax({
+      url: url_post,
+      type: "POST",
+      data: data
+    }).done(function(data) {
+      console.log(data);
+    });
+  });
+
   $(document).on("click", ".like_post", function (e) {
     e.stopPropagation();
     e.preventDefault();

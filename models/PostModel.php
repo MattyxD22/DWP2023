@@ -247,6 +247,25 @@ class PostModel extends BaseModel
         }
     }
 
+    function repost($postID, $userID) {
+        try  {
+            $cxn = parent::connectToDB();
+
+            $sanitized_postID = htmlspecialchars($postID);
+            $sanitized_userID = htmlspecialchars($userID);
+
+            $sql = "CALL repostPost(:postID, :userID);";
+            $handle_repost = $cxn->prepare($sql);
+
+            $handle_repost->bindValue(":postID", $sanitized_postID);
+            $handle_repost->bindValue(":userID", $sanitized_userID);
+            $handle_repost->execute();
+            $cxn = null;
+        } catch (\PDOException $err) {
+            print($err->getMessage());
+        }
+    }
+
     function addCategoryToPost($postID, $categoryID)
     {
     }
