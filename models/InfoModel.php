@@ -22,4 +22,18 @@ class InfoModel extends BaseModel {
         
     }
 
+    function fetchAboutUsDescription() {
+        try {
+            $cxn = parent::connectToDB();
+            $sql = "SELECT * FROM abouttable LIMIT 1";
+            $query = $cxn->prepare($sql);
+            $query->execute();
+            $result = $query->fetch(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $result["Description"];
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
 }
