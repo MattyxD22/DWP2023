@@ -135,19 +135,19 @@
 
         <div class="likes_div pe-4 my-auto">
 
-            <span class="text-red-600 text-l font-bold"><?php echo $value[8] ?></span>
+            <span class="text-red-600 text-l font-bold <?php echo $value[10] == 1 ? 'underline' : ''; ?>"><?php echo $value[8]; ?></span>
             <span class="text-white text-l font-bold ms-1">Likes</span>
 
         </div>
 
         <div class="dislikes_div pe-4 my-auto">
-            <span class="text-red-600 text-l font-bold"><?php echo $value[9] ?></span>
+            <span class="text-red-600 text-l font-bold <?php echo $value[11] == 1 ? 'underline' : ''; ?>"><?php echo $value[9]; ?></span>
             <span class="text-white text-l font-bold ms-1">Dislikes</span>
         </div>
 
 
         <div class="reposts_div pe-4 my-auto">
-            <span class="text-red-600 text-l font-bold"><?php echo $value[12]; ?></span>
+            <span class="text-red-600 text-l font-bold <?php echo $value[13] == 1 ? 'underline' : ''; ?>"><?php echo $value[12]; ?></span>
             <span class="text-white text-l font-bold ms-1">Reposts</span>
         </div>
 
