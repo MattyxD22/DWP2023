@@ -6,7 +6,7 @@ require("../models/UserModel.php");
 
 use models\UserModel;
 
-$userModel = new UserModel();
+$userModel = UserModel::getUserModel();
 
 if ($_POST) {
     // This checks if a request was send from $ajax/javascript. 

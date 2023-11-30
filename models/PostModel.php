@@ -2,9 +2,54 @@
 
 namespace models;
 
+use Exception;
+
 require_once 'BaseModel.php';
 class PostModel extends BaseModel
 {
+
+    private static ?PostModel $postModel = null;
+    public static function getPostModel(): PostModel
+    {
+        if (self::$postModel === null) {
+            self::$postModel = new PostModel();
+        }
+
+        return self::$postModel;
+    }
+
+    /**
+     * is not allowed to call from outside to prevent from creating multiple instances,
+     * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
+     */
+
+    private function __construct()
+    {
+    }
+
+
+    /**
+     * prevent the instance from being cloned (which would create a second instance of it)
+     */
+
+    private function __clone()
+    {
+    }
+
+
+    /**
+     * prevent from being unserialized (which would create a second instance of it)
+     * */
+
+    public function __wakeup()
+
+    {
+
+        throw new Exception("Cannot unserialize singleton");
+    }
+
+
+
     function createPost($userID, $title, $description, $categories, $filesArr)
     {
 
@@ -33,7 +78,7 @@ class PostModel extends BaseModel
                     $handle_addCategory->bindValue(":CategoryID", $category);
                     $handle_addCategory->bindValue(":postID", $postID["PostID"]);
                     $handle_addCategory->execute();
-                    $cxn = $this->closeDB();;
+                    $cxn = $this->closeDB();
                 }
             }
 
@@ -55,7 +100,7 @@ class PostModel extends BaseModel
                     $handle_addImg->bindValue(":postID", $postID["PostID"]);
                     $handle_addImg->bindParam(":file", $file["data"]);
                     $handle_addImg->execute();
-                    $cxn = $this->closeDB();;
+                    $cxn = $this->closeDB();
                 }
             }
             //return

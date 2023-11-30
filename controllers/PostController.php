@@ -4,7 +4,7 @@ require("../models/PostModel.php");
 
 use models\PostModel;
 
-$postModel = new PostModel();
+$postModel = PostModel::getPostModel();
 
 if ($_POST) {
     // This checks if a request was send from $ajax/javascript. 

@@ -12,7 +12,7 @@ $users = [""];
 
         <?php
         if (isset($_SESSION["isAdmin"]) && $_SESSION["isAdmin"] == 1) {
-            $users = $adminController->fetchUsers($_SESSION["UserID"]);
+            $users = AdminController::fetchUsers($_SESSION["UserID"]);
         ?>
             <div class="profile_tab_container admin px-1 pt-2 flex flex-row w-full justify-between h-24">
                 <div class="tab_elem admin selected" data-type="1">
