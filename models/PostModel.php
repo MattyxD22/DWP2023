@@ -9,7 +9,7 @@ class PostModel extends BaseModel
     {
 
         try {
-            $cxn = $this->connectToDB();
+            $cxn = $this->openDB();
 
             $sanitized_title = htmlspecialchars($title);
             $sanitized_description = htmlspecialchars($description);
@@ -21,19 +21,19 @@ class PostModel extends BaseModel
             $handleCreatePost->bindParam(":description", $sanitized_description);
             $handleCreatePost->execute();
             $postID =  $handleCreatePost->fetch(\PDO::FETCH_ASSOC);
-            $cxn = $this->closeDatabase();
+            $cxn = $this->closeDB();
 
             if (!empty($categories)) {
 
                 foreach ($categories as $key => $category) {
-                    $cxn = $this->connectToDB();
+                    $cxn = $this->openDB();
                     print_r($category);
                     $addCategory = "CALL addPostToCategory(:CategoryID, :postID)";
                     $handle_addCategory = $cxn->prepare($addCategory);
                     $handle_addCategory->bindValue(":CategoryID", $category);
                     $handle_addCategory->bindValue(":postID", $postID["PostID"]);
                     $handle_addCategory->execute();
-                    $cxn = $this->closeDatabase();
+                    $cxn = $this->closeDB();;
                 }
             }
 
@@ -48,14 +48,14 @@ class PostModel extends BaseModel
 
                 // Use foreach loop, if multiple files exists
                 foreach ($filesArr as $key => $file) {
-                    $cxn = $this->connectToDB();
+                    $cxn = $this->openDB();
                     $addImg = "CALL addFileToPost(:type, :postID, :file)";
                     $handle_addImg = $cxn->prepare($addImg);
                     $handle_addImg->bindValue(":type", 1);
                     $handle_addImg->bindValue(":postID", $postID["PostID"]);
                     $handle_addImg->bindParam(":file", $file["data"]);
                     $handle_addImg->execute();
-                    $cxn = $this->closeDatabase();
+                    $cxn = $this->closeDB();;
                 }
             }
             //return
@@ -68,7 +68,7 @@ class PostModel extends BaseModel
     {
 
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $sanitized_postID = htmlspecialchars($postID);
 
@@ -88,8 +88,8 @@ class PostModel extends BaseModel
             $imgs = $handle_getPostImgs->fetch(\PDO::FETCH_ASSOC);
             //print_r($imgs["ImgData"]);
 
-            $cxn = null;
-            //$cxn = parent::connectToDB();
+            $cxn = $this->closeDB();
+            //$cxn = $this->connectToDB();
 
             // $get_comments = "CALL getComments(:postID)";
             // $handle_getComments = $cxn->prepare($get_comments);
@@ -123,7 +123,7 @@ class PostModel extends BaseModel
     function getComments($postID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $sanitized_postID = htmlspecialchars($postID);
 
@@ -134,7 +134,7 @@ class PostModel extends BaseModel
             $handle_getComment->execute();
             $comments = $handle_getComment->fetchAll(\PDO::FETCH_ASSOC);
 
-            $cnx = null;
+            $cnx = $this->closeDB();
 
             return include("../views/comments.php");
         } catch (\PDOException $err) {
@@ -149,7 +149,7 @@ class PostModel extends BaseModel
     {
 
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $sanitized_postID = htmlspecialchars($postID);
             $sanitized_description = htmlspecialchars($comment);
@@ -163,7 +163,7 @@ class PostModel extends BaseModel
             $handle_createComment->bindValue(":userID", $sanitized_userID);
             $handle_createComment->execute();
             $handle_createComment->fetch(\PDO::FETCH_ASSOC);
-            $cnx = null;
+            $cnx = $this->closeDB();
 
             return include("../views/refreshComments.php");
         } catch (\PDOException $err) {
@@ -175,7 +175,7 @@ class PostModel extends BaseModel
     {
         try {
 
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $sanitized_postID = htmlspecialchars($postID);
             $sanitized_userID = htmlspecialchars($userID);
@@ -190,7 +190,7 @@ class PostModel extends BaseModel
             $handle_likeComment->bindValue(":userID", $sanitized_userID);
             $handle_likeComment->execute();
             $plz = $handle_likeComment->fetch(\PDO::FETCH_ASSOC);
-            $cnx = null;
+            $cnx = $this->closeDB();
             print_r($plz);
         } catch (\PDOException $err) {
             print($err->getMessage());
@@ -202,7 +202,7 @@ class PostModel extends BaseModel
     {
         try {
 
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $sanitized_postID = htmlspecialchars($postID);
             $sanitized_userID = htmlspecialchars($userID);
@@ -215,7 +215,7 @@ class PostModel extends BaseModel
             $handle_likeComment->bindValue(":userID", $sanitized_userID);
             $handle_likeComment->execute();
             $handle_likeComment->fetch(\PDO::FETCH_ASSOC);
-            $cnx = null;
+            $cnx = $this->closeDB();
         } catch (\PDOException $err) {
             print($err->getMessage());
         }
@@ -224,7 +224,7 @@ class PostModel extends BaseModel
     function removeLike($postID, $userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $sanitized_postID = htmlspecialchars($postID);
             $sanitized_userID = htmlspecialchars($userID);
@@ -235,7 +235,7 @@ class PostModel extends BaseModel
             $handle_likeComment->bindValue(":postID", $sanitized_postID);
             $handle_likeComment->bindValue(":userID", $sanitized_userID);
             $handle_likeComment->execute();
-            $cnx = null;
+            $cnx = $this->closeDB();
 
             return "200";
         } catch (\PDOException $err) {

@@ -16,12 +16,12 @@ class SidebarModel extends BaseModel
     {
 
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $getCategories = "CALL getCategories()";
             $handle_getCategories = $cxn->prepare($getCategories);
             $handle_getCategories->execute();
             $categories = $handle_getCategories->fetchAll(\PDO::FETCH_ASSOC);
-
+            $cxn = $this->closeDB();
             return include("../views/newPost.php");
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -36,7 +36,7 @@ class SidebarModel extends BaseModel
     {
 
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $getFeed = "CALL getFeed(:UserID)";
             $handle_getFeed = $cxn->prepare($getFeed);
             $handle_getFeed->bindParam(":UserID", $_SESSION["UserID"]);
@@ -59,7 +59,7 @@ class SidebarModel extends BaseModel
                 }
             }
 
-
+            $cxn = $this->closeDB();
             return include("../views/feedOnly.php");
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -74,7 +74,7 @@ class SidebarModel extends BaseModel
     {
 
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $cxn = $this->openDB();
             $getCategories = "CALL getCategories()";
             $handle_getCategories = $cxn->prepare($getCategories);
             $handle_getCategories->execute();
@@ -118,7 +118,7 @@ class SidebarModel extends BaseModel
 
 
 
-
+            $cxn = $this->closeDB();
             return include("../views/categoryPage.php");
         } catch (\PDOException $e) {
             echo $e->getMessage();

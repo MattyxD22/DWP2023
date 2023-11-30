@@ -8,7 +8,7 @@ class UserModel extends BaseModel
     function create($username, $email, $password)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $sanitized_username = htmlspecialchars($username);
             $sanitized_email = htmlspecialchars($email);
@@ -39,7 +39,7 @@ class UserModel extends BaseModel
             }
 
 
-            $cxn = null;
+            $cxn = $this->closeDB();
         } catch (\PDOException $e) {
             print($e->getMessage());
         }
@@ -48,7 +48,7 @@ class UserModel extends BaseModel
     function login($username, $password)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
 
 
@@ -83,7 +83,7 @@ class UserModel extends BaseModel
             } else {
                 return 0;
             }
-            $cxn = null;
+            $cxn = $this->closeDB();
         } catch (\PDOException $e) {
             print($e->getMessage());
             return false;
@@ -108,13 +108,13 @@ class UserModel extends BaseModel
     function fetchAmountOfFollowers($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $statement = "SELECT COUNT(*) AS NumberOfFollowers FROM FollowingTable WHERE FollowingID = :userID";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $result["NumberOfFollowers"];
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -124,13 +124,13 @@ class UserModel extends BaseModel
     function fetchAmountOfFollowing($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $statement = "SELECT COUNT(*) AS FollowingCount FROM FollowingTable WHERE UserID = :userID;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $result["FollowingCount"];
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -140,13 +140,13 @@ class UserModel extends BaseModel
     function fetchAmountOfPosts($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $statement = "SELECT COUNT(*) AS NumberOfPostsWithoutParent FROM PostTable WHERE CreatedBy = :userID AND ParentID IS NULL;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $result["NumberOfPostsWithoutParent"];
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -156,13 +156,13 @@ class UserModel extends BaseModel
     function fetchUsernameById($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $statement = "SELECT username FROM usertable WHERE userid = :userID;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $result["username"];
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -172,13 +172,13 @@ class UserModel extends BaseModel
     function fetchPostsById($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $statement = "SELECT PostID, Description, CreatedDate, CreatedBy, Title, CategoryID, mediatable.ImgData FROM PostTable LEFT JOIN mediatable ON mediatable.PostID = PostTable.PostID WHERE ParentID IS NULL AND CreatedBy = :userID ORDER BY PostID DESC;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $result;
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -188,7 +188,7 @@ class UserModel extends BaseModel
     function fetchLikesById($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $statement = "CALL fetchLikesByID(:UserID)";
             $query = $cxn->prepare($statement);
@@ -201,7 +201,7 @@ class UserModel extends BaseModel
             // $query->bindValue(":userID", $userID);
             // $query->execute();
             // $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $likes;
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -211,7 +211,7 @@ class UserModel extends BaseModel
     function fetchDislikesById($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $statement = "CALL fetchDislikesByID(:UserID)";
             $query = $cxn->prepare($statement);
@@ -224,7 +224,7 @@ class UserModel extends BaseModel
             // $query->bindValue(":userID", $userID);
             // $query->execute();
             // $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $dislikes;
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -234,7 +234,7 @@ class UserModel extends BaseModel
     function fetchUserCommentsByID($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $statement = "CALL fetchUserCommentsByID(:UserID)";
             $query = $cxn->prepare($statement);
@@ -247,7 +247,7 @@ class UserModel extends BaseModel
             // $query->bindValue(":userID", $userID);
             // $query->execute();
             // $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $comments;
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -264,7 +264,7 @@ class UserModel extends BaseModel
         try {
             $currentUser = $_SESSION["UserID"];
 
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $checkStatement = "SELECT * FROM FollowingTable WHERE UserID = :currentUser AND FollowingID = :targetUser";
             $checkQuery = $cxn->prepare($checkStatement);

@@ -12,7 +12,7 @@ class AdminModel extends BaseModel
     function getContactInfo()
     {
         try {
-            $cxn = $this->connectToDB();
+            $cxn = $this->openDB();
             $statement = "SELECT * FROM contactinfotable LIMIT 1";
             $query = $cxn->prepare($statement);
             $query->execute();
@@ -38,7 +38,7 @@ class AdminModel extends BaseModel
             $houseNumber = htmlspecialchars($contactData['houseNumber']);
             $streetName = htmlspecialchars($contactData['streetName']);
 
-            $cxn = $this->connectToDB();
+            $cxn = $this->openDB();
             $statement = "UPDATE contactinfotable SET Email = :email, FName = :fname, LName = :lname,
              PhoneNumber = :phoneNumber, City = :city, StreetName = :streetName, HouseNumber = :houseNumber;";
             $query = $cxn->prepare($statement);
@@ -61,7 +61,7 @@ class AdminModel extends BaseModel
     function getUser($userID)
     {
         try {
-            $cxn = $this->connectToDB();
+            $cxn = $this->openDB();
             $statement = "SELECT UserID, Username, FName, LName, Email, Banned FROM usertable WHERE IsAdmin = 0 OR UserID = :userID;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
@@ -79,7 +79,7 @@ class AdminModel extends BaseModel
     function updateUser($userID, $userBan, $userNewEmail, $userNewPassword)
     {
         try {
-            $cxn = $this->connectToDB();
+            $cxn = $this->openDB();
             $query = $cxn->prepare("UPDATE UserTable
                                 SET Banned = :userBan,
                                     Email = :userNewEmail,
@@ -109,7 +109,7 @@ class AdminModel extends BaseModel
     function deleteRule($ruleID)
     {
         try {
-            $cnx = $this->connectToDB();
+            $cnx = $this->openDB();
 
             $request = "CALL deleteRule(:ruleID)";
             $handle_request = $cnx->prepare($request);
@@ -124,7 +124,7 @@ class AdminModel extends BaseModel
     // function addRule($rule)
     // {
     //     try {
-    //         $cnx = $this->connectToDB();
+    //         $cnx = $this->openDB();
 
     //         $request = "CALL insertRule(:rule)";
     //         $handle_request = $cnx->prepare($request);
@@ -139,7 +139,7 @@ class AdminModel extends BaseModel
     function updateRule($ruleID, $ruleText)
     {
         try {
-            $cnx = $this->connectToDB();
+            $cnx = $this->openDB();
 
             $request = "CALL updateRule(:ruleID, :ruleText)";
             $handle_request = $cnx->prepare($request);
@@ -160,7 +160,7 @@ class AdminModel extends BaseModel
     function getRules()
     {
         try {
-            $cnx = $this->connectToDB();
+            $cnx = $this->openDB();
 
             $request = "CALL getRules()";
             $handle_request = $cnx->prepare($request);
@@ -176,7 +176,7 @@ class AdminModel extends BaseModel
     function addNewRule($rule)
     {
         try {
-            $cnx = $this->connectToDB();
+            $cnx = $this->openDB();
 
             $ruleStmt = "CALL insertRule(:rule)";
             $handle_addRule = $cnx->prepare($ruleStmt);
