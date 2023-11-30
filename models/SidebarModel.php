@@ -43,6 +43,23 @@ class SidebarModel extends BaseModel
             $handle_getFeed->execute();
             $results = $handle_getFeed->fetchAll(\PDO::FETCH_ASSOC);
 
+            foreach ($results as &$result) {
+                $result["Images"] = [];
+
+                // Fetch all images associated with the current post
+                $query2 = "SELECT mediatable.ImgData FROM mediatable WHERE mediatable.PostID = :PostID ORDER BY mediatable.PostID;";
+                $handle_getFeed = $cxn->prepare($query2);
+                $handle_getFeed->bindParam(":PostID", $result["PostID"]);
+                $handle_getFeed->execute();
+                $imgData =  $handle_getFeed->fetchAll(\PDO::FETCH_ASSOC);
+
+                // Add images to the 'Images' key in the $result array
+                if (!empty($imgData)) {
+                    $result["Images"] = $imgData;
+                }
+            }
+
+
             return include("../views/feedOnly.php");
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -131,7 +148,8 @@ class SidebarModel extends BaseModel
         //header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/adminPage.php');
     }
 
-    function loadAboutUs() {
+    function loadAboutUs()
+    {
         header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/aboutUs.php');
     }
 

@@ -7,39 +7,27 @@ require_once 'BaseModel.php';
 class AdminModel extends BaseModel
 {
 
-    function getRules() {
-        try {
-            $cxn = parent::connectToDB();
-            $statement = "SELECT * FROM rulestable";
-            $query = $cxn->prepare($statement);
-            $query->execute();
-            $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-            $cxn = null;
-            return $result;
-        } catch (\Exception $e) {
-            print($e->getMessage());
-            $cxn = null;
-            return false;
-        }
-    }
 
-    function getContactInfo() {
+
+    function getContactInfo()
+    {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->connectToDB();
             $statement = "SELECT * FROM contactinfotable LIMIT 1";
             $query = $cxn->prepare($statement);
             $query->execute();
             $result = $query->fetch();
-            $cxn = null;
+            $cnx = $this->closeDB();
             return $result;
         } catch (\Exception $e) {
             print($e->getMessage());
-            $cxn = null;
+            $cnx = $this->closeDB();
             return false;
         }
     }
 
-    function updateContact($contactData) {
+    function updateContact($contactData)
+    {
 
         try {
             $fName = htmlspecialchars($contactData['fName']);
@@ -50,41 +38,40 @@ class AdminModel extends BaseModel
             $houseNumber = htmlspecialchars($contactData['houseNumber']);
             $streetName = htmlspecialchars($contactData['streetName']);
 
-            $cxn = parent::connectToDB();
+            $cxn = $this->connectToDB();
             $statement = "UPDATE contactinfotable SET Email = :email, FName = :fname, LName = :lname,
              PhoneNumber = :phoneNumber, City = :city, StreetName = :streetName, HouseNumber = :houseNumber;";
-             $query = $cxn->prepare($statement);
-             $query->bindParam(":fname", $fName);
-             $query->bindParam(":email", $email);
-             $query->bindParam(":lname", $lName);
-             $query->bindParam(":phoneNumber", $phoneNumber);
-             $query->bindParam(":city", $city);
-             $query->bindParam(":houseNumber", $houseNumber);
-             $query->bindParam(":streetName", $streetName);
-             $query->execute();
-             $cxn = null;
-             return true;
-        }
-        catch (\Exception $e) {
+            $query = $cxn->prepare($statement);
+            $query->bindParam(":fname", $fName);
+            $query->bindParam(":email", $email);
+            $query->bindParam(":lname", $lName);
+            $query->bindParam(":phoneNumber", $phoneNumber);
+            $query->bindParam(":city", $city);
+            $query->bindParam(":houseNumber", $houseNumber);
+            $query->bindParam(":streetName", $streetName);
+            $query->execute();
+            $cnx = $this->closeDB();
+            return true;
+        } catch (\Exception $e) {
             print($e->getMessage());
             return false;
         }
-        
     }
 
-    function getUser($userID) {
+    function getUser($userID)
+    {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->connectToDB();
             $statement = "SELECT UserID, Username, FName, LName, Email, Banned FROM usertable WHERE IsAdmin = 0 OR UserID = :userID;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cnx = $this->closeDB();
             return $result;
         } catch (\Exception $e) {
             print($e->getMessage());
-            $cxn = null;
+            $cnx = $this->closeDB();
             return false;
         }
     }
@@ -92,7 +79,7 @@ class AdminModel extends BaseModel
     function updateUser($userID, $userBan, $userNewEmail, $userNewPassword)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->connectToDB();
             $query = $cxn->prepare("UPDATE UserTable
                                 SET Banned = :userBan,
                                     Email = :userNewEmail,
@@ -106,15 +93,15 @@ class AdminModel extends BaseModel
             $query->bindParam(':userNewPassword', $userNewPassword);
             $query->execute();
             if ($query->rowCount() > 0) {
-                $cxn = null;
+                $cnx = $this->closeDB();
                 return true;
             } else {
-                $cxn = null;
+                $cnx = $this->closeDB();
                 return false;
             }
         } catch (\Exception $e) {
             print($e->getMessage());
-            $cxn = null;
+            $cnx = $this->closeDB();
             return false;
         }
     }

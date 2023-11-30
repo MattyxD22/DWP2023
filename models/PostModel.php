@@ -9,7 +9,7 @@ class PostModel extends BaseModel
     {
 
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->connectToDB();
 
             $sanitized_title = htmlspecialchars($title);
             $sanitized_description = htmlspecialchars($description);
@@ -21,21 +21,20 @@ class PostModel extends BaseModel
             $handleCreatePost->bindParam(":description", $sanitized_description);
             $handleCreatePost->execute();
             $postID =  $handleCreatePost->fetch(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDatabase();
 
             if (!empty($categories)) {
 
-                $cxn = parent::connectToDB();
-
                 foreach ($categories as $key => $category) {
+                    $cxn = $this->connectToDB();
+                    print_r($category);
                     $addCategory = "CALL addPostToCategory(:CategoryID, :postID)";
                     $handle_addCategory = $cxn->prepare($addCategory);
                     $handle_addCategory->bindValue(":CategoryID", $category);
                     $handle_addCategory->bindValue(":postID", $postID["PostID"]);
                     $handle_addCategory->execute();
+                    $cxn = $this->closeDatabase();
                 }
-
-                $cxn = null;
             }
 
 
@@ -47,12 +46,8 @@ class PostModel extends BaseModel
                 // PostID = ID which should be returned by previous database call
                 // file = file to upload
 
-                $count = 1;
-
                 // Use foreach loop, if multiple files exists
                 foreach ($filesArr as $key => $file) {
-
-                    $count++;
                     $cxn = $this->connectToDB();
                     $addImg = "CALL addFileToPost(:type, :postID, :file)";
                     $handle_addImg = $cxn->prepare($addImg);
@@ -60,11 +55,9 @@ class PostModel extends BaseModel
                     $handle_addImg->bindValue(":postID", $postID["PostID"]);
                     $handle_addImg->bindParam(":file", $file["data"]);
                     $handle_addImg->execute();
-
                     $cxn = $this->closeDatabase();
                 }
             }
-
             //return
         } catch (\PDOException $err) {
             print($err->getMessage());
@@ -91,7 +84,7 @@ class PostModel extends BaseModel
             $handle_getPostImgs = $cxn->prepare($get_postImgs);
             $handle_getPostImgs->bindValue(":postID", $sanitized_postID);
             $handle_getPostImgs->execute();
-            header("content-type: image/jpeg");
+            //header("content-type: image/jpeg");
             $imgs = $handle_getPostImgs->fetch(\PDO::FETCH_ASSOC);
             //print_r($imgs["ImgData"]);
 
@@ -134,7 +127,7 @@ class PostModel extends BaseModel
 
             $sanitized_postID = htmlspecialchars($postID);
 
-            $get_Comments = "CALL getComments(:postID)";
+            $get_Comments = "CALL GetReplyChain(:postID)";
             $handle_getComment = $cxn->prepare($get_Comments);
 
             $handle_getComment->bindValue(":postID", $sanitized_postID);
@@ -149,7 +142,10 @@ class PostModel extends BaseModel
         }
     }
 
-    function createComment($postID, $comment, $userID)
+    /**
+     * orgID Is the original post ID, it is needed to refresh the comments when creating a reply
+     */
+    function createComment($postID, $comment, $userID, $orgID)
     {
 
         try {
@@ -169,7 +165,7 @@ class PostModel extends BaseModel
             $handle_createComment->fetch(\PDO::FETCH_ASSOC);
             $cnx = null;
 
-            return "200";
+            return include("../views/refreshComments.php");
         } catch (\PDOException $err) {
             print($err->getMessage());
         }

@@ -23,7 +23,7 @@
     <div class="post_comments_container flex flex-col px-3 py-3">
 
         <div class="RTE_comment w-full">
-            
+
         </div>
 
         <!-- <textarea id="comment" rows="4" class="w-full std_input comment_textArea" placeholder="Write a comment..."></textarea> -->
@@ -83,6 +83,7 @@ function getComments($postID)
     $postModel = new postModel();
     // $comments = 
     // $view = include("./comments.php");
+    $postID = (int) $postID;
     return $postModel->getComments($postID);
 }
 

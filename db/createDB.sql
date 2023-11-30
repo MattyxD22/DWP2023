@@ -164,10 +164,15 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE getFeed(IN UserID INT(11))
 BEGIN
-SELECT PostTable.PostID, PostTable.Description, PostTable.CreatedBy, PostTable.Title, UserTable.Username, UserTable.UserID, (SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = posttable.PostID) AS 'Comments', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'Dislikes', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike', mediatable.ImgData, posttable.CreatedDate FROM PostTable 
-LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy 
-LEFT JOIN MediaTable ON MediaTable.PostID = PostTable.PostID
-WHERE PostTable.ParentID IS NULL ORDER BY posttable.CreatedDate DESC;
+SELECT posttable.PostID, posttable.Title, posttable.Description, posttable.CreatedDate, usertable.UserID, usertable.Username, posttable.CreatedBy, 
+    (SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = posttable.PostID) AS 'Comments', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'Dislikes', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike',
+    posttable.CreatedDate
+    FROM posttable 
+    LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID IS NULL ORDER BY posttable.CreatedDate DESC
 END //
 
 DELIMITER ;
@@ -448,3 +453,62 @@ BEGIN
 UPDATE RulesTable SET RulesTable.Rule = Rule WHERE RulesTable.RuleID = RuleID;
 END //
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE GetReplyChain(IN PostID INT(11))
+BEGIN
+    
+    WITH RECURSIVE PostHierarchyCTE AS (
+        SELECT
+            PostTable.PostID,
+            PostTable.ParentID,
+            PostTable.Description,
+            PostTable.CreatedDate,
+            PostTable.CreatedBy,
+            UserTable.Username AS Username,
+            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 1) AS 'Likes',
+            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 2) AS 'Dislikes',
+            0 AS Level
+        FROM
+            PostTable
+        LEFT JOIN
+            UserTable ON p.CreatedBy = UserTable.UserID
+        WHERE
+            PostTable.PostID = PostID
+        UNION ALL
+        SELECT
+            PostTable.PostID,
+            PostTable.ParentID,
+            PostTable.Description,
+            PostTable.CreatedDate,
+            PostTable.CreatedBy,
+            UserTable.Username AS Username,
+            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = p.PostID AND LikesTable.Type = 1) AS 'Likes',
+            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = p.PostID AND LikesTable.Type = 2) AS 'Dislikes',
+            ph.Level + 1 AS Level
+        FROM
+            PostTable
+        INNER JOIN
+            PostHierarchyCTE ph ON PostTable.ParentID = ph.PostID
+        LEFT JOIN
+            UserTable ON PostTable.CreatedBy = UserTable.UserID
+    )
+
+    -- Selecting the final result
+    SELECT
+        PostID,
+        ParentID,
+        Description,
+        CreatedDate,
+        CreatedBy,
+        Username,
+        Likes,
+        Dislikes,
+        Level
+    FROM
+        PostHierarchyCTE
+    ORDER BY
+        Level, PostID;
+
+END

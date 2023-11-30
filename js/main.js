@@ -157,16 +157,9 @@ $(document).ready(function () {
       contentType: false, // NEEDED, DON'T OMIT THIS
       processData: false, // NEEDED, DON'T OMIT THIS
     }).done(function (data) {
-      console.log(data);
+      alert("Post Created successfully");
+      //console.log(data);
     });
-
-    // $.ajax({
-    //   url: url_post,
-    //   type: "POST",
-    //   data: data,
-    // }).done(function (data) {
-    //   console.log(data);
-    // });
   });
 
   $(document).on("click", ".mainBG", function (e) {
@@ -305,14 +298,16 @@ $(document).ready(function () {
   });
 
   $(document).on("click", ".submit_comment", function () {
-    const container = $(this).closest(".postComment_Container");
+    const post_container = $(this).closest(".post_Container");
     const comment = quillEditor.root.innerHTML;
     const id = $(this).data("id");
+    const orgID = 0; // only needed when creating replies, not inital comments
 
     const data = {
       action: "createComment",
       comment: comment,
       postID: id,
+      orgID: orgID,
     };
 
     console.log(data);
@@ -322,7 +317,9 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      console.log(data);
+      //Clearing comments after successful comment creation
+      post_container.find(".comment_section").remove();
+      post_container.append(data);
     });
   });
 
@@ -359,15 +356,18 @@ $(document).ready(function () {
   });
 
   $(document).on("click", ".submit_reply", function () {
+    const post_container = $(this).closest(".post_Container");
     const container = $(this).closest(".reply_to_comment_container");
 
     let reply = container.find(".std_input").val();
     let commentID = $(this).data("id");
+    let orgID = $(this).data("org-id"); // Original post ID
 
     const data = {
       action: "createComment",
       comment: reply,
       postID: commentID,
+      orgID: orgID,
     };
 
     $.ajax({
@@ -375,8 +375,11 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      container.find(".std_input").val("");
-      container.closest(".reply_comment_container").removeClass("open");
+      //Clearing comments after successful comment creation
+      post_container.find(".comment_section").remove();
+      post_container.append(data);
+      //container.find(".std_input").val("");
+      //container.closest(".reply_comment_container").removeClass("open");
     });
   });
 
@@ -519,27 +522,27 @@ $(document).ready(function () {
     e.preventDefault();
   });
 
-  $(document).on("click", ".submit_reply", function () {
-    const container = $(this).closest(".reply_to_comment_container");
+  // $(document).on("click", ".submit_reply", function () {
+  //   const container = $(this).closest(".reply_to_comment_container");
 
-    let reply = container.find(".std_input").val();
-    let commentID = $(this).data("id");
+  //   let reply = container.find(".std_input").val();
+  //   let commentID = $(this).data("id");
 
-    const data = {
-      action: "createComment",
-      comment: reply,
-      postID: commentID,
-    };
+  //   const data = {
+  //     action: "createComment",
+  //     comment: reply,
+  //     postID: commentID,
+  //   };
 
-    $.ajax({
-      url: url_post,
-      type: "POST",
-      data: data,
-    }).done(function (data) {
-      container.find(".std_input").val("");
-      container.closest(".reply_comment_container").removeClass("open");
-    });
-  });
+  //   $.ajax({
+  //     url: url_post,
+  //     type: "POST",
+  //     data: data,
+  //   }).done(function (data) {
+  //     container.find(".std_input").val("");
+  //     container.closest(".reply_comment_container").removeClass("open");
+  //   });
+  // });
 
   $(document).on("click", ".like_post", function (e) {
     e.stopPropagation();
@@ -729,8 +732,11 @@ $(document).ready(function () {
   $(document).on("click", ".feed_image_container", function (e) {
     e.stopPropagation();
     e.preventDefault();
+    const container = this;
+    console.log(container);
 
-    let dialog = document.querySelector("dialog");
+    let dialog = container.querySelector("dialog");
+    $(dialog).addClass("showing");
     dialog.showModal();
   });
 
@@ -748,7 +754,9 @@ $(document).ready(function () {
     // check if the clicked element is the dialog element itself
     if ($(clickElem).hasClass("imgDialog")) {
       // if true, close the dialog
+
       let dialog = document.querySelector("dialog");
+      $(dialog).removeClass("showing");
       dialog.close();
     }
   });

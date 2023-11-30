@@ -48,13 +48,13 @@ $userComments = $userController->fetchUserComments($userID);
         <?php
         if (isset($_GET['userid']) && $_SESSION['UserID'] != $userID) {
         ?>
-        <div>
-            <button type="button" class="std_button followUnfollowBtn" data-userid="<?php echo $userID?>">
-                <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
-            </button>
-        </div>
-        <?php 
-            } else {
+            <div>
+                <button type="button" class="std_button followUnfollowBtn" data-userid="<?php echo $userID ?>">
+                    <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
+                </button>
+            </div>
+        <?php
+        } else {
         ?>
             <button type="button" class="std_button opacity-0">
                 <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
@@ -164,7 +164,7 @@ $userComments = $userController->fetchUserComments($userID);
             </div>
 
             <div class="profile_content" data-type="4">
-                <div class="grid grid-cols-3 gap-4 p-8 ">
+                <div class="grid grid-cols-1 gap-4 p-8 ">
 
                     <?php
                     foreach ($userComments as $key => $comment) {
@@ -176,7 +176,7 @@ $userComments = $userController->fetchUserComments($userID);
                         $postID = $comment["PostID"];
 
                         // Now include the profileItem.php file, which will use the variables above
-                        include('./profileItem.php');
+                        include('./profileComments.php');
                     }
 
                     ?>

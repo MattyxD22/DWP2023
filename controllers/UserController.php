@@ -23,13 +23,12 @@ if ($_POST) {
 
 switch ($action) {
 
-    case "follow":
+        // case "follow":
 
-        $followUser = $_POST["followUser"];
-        $userID = $_SESSION["UserID"];
-        $userModel->follow($followUser, $userID);
-        break;
-        break;
+        //     $followUser = $_POST["followUser"];
+        //     $userID = $_SESSION["UserID"];
+        //     $userModel->follow($followUser, $userID);
+        //     break;
 
     case "logout":
 
