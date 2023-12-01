@@ -113,20 +113,18 @@ $userFollowing = $userController->fetchFollowingUsers($userID);
                 <div class="grid grid-cols-3 gap-4 p-8 ">
 
                     <?php
-                        foreach ($userPosts as $key => $post) {
+                         foreach ($userPosts as $key => $post) {
                             // Set variables with the information from the current post
                             $title = $post['Title']; // Assuming 'Title' is the correct key
                             $description = $post['Description']; // And so on for other variables
                             $img = ""; //$post["ImgData"];
                             $postID = $post["PostID"];
-
                             $likesAmount = $post["Likes"];
                             $userLike = $post["UserLike"];
                             $userDislike = $post["UserDislike"];
                             $dislikesAmount = $post["Dislikes"];
                             $repostAmount = $post["Reposts"];
                             $userReposted = $post["UserReposted"];
-
                             // Now include the profileItem.php file, which will use the variables above
                             include('./profileItem.php');
                         }

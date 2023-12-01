@@ -216,7 +216,7 @@ class UserModel extends BaseModel
     {
         try {
             $cxn = $this->openDB();
-            $statement = "SELECT PostID, Description, CreatedDate, CreatedBy, Title, CategoryID, mediatable.ImgData FROM PostTable LEFT JOIN mediatable ON mediatable.PostID = PostTable.PostID WHERE ParentID IS NULL AND CreatedBy = :userID ORDER BY PostID DESC;";
+            $statement = "CALL fetchUserPosts(:userID)";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
@@ -345,7 +345,7 @@ class UserModel extends BaseModel
             echo $e->getMessage();
         }
     }
-    
+
     function fetchFollowingUsers($userID) {
         try {
             $cxn = parent::connectToDB();
