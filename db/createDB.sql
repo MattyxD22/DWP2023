@@ -583,47 +583,46 @@ END //
 DELIMITER ;
 
 DELIMITER //
-
-CREATE PROCEDURE GetReplyChain(IN PostID INT(11))
+CREATE PROCEDURE GetReplyChain(p_postID INT)
 BEGIN
-    
+    -- Recursive common table expression to get post hierarchy
     WITH RECURSIVE PostHierarchyCTE AS (
         SELECT
-            PostTable.PostID,
-            PostTable.ParentID,
-            PostTable.Description,
-            PostTable.CreatedDate,
-            PostTable.CreatedBy,
-            UserTable.Username AS Username,
-            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 1) AS 'Likes',
-            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 2) AS 'Dislikes',
+            p.PostID,
+            p.ParentID,
+            p.Description,
+            p.CreatedDate,
+            p.CreatedBy,
+            u.Username AS Username,
+            (SELECT COUNT(*) FROM LikesTable l WHERE l.PostID = p.PostID AND l.Type = 1) AS Likes,
+            (SELECT COUNT(*) FROM LikesTable l WHERE l.PostID = p.PostID AND l.Type = 2) AS Dislikes,
             0 AS Level
         FROM
-            PostTable
+            PostTable p
         LEFT JOIN
-            UserTable ON p.CreatedBy = UserTable.UserID
+            UserTable u ON p.CreatedBy = u.UserID
         WHERE
-            PostTable.PostID = PostID
+            p.PostID = p_postID
         UNION ALL
         SELECT
-            PostTable.PostID,
-            PostTable.ParentID,
-            PostTable.Description,
-            PostTable.CreatedDate,
-            PostTable.CreatedBy,
-            UserTable.Username AS Username,
-            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = p.PostID AND LikesTable.Type = 1) AS 'Likes',
-            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = p.PostID AND LikesTable.Type = 2) AS 'Dislikes',
+            p.PostID,
+            p.ParentID,
+            p.Description,
+            p.CreatedDate,
+            p.CreatedBy,
+            u.Username AS Username,
+            (SELECT COUNT(*) FROM LikesTable l WHERE l.PostID = p.PostID AND l.Type = 1) AS Likes,
+            (SELECT COUNT(*) FROM LikesTable l WHERE l.PostID = p.PostID AND l.Type = 2) AS Dislikes,
             ph.Level + 1 AS Level
         FROM
-            PostTable
+            PostTable p
         INNER JOIN
-            PostHierarchyCTE ph ON PostTable.ParentID = ph.PostID
+            PostHierarchyCTE ph ON p.ParentID = ph.PostID
         LEFT JOIN
-            UserTable ON PostTable.CreatedBy = UserTable.UserID
+            UserTable u ON p.CreatedBy = u.UserID
     )
 
-    -- Selecting the final result
+    -- Selecting the final result from the CTE
     SELECT
         PostID,
         ParentID,
@@ -639,8 +638,7 @@ BEGIN
     ORDER BY
         Level, PostID;
 
-END //
-
+END//
 DELIMITER ;
 
 DELIMITER //
