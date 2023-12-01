@@ -80,7 +80,7 @@ use models\PostModel;
 
 function getComments($postID)
 {
-    $postModel = new postModel();
+    $postModel = PostModel::getPostModel();
     // $comments = 
     // $view = include("./comments.php");
     $postID = (int) $postID;
