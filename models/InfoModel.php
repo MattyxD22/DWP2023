@@ -59,10 +59,27 @@ class InfoModel extends BaseModel
             $query = $cxn->prepare($sql);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
+            print_r($result);
             $cxn = $this->closeDB();
             return $result;
         } catch (\PDOException $e) {
             echo $e->getMessage();
         }
     }
+
+    function fetchAboutUsDescription() {
+        try {
+            $cxn = $this->openDB();
+            $sql = "SELECT * FROM abouttable LIMIT 1";
+            $query = $cxn->prepare($sql);
+            $query->execute();
+            $result = $query->fetch(\PDO::FETCH_ASSOC);
+            print_r($result);
+            $cxn = $this->closeDB();
+            return $result["Description"];
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
 }
