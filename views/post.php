@@ -3,6 +3,10 @@
         <i class="bi bi-person-circle text-4xl my-auto"></i>
         <span class="ms-3 my-auto font-bold"><?php echo $post["Username"] ?></span>
 
+
+
+
+
     </div>
 
     <div class="post_content flex flex-col py-2">

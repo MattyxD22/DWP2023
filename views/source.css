@@ -534,3 +534,7 @@
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
 }
+
+.edit_post_container .dots{
+    color: var(--red);
+}
