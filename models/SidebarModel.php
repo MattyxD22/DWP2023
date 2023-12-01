@@ -2,10 +2,52 @@
 
 namespace models;
 
+use Exception;
+
 require_once 'BaseModel.php';
 
 class SidebarModel extends BaseModel
 {
+
+    private static ?SidebarModel $sidebarModel = null;
+    public static function getSidebarModel(): SidebarModel
+    {
+        if (self::$sidebarModel === null) {
+            self::$sidebarModel = new SidebarModel();
+        }
+
+        return self::$sidebarModel;
+    }
+
+    /**
+     * is not allowed to call from outside to prevent from creating multiple instances,
+     * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
+     */
+
+    private function __construct()
+    {
+    }
+
+
+    /**
+     * prevent the instance from being cloned (which would create a second instance of it)
+     */
+
+    private function __clone()
+    {
+    }
+
+
+    /**
+     * prevent from being unserialized (which would create a second instance of it)
+     * */
+
+    public function __wakeup()
+
+    {
+
+        throw new Exception("Cannot unserialize singleton");
+    }
 
     function loadProfile()
     {
@@ -16,12 +58,12 @@ class SidebarModel extends BaseModel
     {
 
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $getCategories = "CALL getCategories()";
             $handle_getCategories = $cxn->prepare($getCategories);
             $handle_getCategories->execute();
             $categories = $handle_getCategories->fetchAll(\PDO::FETCH_ASSOC);
-
+            $cxn = $this->closeDB();
             return include("../views/newPost.php");
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -36,13 +78,30 @@ class SidebarModel extends BaseModel
     {
 
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $getFeed = "CALL getFeed(:UserID)";
             $handle_getFeed = $cxn->prepare($getFeed);
             $handle_getFeed->bindParam(":UserID", $_SESSION["UserID"]);
             $handle_getFeed->execute();
             $results = $handle_getFeed->fetchAll(\PDO::FETCH_ASSOC);
 
+            foreach ($results as &$result) {
+                $result["Images"] = [];
+
+                // Fetch all images associated with the current post
+                $query2 = "SELECT mediatable.ImgData FROM mediatable WHERE mediatable.PostID = :PostID ORDER BY mediatable.PostID;";
+                $handle_getFeed = $cxn->prepare($query2);
+                $handle_getFeed->bindParam(":PostID", $result["PostID"]);
+                $handle_getFeed->execute();
+                $imgData =  $handle_getFeed->fetchAll(\PDO::FETCH_ASSOC);
+
+                // Add images to the 'Images' key in the $result array
+                if (!empty($imgData)) {
+                    $result["Images"] = $imgData;
+                }
+            }
+
+            $cxn = $this->closeDB();
             return include("../views/feedOnly.php");
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -57,7 +116,7 @@ class SidebarModel extends BaseModel
     {
 
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $cxn = $this->openDB();
             $getCategories = "CALL getCategories()";
             $handle_getCategories = $cxn->prepare($getCategories);
             $handle_getCategories->execute();
@@ -101,7 +160,7 @@ class SidebarModel extends BaseModel
 
 
 
-
+            $cxn = $this->closeDB();
             return include("../views/categoryPage.php");
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -138,7 +197,8 @@ class SidebarModel extends BaseModel
         //header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/adminPage.php');
     }
 
-    function loadAboutUs() {
+    function loadAboutUs()
+    {
         header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/aboutUs.php');
     }
 
