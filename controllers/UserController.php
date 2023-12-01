@@ -6,7 +6,7 @@ require("../models/UserModel.php");
 
 use models\UserModel;
 
-$userModel = new UserModel();
+$userModel = UserModel::getUserModel();
 
 if ($_POST) {
     // This checks if a request was send from $ajax/javascript. 
@@ -23,13 +23,12 @@ if ($_POST) {
 
 switch ($action) {
 
-    case "follow":
+        // case "follow":
 
-        $followUser = $_POST["followUser"];
-        $userID = $_SESSION["UserID"];
-        $userModel->follow($followUser, $userID);
-        break;
-        break;
+        //     $followUser = $_POST["followUser"];
+        //     $userID = $_SESSION["UserID"];
+        //     $userModel->follow($followUser, $userID);
+        //     break;
 
     case "logout":
 

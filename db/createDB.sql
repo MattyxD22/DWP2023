@@ -584,6 +584,67 @@ DELIMITER ;
 
 DELIMITER //
 
+CREATE PROCEDURE GetReplyChain(IN PostID INT(11))
+BEGIN
+    
+    WITH RECURSIVE PostHierarchyCTE AS (
+        SELECT
+            PostTable.PostID,
+            PostTable.ParentID,
+            PostTable.Description,
+            PostTable.CreatedDate,
+            PostTable.CreatedBy,
+            UserTable.Username AS Username,
+            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 1) AS 'Likes',
+            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 2) AS 'Dislikes',
+            0 AS Level
+        FROM
+            PostTable
+        LEFT JOIN
+            UserTable ON p.CreatedBy = UserTable.UserID
+        WHERE
+            PostTable.PostID = PostID
+        UNION ALL
+        SELECT
+            PostTable.PostID,
+            PostTable.ParentID,
+            PostTable.Description,
+            PostTable.CreatedDate,
+            PostTable.CreatedBy,
+            UserTable.Username AS Username,
+            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = p.PostID AND LikesTable.Type = 1) AS 'Likes',
+            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = p.PostID AND LikesTable.Type = 2) AS 'Dislikes',
+            ph.Level + 1 AS Level
+        FROM
+            PostTable
+        INNER JOIN
+            PostHierarchyCTE ph ON PostTable.ParentID = ph.PostID
+        LEFT JOIN
+            UserTable ON PostTable.CreatedBy = UserTable.UserID
+    )
+
+    -- Selecting the final result
+    SELECT
+        PostID,
+        ParentID,
+        Description,
+        CreatedDate,
+        CreatedBy,
+        Username,
+        Likes,
+        Dislikes,
+        Level
+    FROM
+        PostHierarchyCTE
+    ORDER BY
+        Level, PostID;
+
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
 CREATE PROCEDURE repostPost(IN p_PostID INT(11), IN p_UserID INT(11))
 BEGIN
     IF EXISTS (SELECT * FROM RepostTable WHERE UserID = p_UserID AND PostID = p_PostID) THEN

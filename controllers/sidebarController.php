@@ -4,7 +4,7 @@ require("../models/SidebarModel.php");
 
 use models\SidebarModel;
 
-$sidebarModel = new SidebarModel();
+$sidebarModel = SidebarModel::getSidebarModel();
 
 if ($_POST) {
     // This checks if a request was send from $ajax/javascript. 
