@@ -601,7 +601,7 @@ BEGIN
         FROM
             PostTable
         LEFT JOIN
-            UserTable ON p.CreatedBy = UserTable.UserID
+            UserTable ON PostTable.CreatedBy = UserTable.UserID
         WHERE
             PostTable.PostID = PostID
         UNION ALL
@@ -612,8 +612,8 @@ BEGIN
             PostTable.CreatedDate,
             PostTable.CreatedBy,
             UserTable.Username AS Username,
-            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = p.PostID AND LikesTable.Type = 1) AS 'Likes',
-            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = p.PostID AND LikesTable.Type = 2) AS 'Dislikes',
+            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 1) AS 'Likes',
+            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 2) AS 'Dislikes',
             ph.Level + 1 AS Level
         FROM
             PostTable
