@@ -302,4 +302,19 @@ class UserModel extends BaseModel
     }
 }
 
+function fetchFollowingUsers($userID) {
+    try {
+        $cxn = parent::connectToDB();
+        $sql = "CALL GetFollowingUsers(:userID);";
+        $query = $cxn->prepare($sql);
+        $query->bindParam(":userID", $userID);
+        $query->execute();
+        $followedUsers = $query->fetchAll(\PDO::FETCH_ASSOC);
+        $cxn = null;
+        return $followedUsers;
+    } catch (\PDOException $e) {
+        echo $e->getMessage();
+    }
+}
+
 }

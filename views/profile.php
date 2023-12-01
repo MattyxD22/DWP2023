@@ -24,6 +24,7 @@ $userLikes = $userController->fetchLikes($userID);
 $userDislikes = $userController->fetchDislikes($userID);
 $userComments = $userController->fetchUserComments($userID);
 $userReposts = $userController->fetchReposts($userID);
+$userFollowing = $userController->fetchFollowingUsers($userID);
 ?>
 
 <article class="text-white profile_page">
@@ -235,7 +236,18 @@ $userReposts = $userController->fetchReposts($userID);
             </div>
 
             <div class="profile_content" data-type="6">
+                <div class="flex flex-wrap gap-4 p-8">
+                    <?php
+                        foreach($userFollowing as $key => $user) {
+                            $userID = $user["UserID"];
+                            $username = $user["Username"];
+                            $fname = $user["FName"];
+                            $lname = $user["LName"];
 
+                            include("./userCard.php");
+                        }
+                    ?>
+                </div>
             </div>
 
         </div>
