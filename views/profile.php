@@ -23,6 +23,8 @@ $userPosts = $userController->fetchPosts($userID);
 $userLikes = $userController->fetchLikes($userID);
 $userDislikes = $userController->fetchDislikes($userID);
 $userComments = $userController->fetchUserComments($userID);
+$userReposts = $userController->fetchReposts($userID);
+$userFollowing = $userController->fetchFollowingUsers($userID);
 ?>
 
 <article class="text-white profile_page">
@@ -48,13 +50,13 @@ $userComments = $userController->fetchUserComments($userID);
         <?php
         if (isset($_GET['userid']) && $_SESSION['UserID'] != $userID) {
         ?>
-        <div>
-            <button type="button" class="std_button followUnfollowBtn" data-userid="<?php echo $userID?>">
-                <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
-            </button>
-        </div>
-        <?php 
-            } else {
+            <div>
+                <button type="button" class="std_button followUnfollowBtn" data-userid="<?php echo $userID ?>">
+                    <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
+                </button>
+            </div>
+        <?php
+        } else {
         ?>
             <button type="button" class="std_button opacity-0">
                 <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
@@ -111,16 +113,21 @@ $userComments = $userController->fetchUserComments($userID);
                 <div class="grid grid-cols-3 gap-4 p-8 ">
 
                     <?php
-                    foreach ($userPosts as $post) {
-                        // Set variables with the information from the current post
-                        $title = $post['Title']; // Assuming 'Title' is the correct key
-                        $description = $post['Description']; // And so on for other variables
-                        $img = ""; //$post["ImgData"];
-                        $postID = $post["PostID"];
-
-                        // Now include the profileItem.php file, which will use the variables above
-                        include('./profileItem.php');
-                    }
+                         foreach ($userPosts as $key => $post) {
+                            // Set variables with the information from the current post
+                            $title = $post['Title']; // Assuming 'Title' is the correct key
+                            $description = $post['Description']; // And so on for other variables
+                            $img = ""; //$post["ImgData"];
+                            $postID = $post["PostID"];
+                            $likesAmount = $post["Likes"];
+                            $userLike = $post["UserLike"];
+                            $userDislike = $post["UserDislike"];
+                            $dislikesAmount = $post["Dislikes"];
+                            $repostAmount = $post["Reposts"];
+                            $userReposted = $post["UserReposted"];
+                            // Now include the profileItem.php file, which will use the variables above
+                            include('./profileItem.php');
+                        }
                     ?>
                 </div>
             </div>
@@ -135,6 +142,13 @@ $userComments = $userController->fetchUserComments($userID);
                         $description = $like['Description']; // And so on for other variables
                         $img = $like["ImgData"];
                         $postID = $like["PostID"];
+
+                        $likesAmount = $like["Likes"];
+                        $userLike = $like["UserLike"];
+                        $userDislike = $like["UserDislike"];
+                        $dislikesAmount = $like["Dislikes"];
+                        $repostAmount = $like["Reposts"];
+                        $userReposted = $like["UserReposted"];
 
                         // Now include the profileItem.php file, which will use the variables above
                         include('./profileItem.php');
@@ -155,6 +169,13 @@ $userComments = $userController->fetchUserComments($userID);
                         $img = $dislike["ImgData"];
                         $postID = $dislike["PostID"];
 
+                        $likesAmount = $dislike["Likes"];
+                        $userLike = $dislike["UserLike"];
+                        $userDislike = $dislike["UserDislike"];
+                        $dislikesAmount = $dislike["Dislikes"];
+                        $repostAmount = $dislike["Reposts"];
+                        $userReposted = $dislike["UserReposted"];
+
                         // Now include the profileItem.php file, which will use the variables above
                         include('./profileItem.php');
                     }
@@ -164,7 +185,7 @@ $userComments = $userController->fetchUserComments($userID);
             </div>
 
             <div class="profile_content" data-type="4">
-                <div class="grid grid-cols-3 gap-4 p-8 ">
+                <div class="grid grid-cols-1 gap-4 p-8 ">
 
                     <?php
                     foreach ($userComments as $key => $comment) {
@@ -174,9 +195,15 @@ $userComments = $userController->fetchUserComments($userID);
                         //$img = $comment["ImgData"];
 
                         $postID = $comment["PostID"];
+                        $likesAmount = $comment["Likes"];
+                        $userLike = $comment["UserLike"];
+                        $userDislike = $comment["UserDislike"];
+                        $dislikesAmount = $comment["Dislikes"];
+                        $repostAmount = $comment["Reposts"];
+                        $userReposted = $comment["UserReposted"];
 
                         // Now include the profileItem.php file, which will use the variables above
-                        include('./profileItem.php');
+                        include('./profileComments.php');
                     }
 
                     ?>
@@ -184,11 +211,41 @@ $userComments = $userController->fetchUserComments($userID);
             </div>
 
             <div class="profile_content" data-type="5">
+                <div class="grid grid-cols-3 gap-4 p-8">
+                    <?php 
+                    
+                    foreach ($userReposts as $key => $repost) {
+                        $title = $repost["Title"];
+                        $description = $repost["Description"];
+                        $img = $repost["ImgData"];
+                        $postID = $repost["PostID"];
+                        $likesAmount = $repost["Likes"];
+                        $userLike = $repost["UserLike"];
+                        $userDislike = $repost["UserDislike"];
+                        $dislikesAmount = $repost["Dislikes"];
+                        $repostAmount = $repost["Reposts"];
+                        $userReposted = $repost["UserReposted"];
+
+                        include('./profileItem.php');
+                    }
+                    ?>
+                </div>
 
             </div>
 
             <div class="profile_content" data-type="6">
+                <div class="flex flex-wrap gap-4 p-8">
+                    <?php
+                        foreach($userFollowing as $key => $user) {
+                            $userID = $user["UserID"];
+                            $username = $user["Username"];
+                            $fname = $user["FName"];
+                            $lname = $user["LName"];
 
+                            include("./userCard.php");
+                        }
+                    ?>
+                </div>
             </div>
 
         </div>

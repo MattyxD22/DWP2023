@@ -6,7 +6,7 @@ require("../models/AdminModel.php");
 
 use models\AdminModel;
 
-$adminModel2 = new AdminModel();
+$adminModel2 = AdminModel::getAdminModel();
 
 if ($_POST) {
     // This checks if a request was send from $ajax/javascript. 
@@ -83,6 +83,10 @@ switch ($action) {
         return $adminModel2->addNewRule($rule);
 
         break;
+    case 'updateDescription':
+        $description = base64_encode($_POST["description"]);
+        return $adminModel2->updateDescription($description);
+        break;
 }
 
 class AdminController
@@ -91,7 +95,7 @@ class AdminController
 
     public function __construct()
     {
-        $this->adminModel = new AdminModel();
+        $this->adminModel = AdminModel::getAdminModel();
     }
 
     function fetchUsers($userID)
@@ -100,14 +104,15 @@ class AdminController
         return $users;
     }
 
-    function fetchRules() {
+    function fetchRules()
+    {
         $rules = $this->adminModel->getRules();
         return $rules;
     }
 
-    function fetchContact() {
+    function fetchContact()
+    {
         $contactInfo = $this->adminModel->getContactInfo();
         return $contactInfo;
     }
-    
 }

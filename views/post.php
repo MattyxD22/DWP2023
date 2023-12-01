@@ -3,6 +3,10 @@
         <i class="bi bi-person-circle text-4xl my-auto"></i>
         <span class="ms-3 my-auto font-bold"><?php echo $post["Username"] ?></span>
 
+
+
+
+
     </div>
 
     <div class="post_content flex flex-col py-2">
@@ -23,7 +27,7 @@
     <div class="post_comments_container flex flex-col px-3 py-3">
 
         <div class="RTE_comment w-full">
-            
+
         </div>
 
         <!-- <textarea id="comment" rows="4" class="w-full std_input comment_textArea" placeholder="Write a comment..."></textarea> -->
@@ -80,9 +84,10 @@ use models\PostModel;
 
 function getComments($postID)
 {
-    $postModel = new postModel();
+    $postModel = PostModel::getPostModel();
     // $comments = 
     // $view = include("./comments.php");
+    $postID = (int) $postID;
     return $postModel->getComments($postID);
 }
 

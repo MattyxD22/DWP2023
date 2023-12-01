@@ -2,13 +2,56 @@
 
 namespace models;
 
+use Exception;
+
 require_once 'BaseModel.php';
 class UserModel extends BaseModel
 {
+
+    private static ?UserModel $userModel = null;
+    public static function getUserModel(): UserModel
+    {
+        if (self::$userModel === null) {
+            self::$userModel = new UserModel();
+        }
+
+        return self::$userModel;
+    }
+
+    /**
+     * is not allowed to call from outside to prevent from creating multiple instances,
+     * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
+     */
+
+    private function __construct()
+    {
+    }
+
+
+    /**
+     * prevent the instance from being cloned (which would create a second instance of it)
+     */
+
+    private function __clone()
+    {
+    }
+
+
+    /**
+     * prevent from being unserialized (which would create a second instance of it)
+     * */
+
+    public function __wakeup()
+
+    {
+
+        throw new Exception("Cannot unserialize singleton");
+    }
+
     function create($username, $email, $password)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $sanitized_username = htmlspecialchars($username);
             $sanitized_email = htmlspecialchars($email);
@@ -39,7 +82,7 @@ class UserModel extends BaseModel
             }
 
 
-            $cxn = null;
+            $cxn = $this->closeDB();
         } catch (\PDOException $e) {
             print($e->getMessage());
         }
@@ -48,7 +91,7 @@ class UserModel extends BaseModel
     function login($username, $password)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
 
 
@@ -83,7 +126,7 @@ class UserModel extends BaseModel
             } else {
                 return 0;
             }
-            $cxn = null;
+            $cxn = $this->closeDB();
         } catch (\PDOException $e) {
             print($e->getMessage());
             return false;
@@ -93,6 +136,7 @@ class UserModel extends BaseModel
     function logout($userID)
     {
         //echo "logout done";
+        $_SESSION["UserID"] = null;
         header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/login.php');
     }
 
@@ -107,13 +151,13 @@ class UserModel extends BaseModel
     function fetchAmountOfFollowers($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $statement = "SELECT COUNT(*) AS NumberOfFollowers FROM FollowingTable WHERE FollowingID = :userID";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $result["NumberOfFollowers"];
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -123,13 +167,13 @@ class UserModel extends BaseModel
     function fetchAmountOfFollowing($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $statement = "SELECT COUNT(*) AS FollowingCount FROM FollowingTable WHERE UserID = :userID;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $result["FollowingCount"];
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -139,13 +183,13 @@ class UserModel extends BaseModel
     function fetchAmountOfPosts($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $statement = "SELECT COUNT(*) AS NumberOfPostsWithoutParent FROM PostTable WHERE CreatedBy = :userID AND ParentID IS NULL;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $result["NumberOfPostsWithoutParent"];
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -155,13 +199,13 @@ class UserModel extends BaseModel
     function fetchUsernameById($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $statement = "SELECT username FROM usertable WHERE userid = :userID;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $result["username"];
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -171,23 +215,23 @@ class UserModel extends BaseModel
     function fetchPostsById($userID)
     {
         try {
-            $cxn = parent::connectToDB();
-            $statement = "SELECT PostID, Description, CreatedDate, CreatedBy, Title, CategoryID, mediatable.ImgData FROM PostTable LEFT JOIN mediatable ON mediatable.PostID = PostTable.PostID WHERE ParentID IS NULL AND CreatedBy = :userID ORDER BY PostID DESC;";
+            $cxn = $this->openDB();
+            $statement = "CALL fetchUserPosts(:userID)";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $result;
         } catch (\PDOException $e) {
             echo $e->getMessage();
-        }
+        }        
     }
 
     function fetchLikesById($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $statement = "CALL fetchLikesByID(:UserID)";
             $query = $cxn->prepare($statement);
@@ -200,7 +244,7 @@ class UserModel extends BaseModel
             // $query->bindValue(":userID", $userID);
             // $query->execute();
             // $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $likes;
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -210,7 +254,7 @@ class UserModel extends BaseModel
     function fetchDislikesById($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $statement = "CALL fetchDislikesByID(:UserID)";
             $query = $cxn->prepare($statement);
@@ -223,8 +267,24 @@ class UserModel extends BaseModel
             // $query->bindValue(":userID", $userID);
             // $query->execute();
             // $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $dislikes;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchRepostsByUserID($userID) {
+        try {
+            $cxn = parent::connectToDB();
+
+            $sql = "CALL fetchUserReposts(:userID);";
+            $query = $cxn->prepare($sql);
+            $query->bindValue(":userID", $userID);
+            $query->execute();
+            $reposts = $query->fetchALL(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $reposts;
         } catch (\PDOException $e) {
             echo $e->getMessage();
         }
@@ -233,7 +293,7 @@ class UserModel extends BaseModel
     function fetchUserCommentsByID($userID)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
 
             $statement = "CALL fetchUserCommentsByID(:UserID)";
             $query = $cxn->prepare($statement);
@@ -246,7 +306,7 @@ class UserModel extends BaseModel
             // $query->bindValue(":userID", $userID);
             // $query->execute();
             // $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $comments;
         } catch (\PDOException $e) {
             echo $e->getMessage();
@@ -256,34 +316,48 @@ class UserModel extends BaseModel
     function userPage($userID)
     {
         header('Location: ' . DOMAIN_NAME . BASE_URL . '/views/profile.php?userid=' . urlencode($userID));
-    }  
-    
-    function followUser($userID) {
-    try {
-        $currentUser = $_SESSION["UserID"];
-
-        $cxn = parent::connectToDB();
-
-        $checkStatement = "SELECT * FROM FollowingTable WHERE UserID = :currentUser AND FollowingID = :targetUser";
-        $checkQuery = $cxn->prepare($checkStatement);
-        $checkQuery->bindParam(":currentUser", $currentUser);
-        $checkQuery->bindParam(":targetUser", $userID);
-        $checkQuery->execute();
-
-        if ($checkQuery->rowCount() > 0) {
-            $statement = "DELETE FROM FollowingTable WHERE UserID = :currentUser AND FollowingID = :targetUser";
-        } else {
-            $statement = "INSERT INTO FollowingTable (UserID, FollowingID) VALUES (:currentUser, :targetUser)";
-        }
-
-        $query = $cxn->prepare($statement);
-        $query->bindParam(":currentUser", $currentUser);
-        $query->bindParam(":targetUser", $userID);
-        $query->execute();
-
-    } catch (\PDOException $e) {
-        echo $e->getMessage();
     }
-}
 
+    function followUser($userID)
+    {
+        try {
+            $currentUser = $_SESSION["UserID"];
+
+            $cxn = $this->openDB();
+
+            $checkStatement = "SELECT * FROM FollowingTable WHERE UserID = :currentUser AND FollowingID = :targetUser";
+            $checkQuery = $cxn->prepare($checkStatement);
+            $checkQuery->bindParam(":currentUser", $currentUser);
+            $checkQuery->bindParam(":targetUser", $userID);
+            $checkQuery->execute();
+
+            if ($checkQuery->rowCount() > 0) {
+                $statement = "DELETE FROM FollowingTable WHERE UserID = :currentUser AND FollowingID = :targetUser";
+            } else {
+                $statement = "INSERT INTO FollowingTable (UserID, FollowingID) VALUES (:currentUser, :targetUser)";
+            }
+
+            $query = $cxn->prepare($statement);
+            $query->bindParam(":currentUser", $currentUser);
+            $query->bindParam(":targetUser", $userID);
+            $query->execute();
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchFollowingUsers($userID) {
+        try {
+            $cxn = parent::connectToDB();
+            $sql = "CALL GetFollowingUsers(:userID);";
+            $query = $cxn->prepare($sql);
+            $query->bindParam(":userID", $userID);
+            $query->execute();
+            $followedUsers = $query->fetchAll(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $followedUsers;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
 }

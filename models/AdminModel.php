@@ -2,28 +2,73 @@
 
 namespace models;
 
+use Exception;
+
 require_once 'BaseModel.php';
 
 class AdminModel extends BaseModel
 {
 
-    function getContactInfo() {
+    private static ?AdminModel $adminModel = null;
+    public static function getAdminModel(): AdminModel
+    {
+        if (self::$adminModel === null) {
+            self::$adminModel = new AdminModel();
+        }
+
+        return self::$adminModel;
+    }
+
+    /**
+     * is not allowed to call from outside to prevent from creating multiple instances,
+     * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
+     */
+
+    private function __construct()
+    {
+    }
+
+
+    /**
+     * prevent the instance from being cloned (which would create a second instance of it)
+     */
+
+    private function __clone()
+    {
+    }
+
+
+    /**
+     * prevent from being unserialized (which would create a second instance of it)
+     * */
+
+    public function __wakeup()
+
+    {
+
+        throw new Exception("Cannot unserialize singleton");
+    }
+
+
+    function getContactInfo()
+    {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $statement = "SELECT * FROM contactinfotable LIMIT 1";
             $query = $cxn->prepare($statement);
             $query->execute();
             $result = $query->fetch();
-            $cxn = null;
+            $cnx = $this->closeDB();
             return $result;
         } catch (\Exception $e) {
             print($e->getMessage());
-            $cxn = null;
+            $cnx = $this->closeDB();
             return false;
         }
     }
 
-    function updateContact($contactData) {
+    function updateContact($contactData)
+    {
 
         try {
             $fName = htmlspecialchars($contactData['fName']);
@@ -34,41 +79,40 @@ class AdminModel extends BaseModel
             $houseNumber = htmlspecialchars($contactData['houseNumber']);
             $streetName = htmlspecialchars($contactData['streetName']);
 
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $statement = "UPDATE contactinfotable SET Email = :email, FName = :fname, LName = :lname,
              PhoneNumber = :phoneNumber, City = :city, StreetName = :streetName, HouseNumber = :houseNumber;";
-             $query = $cxn->prepare($statement);
-             $query->bindParam(":fname", $fName);
-             $query->bindParam(":email", $email);
-             $query->bindParam(":lname", $lName);
-             $query->bindParam(":phoneNumber", $phoneNumber);
-             $query->bindParam(":city", $city);
-             $query->bindParam(":houseNumber", $houseNumber);
-             $query->bindParam(":streetName", $streetName);
-             $query->execute();
-             $cxn = null;
-             return true;
-        }
-        catch (\Exception $e) {
+            $query = $cxn->prepare($statement);
+            $query->bindParam(":fname", $fName);
+            $query->bindParam(":email", $email);
+            $query->bindParam(":lname", $lName);
+            $query->bindParam(":phoneNumber", $phoneNumber);
+            $query->bindParam(":city", $city);
+            $query->bindParam(":houseNumber", $houseNumber);
+            $query->bindParam(":streetName", $streetName);
+            $query->execute();
+            $cnx = $this->closeDB();
+            return true;
+        } catch (\Exception $e) {
             print($e->getMessage());
             return false;
         }
-        
     }
 
-    function getUser($userID) {
+    function getUser($userID)
+    {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $statement = "SELECT UserID, Username, FName, LName, Email, Banned FROM usertable WHERE IsAdmin = 0 OR UserID = :userID;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cnx = $this->closeDB();
             return $result;
         } catch (\Exception $e) {
             print($e->getMessage());
-            $cxn = null;
+            $cnx = $this->closeDB();
             return false;
         }
     }
@@ -76,7 +120,7 @@ class AdminModel extends BaseModel
     function updateUser($userID, $userBan, $userNewEmail, $userNewPassword)
     {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $query = $cxn->prepare("UPDATE UserTable
                                 SET Banned = :userBan,
                                     Email = :userNewEmail,
@@ -90,15 +134,15 @@ class AdminModel extends BaseModel
             $query->bindParam(':userNewPassword', $userNewPassword);
             $query->execute();
             if ($query->rowCount() > 0) {
-                $cxn = null;
+                $cnx = $this->closeDB();
                 return true;
             } else {
-                $cxn = null;
+                $cnx = $this->closeDB();
                 return false;
             }
         } catch (\Exception $e) {
             print($e->getMessage());
-            $cxn = null;
+            $cnx = $this->closeDB();
             return false;
         }
     }
@@ -106,7 +150,7 @@ class AdminModel extends BaseModel
     function deleteRule($ruleID)
     {
         try {
-            $cnx = $this->connectToDB();
+            $cnx = $this->openDB();
 
             $request = "CALL deleteRule(:ruleID)";
             $handle_request = $cnx->prepare($request);
@@ -121,7 +165,7 @@ class AdminModel extends BaseModel
     // function addRule($rule)
     // {
     //     try {
-    //         $cnx = $this->connectToDB();
+    //         $cnx = $this->openDB();
 
     //         $request = "CALL insertRule(:rule)";
     //         $handle_request = $cnx->prepare($request);
@@ -136,7 +180,7 @@ class AdminModel extends BaseModel
     function updateRule($ruleID, $ruleText)
     {
         try {
-            $cnx = $this->connectToDB();
+            $cnx = $this->openDB();
 
             $request = "CALL updateRule(:ruleID, :ruleText)";
             $handle_request = $cnx->prepare($request);
@@ -157,7 +201,7 @@ class AdminModel extends BaseModel
     function getRules()
     {
         try {
-            $cnx = $this->connectToDB();
+            $cnx = $this->openDB();
 
             $request = "CALL getRules()";
             $handle_request = $cnx->prepare($request);
@@ -173,7 +217,7 @@ class AdminModel extends BaseModel
     function addNewRule($rule)
     {
         try {
-            $cnx = $this->connectToDB();
+            $cnx = $this->openDB();
 
             $ruleStmt = "CALL insertRule(:rule)";
             $handle_addRule = $cnx->prepare($ruleStmt);
@@ -188,6 +232,21 @@ class AdminModel extends BaseModel
             $cnx = $this->closeDB();
         } catch (\PDOException $err) {
             print_r($err->getMessage());
+        }
+    }
+
+    function updateDescription($description) {
+        try {
+            $cnx = $this->connectToDB();
+            $sql = "UPDATE abouttable SET Description = :description";
+            $query = $cnx->prepare($sql);
+            $query->bindParam(":description", $description);
+            $query->execute();
+            $cnx = null;
+            return true;
+        } catch (\PDOException $err) {
+            print_r($err->getMessage());
+            return false;
         }
     }
 }

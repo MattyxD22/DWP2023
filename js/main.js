@@ -1,5 +1,6 @@
 $(document).ready(function () {
   var quillEditor;
+  var quillEditor2;
 
   const url_user = "../controllers/UserController.php";
   const url_post = "../controllers/PostController.php";
@@ -157,16 +158,9 @@ $(document).ready(function () {
       contentType: false, // NEEDED, DON'T OMIT THIS
       processData: false, // NEEDED, DON'T OMIT THIS
     }).done(function (data) {
-      console.log(data);
+      alert("Post Created successfully");
+      //console.log(data);
     });
-
-    // $.ajax({
-    //   url: url_post,
-    //   type: "POST",
-    //   data: data,
-    // }).done(function (data) {
-    //   console.log(data);
-    // });
   });
 
   $(document).on("click", ".mainBG", function (e) {
@@ -301,24 +295,74 @@ $(document).ready(function () {
     }).done(function (data) {
       $(".state_col").empty();
       $(".state_col").append(data);
+
+      const toolbarOptions = [
+        ["bold", "italic", "underline", "strike"], // toggled buttons
+        ["blockquote", "code-block"],
+
+        [{ header: 1 }, { header: 2 }], // custom button values
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ script: "sub" }, { script: "super" }], // superscript/subscript
+        [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+        [{ direction: "rtl" }], // text direction
+
+        [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+        [{ font: [] }],
+        [{ align: [] }],
+
+        ["clean"], // remove formatting button
+      ];
+
+      quillEditor2 = new Quill(".updateSiteDescription", {
+        modules: {
+          toolbar: toolbarOptions,
+        },
+        placeholder: "Write a comment...",
+        theme: "snow",
+      });
     });
   });
 
   $(document).on("click", ".submit_comment", function () {
-    const container = $(this).closest(".postComment_Container");
+    const post_container = $(this).closest(".post_Container");
     const comment = quillEditor.root.innerHTML;
     const id = $(this).data("id");
+    const orgID = 0; // only needed when creating replies, not inital comments
 
     const data = {
       action: "createComment",
       comment: comment,
       postID: id,
+      orgID: orgID,
     };
 
     console.log(data);
 
     $.ajax({
       url: url_post,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      //Clearing comments after successful comment creation
+      post_container.find(".comment_section").remove();
+      post_container.append(data);
+    });
+  });
+
+  //Save site description
+  $(document).on("click", ".saveSiteDescription", function () {
+    const description = quillEditor2.root.innerHTML;
+
+    const data = {
+      action: "updateDescription",
+      description: description
+    };
+
+    $.ajax({
+      url: url_admin,
       type: "POST",
       data: data,
     }).done(function (data) {
@@ -359,15 +403,18 @@ $(document).ready(function () {
   });
 
   $(document).on("click", ".submit_reply", function () {
+    const post_container = $(this).closest(".post_Container");
     const container = $(this).closest(".reply_to_comment_container");
 
     let reply = container.find(".std_input").val();
     let commentID = $(this).data("id");
+    let orgID = $(this).data("org-id"); // Original post ID
 
     const data = {
       action: "createComment",
       comment: reply,
       postID: commentID,
+      orgID: orgID,
     };
 
     $.ajax({
@@ -375,8 +422,11 @@ $(document).ready(function () {
       type: "POST",
       data: data,
     }).done(function (data) {
-      container.find(".std_input").val("");
-      container.closest(".reply_comment_container").removeClass("open");
+      //Clearing comments after successful comment creation
+      post_container.find(".comment_section").remove();
+      post_container.append(data);
+      //container.find(".std_input").val("");
+      //container.closest(".reply_comment_container").removeClass("open");
     });
   });
 
@@ -438,6 +488,29 @@ $(document).ready(function () {
     // alert("cliked on user profile: " + userID);
   });
 
+  $(document).on("click", ".user-card", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const userID = $(this).data("userid");
+
+    const data = {
+      action: "fromPost",
+      userID: userID,
+    };
+
+    $.ajax({
+      url: url_user,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+
+    // alert("cliked on user profile: " + userID);
+  });  
+
   $(document).on("click", ".updateUserBtn", function () {
     const container = $(this).closest(".updateUserContainer");
 
@@ -482,10 +555,10 @@ $(document).ready(function () {
       phoneNumber: phoneNumber,
       city: city,
       houseNumber: houseNumber,
-      streetName: streetName
-    }
+      streetName: streetName,
+    };
 
-   $.ajax({
+    $.ajax({
       url: url_admin,
       type: "POST",
       data: data,
@@ -502,11 +575,11 @@ $(document).ready(function () {
 
     const data = {
       action: "followUser",
-      userID: userID
-    }
+      userID: userID,
+    };
 
    $.ajax({
-      url: url_admin,
+      url: url_user,
       type: "POST",
       data: data,
     }).done(function (data) {
@@ -517,29 +590,49 @@ $(document).ready(function () {
   $(document).on("click", ".close_popup", function (e) {
     e.stopPropagation();
     e.preventDefault();
-
-    $(this).closest(".reply_comment_container").removeClass("open");
   });
 
-  $(document).on("click", ".submit_reply", function () {
-    const container = $(this).closest(".reply_to_comment_container");
+  // $(document).on("click", ".submit_reply", function () {
+  //   const container = $(this).closest(".reply_to_comment_container");
 
-    let reply = container.find(".std_input").val();
-    let commentID = $(this).data("id");
+  //   let reply = container.find(".std_input").val();
+  //   let commentID = $(this).data("id");
+
+  //   const data = {
+  //     action: "createComment",
+  //     comment: reply,
+  //     postID: commentID,
+  //   };
+
+  //   $.ajax({
+  //     url: url_post,
+  //     type: "POST",
+  //     data: data,
+  //   }).done(function (data) {
+  //     container.find(".std_input").val("");
+  //     container.closest(".reply_comment_container").removeClass("open");
+  //   });
+  // });
+
+  //Repost button
+  $(document).on("click", ".repost_post", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    let elem = $(this);
+    let postID = $(this).data("id");
 
     const data = {
-      action: "createComment",
-      comment: reply,
-      postID: commentID,
-    };
+      action: "repost",
+      postID: postID
+    }
 
     $.ajax({
       url: url_post,
       type: "POST",
-      data: data,
-    }).done(function (data) {
-      container.find(".std_input").val("");
-      container.closest(".reply_comment_container").removeClass("open");
+      data: data
+    }).done(function(data) {
+      console.log(data);
     });
   });
 
@@ -731,8 +824,11 @@ $(document).ready(function () {
   $(document).on("click", ".feed_image_container", function (e) {
     e.stopPropagation();
     e.preventDefault();
+    const container = this;
+    console.log(container);
 
-    let dialog = document.querySelector("dialog");
+    let dialog = container.querySelector("dialog");
+    $(dialog).addClass("showing");
     dialog.showModal();
   });
 
@@ -750,7 +846,9 @@ $(document).ready(function () {
     // check if the clicked element is the dialog element itself
     if ($(clickElem).hasClass("imgDialog")) {
       // if true, close the dialog
+
       let dialog = document.querySelector("dialog");
+      $(dialog).removeClass("showing");
       dialog.close();
     }
   });

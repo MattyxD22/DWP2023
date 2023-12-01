@@ -487,6 +487,7 @@
     background-color: #3D3D3D;
     border-radius: 6px;
     min-height: 500px;
+    max-height: 500px;
     max-width: 750px;
     width: 100%;
     margin-bottom: 1.5rem;
@@ -514,5 +515,39 @@
 }
 
 .imgIndicator.active i{
+    color: var(--red);
+}
+
+.user-card {
+    /* Basic Card Styles */
+    border: 1px solid #dc2626;
+    background-color: #3D3D3D;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    /* Hover Effect */
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.imgDialog.showing{
+    display: flex !important;
+}
+
+.profile_comment{
+    border: 1px solid var(--red);
+    border-radius: 10px;
+}
+
+.comment_description{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.edit_post_container .dots{
     color: var(--red);
 }
