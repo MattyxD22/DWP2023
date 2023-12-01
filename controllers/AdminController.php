@@ -95,7 +95,7 @@ class AdminController
 
     public function __construct()
     {
-        $this->adminModel = new AdminModel();
+        $this->adminModel = AdminModel::getAdminModel();
     }
 
     function fetchUsers($userID)
