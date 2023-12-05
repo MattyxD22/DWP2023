@@ -116,22 +116,81 @@ class AdminModel extends BaseModel
             return false;
         }
     }
-
-    function updateUser($userID, $userBan, $userNewEmail, $userNewPassword)
-    {
+    function uploadUserImage($userImage) {
         try {
             $cxn = $this->openDB();
-            $query = $cxn->prepare("UPDATE UserTable
-                                SET Banned = :userBan,
-                                    Email = :userNewEmail,
-                                    Password = :userNewPassword
-                                WHERE UserID = :userID");
+            $sql = "CALL addFileToPost(:type, :postID, :file);";
+            $query = $cxn->prepare($sql);
+            $query->bindValue(":type", 1);
+            $query->bindValue(":postID", NULL);
+            $query->bindValue(":file", $userImage);
+            $query->execute();
 
-            // Bind the parameters
+            $newId = $query->fetch(\PDO::FETCH_ASSOC);
+            $newMediaID = $newId['NewMediaID'];
+            $cxn = $this->closeDB();
+            return $newMediaID;
+        } catch (\Exception $e) {
+            print($e->getMessage());
+            return "";
+        }
+    }
+
+    function updateUserAdmin($userID, $userBan, $userNewEmail, $userNewPassword, $userNewImage) {
+        try {  
+            if (!empty($userNewImage)) {
+                $newMediaID = $this->uploadUserImage($userNewImage);
+            } else {
+                $newMediaID = "";
+            }
+
+            var_dump($newMediaID);
+
+            $cxn = $this->openDB();
+            $sql = "UPDATE UserTable
+                    SET Banned = COALESCE(:userBan, Banned),
+                        Email = COALESCE(NULLIF(:userNewEmail, ''), Email),
+                        Password = COALESCE(NULLIF(:userNewPassword, ''), Password),
+                        MediaID = COALESCE(NULLIF(:mediaID, ''), MediaID)
+                    WHERE UserID = :userID;";
+            $query = $cxn->prepare($sql);
             $query->bindParam(':userID', $userID);
             $query->bindParam(':userBan', $userBan);
             $query->bindParam(':userNewEmail', $userNewEmail);
             $query->bindParam(':userNewPassword', $userNewPassword);
+            $query->bindParam(':mediaID', $newMediaID);
+            $query->execute();
+            $cxn = $this->closeDB();
+        } catch (\Exception $e) {
+            print($e->getMessage());
+            $cnx = $this->closeDB();
+            return false;
+        }
+
+    }
+
+    function updateUser($userID, $userNewEmail, $userNewPassword, $userNewImage)
+    {
+        try {
+
+            if (!empty($userNewImage)) {
+                $newMediaID = $this->uploadUserImage($userNewImage);
+            } else {
+                $newMediaID = "";
+            }
+
+            $cxn = $this->openDB();
+            $query = $cxn->prepare("UPDATE UserTable
+                                    SET Email = COALESCE(NULLIF(:userNewEmail, ''), Email),
+                                        Password = COALESCE(NULLIF(:userNewPassword, ''), Password),
+                                        MediaID = COALESCE(NULLIF(:mediaID, ''), MediaID)
+                                    WHERE UserID = :userID;");
+
+            // Bind the parameters
+            $query->bindParam(':userID', $userID);
+            $query->bindParam(':userNewEmail', $userNewEmail);
+            $query->bindParam(':userNewPassword', $userNewPassword);
+            $query->bindParam(':mediaID', $newMediaID);
             $query->execute();
             if ($query->rowCount() > 0) {
                 $cnx = $this->closeDB();

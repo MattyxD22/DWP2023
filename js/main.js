@@ -519,18 +519,37 @@ $(document).ready(function () {
     const userNewEmail = container.find(".newEmail").val();
     const userNewPassword = container.find(".newPassword").val();
 
-    const data = {
+    const input = document.getElementById("newProfileImage");
+
+    const file = input.files[0];
+
+    let formData = new FormData();
+
+    formData.append("action", "updateUser");
+    if (file) {
+      formData.append("file", file, file.name);
+    }
+    formData.append("user", user);
+    formData.append("userBan", userBan);
+    formData.append("userNewEmail", userNewEmail);
+    formData.append("userNewPassword", userNewPassword);
+
+    /* const data = {
       action: "updateUser",
       user: user,
       userBan: userBan,
       userNewEmail: userNewEmail,
       userNewPassword: userNewPassword,
-    };
+      userNewImage: userNewImage
+    }; */
 
     $.ajax({
       url: url_admin,
+      data: formData,
+      dataType: "JSON",
       type: "POST",
-      data: data,
+      contentType: false, // NEEDED, DON'T OMIT THIS
+      processData: false, // NEEDED, DON'T OMIT THIS
     }).done(function (data) {
       console.log(data);
     });

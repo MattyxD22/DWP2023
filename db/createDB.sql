@@ -286,12 +286,13 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE addFileToPost(IN Type INT(11), IN PostID INT(11), IN FileData LONGBLOB)
+
+CREATE PROCEDURE addFileToPost(IN Type INT, IN PostID INT, IN FileData LONGBLOB)
 BEGIN 
+    INSERT INTO MediaTable(MediaType, UploadDate, PostID, ImgData) 
+    VALUES (Type, NOW(), PostID, FileData);
 
-INSERT INTO MediaTable(MediaTable.MediaType, MediaTable.UploadDate, MediaTable.PostID, MediaTable.ImgData) VALUES (Type, NOW(), PostID, FileData);
-
-
+    SELECT LAST_INSERT_ID() AS NewMediaID;
 END //
 
 DELIMITER ;
