@@ -8,7 +8,6 @@ $regXP = "/^[A-z0-9_-]+([.][A-z0-9_]+)*[@][A-z0-9_-]+([.][A-z0-9_]+)*[.][A-z]{2,
 
 
 ?>
-
 <form method="post" action="../controllers/UserController.php?action=create">
 
     <!--    since there was made changes to the controller, post requests require a "action" parameter,
@@ -37,6 +36,10 @@ $regXP = "/^[A-z0-9_-]+([.][A-z0-9_]+)*[@][A-z0-9_-]+([.][A-z0-9_]+)*[.][A-z]{2,
             <span class="text-red-600 font-bold mr-2">Create </span>
             <span class="text-white font-bold">Account</span>
         </button>
+
+        <div class="g-recaptcha" 
+                data-sitekey="<?php echo CAPTCHA_SITE_KEY;?>"> 
+            </div> 
 
     </div>
 </form>
