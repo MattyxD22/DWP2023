@@ -32,14 +32,15 @@ $regXP = "/^[A-z0-9_-]+([.][A-z0-9_]+)*[@][A-z0-9_-]+([.][A-z0-9_]+)*[.][A-z]{2,
             <input type="password" id='password' name="password" class="std_input w-[100%]" />
         </div>
 
+        <div class="g-recaptcha flex justify-center" 
+                data-sitekey="<?php echo CAPTCHA_SITE_KEY;?>"> 
+            </div> 
+
         <button type="submit" class="std_button flex flex-row mx-auto my-3">
             <span class="text-red-600 font-bold mr-2">Create </span>
             <span class="text-white font-bold">Account</span>
         </button>
 
-        <div class="g-recaptcha" 
-                data-sitekey="<?php echo CAPTCHA_SITE_KEY;?>"> 
-            </div> 
 
     </div>
 </form>
