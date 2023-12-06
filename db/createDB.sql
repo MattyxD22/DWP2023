@@ -31,6 +31,8 @@ CREATE TABLE PostTable(
     CreatedBy INT(11),
     Title VARCHAR(50),   
     CategoryID INT(11),
+    Hidden INT(11) DEFAULT 0,
+    Deleted INT(11) DEFAULT 0,
     FOREIGN KEY(ParentID) REFERENCES PostTable(PostID),
     FOREIGN KEY(CreatedBy) REFERENCES UserTable(UserID)
 ) ENGINE = INNODB;
@@ -188,7 +190,7 @@ BEGIN
     LEFT JOIN 
         MediaTable ON MediaTable.PostID = PostTable.PostID
     WHERE 
-        PostTable.ParentID IS NULL 
+        PostTable.ParentID IS NULL AND PostTable.Hidden = 0 AND PostTable.Deleted = 0
     ORDER BY 
         PostTable.CreatedDate DESC;
 END //
@@ -200,7 +202,7 @@ DELIMITER //
 CREATE PROCEDURE getPost(IN postID INT(11))
 BEGIN 
 
-SELECT PostTable.PostID, PostTable.Title, PostTable.Description, PostTable.CreatedDate, UserTable.Username
+SELECT PostTable.PostID, PostTable.Title, PostTable.Description, PostTable.CreatedDate, UserTable.Username, PostTable.CreatedBy, PostTable.Hidden
 FROM PostTable 
 LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy 
 WHERE PostTable.PostID = postID;
@@ -460,7 +462,7 @@ FROM
 LEFT JOIN 
     MediaTable ON MediaTable.PostID = PostTable.PostID
 WHERE 
-    PostTable.ParentID IS NULL AND PostTable.CreatedBy = UserID
+    PostTable.ParentID IS NULL AND posttable.Deleted = 0 AND PostTable.CreatedBy = UserID
 ORDER BY 
     PostTable.PostID DESC;
 

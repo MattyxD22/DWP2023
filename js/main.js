@@ -1,6 +1,9 @@
 $(document).ready(function () {
   var quillEditor;
   var quillEditor2;
+  var quillEditor_createPost;
+  var quillEditor_editPost;
+  var quillEditor_reply;
 
   const url_user = "../controllers/UserController.php";
   const url_post = "../controllers/PostController.php";
@@ -78,6 +81,40 @@ $(document).ready(function () {
     }).done(function (data) {
       $(".state_col").empty();
       $(".state_col").append(data);
+
+      let comment_container = document.getElementsByClassName("createPost_RTE");
+      //let comment_container = $(".state_col").find(".RTE_comment");
+      //console.log("createPost_RTE");
+
+      const toolbarOptions = [
+        ["bold", "italic", "underline", "strike"], // toggled buttons
+        ["blockquote", "code-block"],
+
+        [{ header: 1 }, { header: 2 }], // custom button values
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ script: "sub" }, { script: "super" }], // superscript/subscript
+        [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+        [{ direction: "rtl" }], // text direction
+
+        [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+        [{ font: [] }],
+        [{ align: [] }],
+
+        ["clean"], // remove formatting button
+      ];
+
+      //console.log("RTE_comment");
+
+      quillEditor_createPost = new Quill(".createPost_RTE", {
+        modules: {
+          toolbar: toolbarOptions,
+        },
+        placeholder: "Give your post a Description",
+        theme: "snow",
+      });
     });
   });
 
@@ -91,6 +128,22 @@ $(document).ready(function () {
       $(checkbox).prop("checked", false);
     } else {
       $(checkbox).prop("checked", true);
+    }
+  });
+
+  $(document).on("input", ".newPost_Title", function () {
+    if ($(this).val != "" && $(this).val() != null) {
+      $(this).css({ border: "1px solid transparent" });
+    } else {
+      $(this).css({ border: "1px solid #DC2626" });
+    }
+  });
+
+  $(document).on("input", ".edit_post_title", function () {
+    if ($(this).val != "" && $(this).val() != null) {
+      $(this).css({ border: "1px solid transparent" });
+    } else {
+      $(this).css({ border: "1px solid #DC2626" });
     }
   });
 
@@ -114,53 +167,59 @@ $(document).ready(function () {
     const container = $(this).closest(".newPost_container");
 
     const title = container.find(".newPost_Title").val();
-    const description = container.find(".newPost_Textarea").val();
-    let categories = [];
 
-    let formData = new FormData();
+    if (title != "" && title != null) {
+      const description = quillEditor_createPost.root.innerHTML;
+      let categories = [];
 
-    let images = [];
+      let formData = new FormData();
 
-    container.find(".categoryRow").each(function () {
-      if ($(this).find(".categoryCheckbox").prop("checked") == true) {
-        categories.push($(this).data("id"));
-      }
-    });
+      let images = [];
 
-    const data = {
-      action: "createPost",
-      title: title,
-      description: description,
-      categories: categories,
-    };
-    const input = document.getElementById("file_input");
+      container.find(".categoryRow").each(function () {
+        if ($(this).find(".categoryCheckbox").prop("checked") == true) {
+          categories.push($(this).data("id"));
+        }
+      });
 
-    $(input.files).each(function (index, value) {
-      // console.log($(this)[0]);
-      console.log($(input.files));
-      console.log($(this)[0], $(this)[0].name);
+      const data = {
+        action: "createPost",
+        title: title,
+        description: description,
+        categories: categories,
+      };
 
-      formData.append("file" + index, $(this)[0], $(this)[0].name);
-    });
+      const input = document.getElementById("file_input");
 
-    formData.append("action", "createPost");
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("categories", categories);
+      $(input.files).each(function (index, value) {
+        // console.log($(this)[0]);
+        console.log($(input.files));
+        console.log($(this)[0], $(this)[0].name);
 
-    console.log(formData);
+        formData.append("file" + index, $(this)[0], $(this)[0].name);
+      });
 
-    $.ajax({
-      url: url_post,
-      data: formData,
-      dataType: "JSON",
-      type: "POST",
-      contentType: false, // NEEDED, DON'T OMIT THIS
-      processData: false, // NEEDED, DON'T OMIT THIS
-    }).done(function (data) {
-      alert("Post Created successfully");
-      //console.log(data);
-    });
+      formData.append("action", "createPost");
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("categories", categories);
+      console.log(formData);
+
+      $.ajax({
+        url: url_post,
+        data: formData,
+        dataType: "JSON",
+        type: "POST",
+        contentType: false, // NEEDED, DON'T OMIT THIS
+        processData: false, // NEEDED, DON'T OMIT THIS
+      }).done(function (data) {
+        alert("Post Created successfully");
+        //console.log(data);
+      });
+    } else {
+      alert("Please give your post a title");
+      container.find(".newPost_Title").css({ border: "1px solid #DC2626" });
+    }
   });
 
   $(document).on("click", ".mainBG", function (e) {
@@ -263,6 +322,40 @@ $(document).ready(function () {
     }).done(function (data) {
       $(".state_col").empty();
       $(".state_col").append(data);
+
+      let comment_container = document.getElementsByClassName("RTE_comment");
+      //let comment_container = $(".state_col").find(".RTE_comment");
+      console.log("RTE_comment");
+
+      const toolbarOptions = [
+        ["bold", "italic", "underline", "strike"], // toggled buttons
+        ["blockquote", "code-block"],
+
+        [{ header: 1 }, { header: 2 }], // custom button values
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ script: "sub" }, { script: "super" }], // superscript/subscript
+        [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+        [{ direction: "rtl" }], // text direction
+
+        [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+        [{ font: [] }],
+        [{ align: [] }],
+
+        ["clean"], // remove formatting button
+      ];
+
+      console.log("RTE_comment");
+
+      quillEditor = new Quill(".RTE_comment", {
+        modules: {
+          toolbar: toolbarOptions,
+        },
+        placeholder: "Write a comment...",
+        theme: "snow",
+      });
     });
   });
 
@@ -329,27 +422,32 @@ $(document).ready(function () {
   $(document).on("click", ".submit_comment", function () {
     const post_container = $(this).closest(".post_Container");
     const comment = quillEditor.root.innerHTML;
-    const id = $(this).data("id");
-    const orgID = 0; // only needed when creating replies, not inital comments
 
-    const data = {
-      action: "createComment",
-      comment: comment,
-      postID: id,
-      orgID: orgID,
-    };
+    if (comment != "<p><br></p>") {
+      const id = $(this).data("id");
+      const orgID = 0; // only needed when creating replies, not inital comments
 
-    console.log(data);
+      const data = {
+        action: "createComment",
+        comment: comment,
+        postID: id,
+        orgID: orgID,
+      };
 
-    $.ajax({
-      url: url_post,
-      type: "POST",
-      data: data,
-    }).done(function (data) {
-      //Clearing comments after successful comment creation
-      post_container.find(".comment_section").remove();
-      post_container.append(data);
-    });
+      console.log(data);
+
+      $.ajax({
+        url: url_post,
+        type: "POST",
+        data: data,
+      }).done(function (data) {
+        //Clearing comments after successful comment creation
+        post_container.find(".comment_section").remove();
+        post_container.append(data);
+      });
+    } else {
+      alert("Please write a comment");
+    }
   });
 
   //Save site description
@@ -358,7 +456,7 @@ $(document).ready(function () {
 
     const data = {
       action: "updateDescription",
-      description: description
+      description: description,
     };
 
     $.ajax({
@@ -388,6 +486,38 @@ $(document).ready(function () {
 
   $(document).on("click", ".reply_comment_container", function () {
     $(this).toggleClass("open");
+
+    if ($(this).hasClass("open")) {
+      const toolbarOptions = [
+        ["bold", "italic", "underline", "strike"], // toggled buttons
+        ["blockquote", "code-block"],
+
+        [{ header: 1 }, { header: 2 }], // custom button values
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ script: "sub" }, { script: "super" }], // superscript/subscript
+        [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+        [{ direction: "rtl" }], // text direction
+
+        [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+        [{ font: [] }],
+        [{ align: [] }],
+
+        ["clean"], // remove formatting button
+      ];
+
+      quillEditor_reply = new Quill(".reply_rte", {
+        modules: {
+          toolbar: toolbarOptions,
+        },
+        placeholder: "Write a Comment..",
+        theme: "snow",
+      });
+    } else {
+      $(this).find(".ql-toolbar").remove();
+    }
   });
 
   $(document).on("click", ".reply_to_comment_container", function (e) {
@@ -399,6 +529,8 @@ $(document).ready(function () {
     e.stopPropagation();
     e.preventDefault();
 
+    $(this).closest(".reply_to_comment_container").find(".ql-toolbar").remove();
+
     $(this).closest(".reply_comment_container").removeClass("open");
   });
 
@@ -406,28 +538,33 @@ $(document).ready(function () {
     const post_container = $(this).closest(".post_Container");
     const container = $(this).closest(".reply_to_comment_container");
 
-    let reply = container.find(".std_input").val();
-    let commentID = $(this).data("id");
-    let orgID = $(this).data("org-id"); // Original post ID
+    let reply = quillEditor_reply.root.innerHTML;
 
-    const data = {
-      action: "createComment",
-      comment: reply,
-      postID: commentID,
-      orgID: orgID,
-    };
+    if (reply != "<p><br></p>") {
+      let commentID = $(this).data("id");
+      let orgID = $(this).data("org-id") || 0; // Original post ID - cant remember what it does
 
-    $.ajax({
-      url: url_post,
-      type: "POST",
-      data: data,
-    }).done(function (data) {
-      //Clearing comments after successful comment creation
-      post_container.find(".comment_section").remove();
-      post_container.append(data);
-      //container.find(".std_input").val("");
-      //container.closest(".reply_comment_container").removeClass("open");
-    });
+      const data = {
+        action: "createComment",
+        comment: reply,
+        postID: commentID,
+        orgID: orgID,
+      };
+
+      $.ajax({
+        url: url_post,
+        type: "POST",
+        data: data,
+      }).done(function (data) {
+        //Clearing comments after successful comment creation
+        post_container.find(".comment_section").remove();
+        post_container.append(data);
+        //container.find(".std_input").val("");
+        //container.closest(".reply_comment_container").removeClass("open");
+      });
+    } else {
+      alert("Please write a comment before submitting");
+    }
   });
 
   $(document).on("click", ".like_post", function (e) {
@@ -555,7 +692,7 @@ $(document).ready(function () {
       userID: userID,
     };
 
-   $.ajax({
+    $.ajax({
       url: url_user,
       type: "POST",
       data: data,
@@ -592,7 +729,7 @@ $(document).ready(function () {
   // });
 
   //Repost button
-  $(document).on("click", ".repost_post", function(e) {
+  $(document).on("click", ".repost_post", function (e) {
     e.stopPropagation();
     e.preventDefault();
 
@@ -601,14 +738,14 @@ $(document).ready(function () {
 
     const data = {
       action: "repost",
-      postID: postID
-    }
+      postID: postID,
+    };
 
     $.ajax({
       url: url_post,
       type: "POST",
-      data: data
-    }).done(function(data) {
+      data: data,
+    }).done(function (data) {
       console.log(data);
     });
   });
@@ -864,5 +1001,254 @@ $(document).ready(function () {
     container
       .find('.imgIndicator[data-img="' + currentImgID + '"]')
       .addClass("active");
+  });
+
+  // $(document).on("click", ".edit_post_container", function () {
+  //   $(this).toggleClass("open");
+  // });
+
+  $(document).on("click", ".edit_post", function () {
+    $(this).toggleClass("active");
+
+    const container = $(this).closest(".post_Container");
+
+    //Unhide inputs when editing post if "Edit Post" was clicked and it has the class "active"
+    if ($(this).hasClass("active")) {
+      container.find(".post_title_span").addClass("hide");
+      container.find(".post_description_span").addClass("hide");
+      container.find(".post_comments_container").addClass("hide");
+      container.find(".post_image_container").addClass("hide");
+
+      container.find(".edit_post_title").removeClass("hide");
+      container.find(".edit_post_rte").removeClass("hide");
+      container.find(".btn_update_post").removeClass("hide");
+
+      let comment_container = document.getElementsByClassName("edit_post_rte");
+
+      const toolbarOptions = [
+        ["bold", "italic", "underline", "strike"], // toggled buttons
+        ["blockquote", "code-block"],
+
+        [{ header: 1 }, { header: 2 }], // custom button values
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ script: "sub" }, { script: "super" }], // superscript/subscript
+        [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+        [{ direction: "rtl" }], // text direction
+
+        [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+        [{ font: [] }],
+        [{ align: [] }],
+
+        ["clean"], // remove formatting button
+      ];
+
+      quillEditor_editPost = new Quill(".edit_post_rte", {
+        modules: {
+          toolbar: toolbarOptions,
+        },
+        placeholder: "Give your Post a Description...",
+        theme: "snow",
+      });
+    } else {
+      // Otherwise hide the inputs if it was clicked again
+      container.find(".post_title_span").removeClass("hide");
+      container.find(".post_description_span").removeClass("hide");
+      container.find(".post_comments_container").removeClass("hide");
+      container.find(".post_image_container").removeClass("hide");
+
+      container.find(".edit_post_title").addClass("hide");
+      container.find(".edit_post_rte").addClass("hide");
+      container.find(".btn_update_post").addClass("hide");
+
+      container.find(".post_content .ql-toolbar").remove();
+    }
+  });
+
+  $(document).on("click", ".btn_update_post", function () {
+    const container = $(this).closest(".post_Container");
+
+    const postID = $(this).data("post");
+    const title = container.find(".edit_post_title").val();
+
+    if (title != "" && title != null) {
+      const description = quillEditor_editPost.root.innerHTML;
+
+      const data = {
+        action: "updatePost",
+        postID: postID,
+        title: title,
+        description: description,
+      };
+
+      $.ajax({
+        url: url_post,
+        type: "POST",
+        data: data,
+      }).done(function (data) {
+        $(".state_col").empty();
+        $(".state_col").append(data);
+
+        let comment_container = document.getElementsByClassName("RTE_comment");
+        //let comment_container = $(".state_col").find(".RTE_comment");
+        console.log("RTE_comment");
+
+        const toolbarOptions = [
+          ["bold", "italic", "underline", "strike"], // toggled buttons
+          ["blockquote", "code-block"],
+
+          [{ header: 1 }, { header: 2 }], // custom button values
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ script: "sub" }, { script: "super" }], // superscript/subscript
+          [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+          [{ direction: "rtl" }], // text direction
+
+          [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+          [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+          [{ font: [] }],
+          [{ align: [] }],
+
+          ["clean"], // remove formatting button
+        ];
+
+        console.log("RTE_comment");
+
+        quillEditor = new Quill(".RTE_comment", {
+          modules: {
+            toolbar: toolbarOptions,
+          },
+          placeholder: "Write a comment...",
+          theme: "snow",
+        });
+      });
+    } else {
+      alert("Please ensure that your post has a Title");
+      container.find(".edit_post_title").css({ border: "1px solid #DC2626" });
+    }
+  });
+
+  $(document).on("click", ".hide_post", function () {
+    // The confirm method returns true if the user clicks "OK" and false if the user clicks "Cancel"
+    var userConfirmed = window.confirm(
+      "This will hide the post, you can still see it in your profile, but other people won't, you can always unhide the post again"
+    );
+
+    // Check the result and perform actions accordingly
+    if (userConfirmed) {
+      const postID = $(this).data("post");
+
+      const data = {
+        action: "hidePost",
+        postID: postID,
+      };
+
+      $.ajax({
+        url: url_post,
+        type: "POST",
+        data: data,
+      }).done(function (data) {
+        alert("Your post is now hidden");
+
+        $(".state_col").empty();
+        $(".state_col").append(data);
+      });
+    } else {
+    }
+  });
+
+  $(document).on("click", ".unhide_post", function () {
+    // The confirm method returns true if the user clicks "OK" and false if the user clicks "Cancel"
+    var userConfirmed = window.confirm(
+      "This will unhide the post, you can always hide the post again"
+    );
+
+    // Check the result and perform actions accordingly
+    if (userConfirmed) {
+      const postID = $(this).data("post");
+
+      const data = {
+        action: "unhidePost",
+        postID: postID,
+      };
+
+      $.ajax({
+        url: url_post,
+        type: "POST",
+        data: data,
+      }).done(function (data) {
+        alert("Your post is now unhidden");
+
+        $(".state_col").empty();
+        $(".state_col").append(data);
+
+        let comment_container = document.getElementsByClassName("RTE_comment");
+        //let comment_container = $(".state_col").find(".RTE_comment");
+        console.log("RTE_comment");
+
+        const toolbarOptions = [
+          ["bold", "italic", "underline", "strike"], // toggled buttons
+          ["blockquote", "code-block"],
+
+          [{ header: 1 }, { header: 2 }], // custom button values
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ script: "sub" }, { script: "super" }], // superscript/subscript
+          [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+          [{ direction: "rtl" }], // text direction
+
+          [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+          [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+          [{ font: [] }],
+          [{ align: [] }],
+
+          ["clean"], // remove formatting button
+        ];
+
+        console.log("RTE_comment");
+
+        quillEditor = new Quill(".RTE_comment", {
+          modules: {
+            toolbar: toolbarOptions,
+          },
+          placeholder: "Write a comment...",
+          theme: "snow",
+        });
+      });
+    } else {
+    }
+  });
+
+  $(document).on("click", ".delete_post", function () {
+    // The confirm method returns true if the user clicks "OK" and false if the user clicks "Cancel"
+    var userConfirmed = window.confirm(
+      "This action will delete the post, it will be gone forever! Are you sure?"
+    );
+
+    // Check the result and perform actions accordingly
+    if (userConfirmed) {
+      const postID = $(this).data("post");
+
+      const data = {
+        action: "deletePost",
+        postID: postID,
+      };
+
+      $.ajax({
+        url: url_post,
+        type: "POST",
+        data: data,
+      }).done(function (data) {
+        alert("Your post is now deleted");
+
+        $(".state_col").empty();
+        $(".state_col").append(data);
+      });
+    } else {
+    }
   });
 });

@@ -62,12 +62,15 @@ if (!empty($comments)) {
                                     </div>
                                 </div>
 
-                                <div class="reply_popup_content py-1 px-1 flex flex-row">
-                                    <textarea class="std_input w-[100%]" placeholder="Your reply Here"></textarea>
+                                <div class="reply_popup_content py-1 px-1 flex flex-col">
+                                    <div class="reply_rte">
+
+                                    </div>
+                                    <!-- <textarea class="std_input w-[100%]" placeholder="Your reply Here"></textarea> -->
                                 </div>
 
                                 <div class="reply_popup_footer py-1 px-1 flex flex-row justify-end">
-                                    <button type="button" class="std_button submit_reply text-white" data-org-id="<?php echo $postID ?>" data-id=" <?php echo $reply["PostID"] ?>">
+                                    <button type="button" class="std_button submit_reply text-white" data-id=" <?php echo $reply["PostID"] ?>">
                                         Post Reply
                                     </button>
                                 </div>
@@ -76,10 +79,10 @@ if (!empty($comments)) {
                             </div>
                         </div>
 
-                        <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
+                        <!-- <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
                             <i class="bi bi-chat-square-heart not_reposted"></i>
                             <i class="bi bi-chat-square-heart-fill reposted"></i>
-                        </div>
+                        </div> -->
 
                     </div>
                 </div>
@@ -163,12 +166,17 @@ if (!empty($comments)) {
                                     </div>
                                 </div>
 
-                                <div class="reply_popup_content py-1 px-1 flex flex-row">
-                                    <textarea class="std_input w-[100%]" placeholder="Your reply Here"></textarea>
+                                <div class="reply_popup_content py-1 px-1 flex flex-col">
+
+                                    <div class="reply_rte">
+
+                                    </div>
+
+                                    <!-- <textarea class="std_input w-[100%]" placeholder="Your reply Here"></textarea> -->
                                 </div>
 
                                 <div class="reply_popup_footer py-1 px-1 flex flex-row justify-end">
-                                    <button type="button" class="std_button submit_reply text-white" data-org-id="<?php echo $post["PostID"] ?>" data-id=" <?php echo $comment["PostID"] ?>">
+                                    <button type="button" class="std_button submit_reply text-white" data-id="<?php echo $comment["PostID"] ?>">
                                         Post Reply
                                     </button>
                                 </div>
@@ -177,10 +185,10 @@ if (!empty($comments)) {
                             </div>
                         </div>
 
-                        <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
+                        <!-- <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
                             <i class="bi bi-chat-square-heart not_reposted"></i>
                             <i class="bi bi-chat-square-heart-fill reposted"></i>
-                        </div>
+                        </div> -->
 
                     </div>
                 </div>

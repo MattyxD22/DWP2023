@@ -4,14 +4,18 @@
         <div class="profileItem_image_container h-full overflow-hidden flex">
 
             <div class="profileItem_img_container  h-full flex flex-row justify-center items-center my-auto mx-auto">
-                <img class="object-contain h-full" src="data:image/jpeg;base64,<?php echo base64_encode($img); ?>">
+                <?php if (!empty($img)) { ?>
+
+                    <img class="object-contain h-full" src="data:image/jpeg;base64,<?php echo base64_encode($img); ?>">
+
+                <?php } ?>
             </div>
 
         </div>
     </div>
     <div class="profileItem_Content py-2">
         <h2><?php echo htmlspecialchars($title); ?></h2>
-        <p><?php echo htmlspecialchars($description); ?></p>
+        <pre><?php echo base64_decode(htmlspecialchars($description)) ?></pre>
     </div>
     <div class="profileItem_Footer flex flex-row py-2">
         <div class="actions_div flex flex-row my-auto">
@@ -33,10 +37,10 @@
                 <span class="mx-2 text-red-600 <?php echo $userDislike == 1 ? 'underline' : ''; ?>"><?php echo $dislikesAmount; ?></span>
             </div>
         </div>
-        <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
+        <!-- <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
             <i class="bi bi-chat-square-heart not_reposted"></i>
             <i class="bi bi-chat-square-heart-fill reposted"></i>
-        </div>
+        </div> -->
     </div>
 
 </div>

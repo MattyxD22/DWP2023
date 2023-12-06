@@ -12,7 +12,7 @@ $users = [""];
 
         <?php
         if (isset($_SESSION["isAdmin"]) && $_SESSION["isAdmin"] == 1) {
-            $users = AdminController::fetchUsers($_SESSION["UserID"]);
+            $users = $adminController->fetchUsers($_SESSION["UserID"]);
         ?>
             <div class="profile_tab_container admin px-1 pt-2 flex flex-row w-full justify-between h-24">
                 <div class="tab_elem admin selected" data-type="1">
@@ -86,27 +86,27 @@ $users = [""];
                                 <span class="createPost_Span text-2xl font-bold text-red-600">Save</span>
                         </button>
                     </section>';
+                    ?>
+                </section>
+            </section>
+
+            <section class="p-4 gap-2 profile_content" data-type="2">
+                <?php
+                include("../views/updateRules.php");
                 ?>
             </section>
-        </section>
-    
-        <section class="p-4 gap-2 profile_content" data-type="2">
-            <?php 
-                include("../views/updateRules.php");
-            ?>
-        </section>
 
-        <section class="p-4 gap-2 profile_content" data-type="3">
-            <?php 
+            <section class="p-4 gap-2 profile_content" data-type="3">
+                <?php
                 include("../views/updateContact.php");
-            ?>
-        </section>
+                ?>
+            </section>
 
-        <section class="p-4 gap-2 profile_content" data-type="4">
-            <?php 
+            <section class="p-4 gap-2 profile_content" data-type="4">
+                <?php
                 include("../views/updateDescription.php");
-            ?>
-        </section>
+                ?>
+            </section>
 
         <?php
         }

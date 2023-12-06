@@ -8,11 +8,11 @@
     <div class="feed_content flex flex-col h-4/6">
 
         <div class="feed_title_container py-2 px-2">
-            <span><?php echo $post[1] ?></span>
+            <span class="text-red-600 text-2xl font-bold"><?php echo $post[1] ?></span>
         </div>
 
         <div class="feed_title_container py-2 px-2">
-            <span><?php echo $post[2] ?></span>
+            <pre class="text-red-600"><?php echo base64_decode($post[2]) ?></pre>
         </div>
 
 
