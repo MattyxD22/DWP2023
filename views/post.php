@@ -153,9 +153,57 @@
 
         <!-- <textarea id="comment" rows="4" class="w-full std_input comment_textArea" placeholder="Write a comment..."></textarea> -->
 
-        <button type="button" class="std_button submit_comment text-white ms-auto mt-2" data-id="<?php echo $post["PostID"] ?>">
-            Post comment
-        </button>
+        <div class="flex flex-row">
+            <div class="likes_div pe-4 my-auto">
+
+                <span class="text-red-600 text-l font-bold likes_amount"><?php echo $post["Likes"]; ?></span>
+                <span class="text-white text-l font-bold ms-1">Likes</span>
+
+            </div>
+
+            <div class="dislikes_div pe-4 my-auto">
+                <span class="text-red-600 text-l font-bold dislikes_amount"><?php echo $post["Dislikes"]; ?></span>
+                <span class="text-white text-l font-bold ms-1">Dislikes</span>
+            </div>
+
+
+            <div class="reposts_div pe-4 my-auto">
+                <span class="text-red-600 text-l font-bold repost_amount"><?php echo $post["Reposts"]; ?></span>
+                <span class="text-white text-l font-bold ms-1">Reposts</span>
+            </div>
+
+
+            <div class="comments_div pe-4 my-auto">
+                <span class="text-red-600 text-l font-bold"><?php echo $commentsSize; ?></span>
+                <span class="text-white text-l font-bold ms-1">Comments</span>
+            </div>
+
+            <div class="actions_div flex flex-row ms-1 my-auto">
+
+                <div>
+                    <i class="bi bi-arrow-down-up text-xl text-red-600 flex repost_post cursor-pointer mx-1" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $post["PostID"] ?>"></i>
+                </div>
+
+                <div class="action_like mx-1 <?php echo $post["UserLike"] == 1 ? 'like' : ''; ?>">
+                    <i class=" bi bi-hand-thumbs-up text-xl text-red-600 flex like_post"></i>
+                    <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $post["PostID"] ?>"></i>
+
+                </div>
+
+                <div class="action_dislike mx-1 <?php echo $post["UserDislike"] == 1 ? 'dislike' : ''; ?>">
+                    <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex dislike_post"></i>
+                    <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $post["PostID"] ?>"></i>
+
+                </div>
+
+            </div>
+
+            <button type="button" class="std_button submit_comment text-white ms-auto mt-2" data-id="<?php echo $post["PostID"] ?>">
+                Post comment
+            </button>
+        </div>
+
+
     </div>
 
     <div class="comment_section flex flex-col">

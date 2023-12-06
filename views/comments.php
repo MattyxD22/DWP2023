@@ -39,16 +39,16 @@ if (!empty($comments)) {
 
                         <div class="actions_div flex flex-row my-auto">
 
-                            <div class="action_like flex flex-row pe-2">
-                                <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
+                            <div class="action_like flex flex-row pe-2 <?php echo $reply["UserLike"] == 1 ? 'like' : ''; ?>">
+                                <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex like_post"></i>
                                 <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-id="<?php echo $reply["PostID"] ?>"></i>
-                                <span class="mx-2 text-red-600"><?php echo $reply["Dislikes"] ?></span>
+                                <span class="mx-2 text-red-600 likes_amount"><?php echo $reply["Likes"] ?></span>
                             </div>
 
-                            <div class="action_dislike flex flex-row pe-2">
-                                <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex"></i>
+                            <div class="action_dislike flex flex-row pe-2  <?php echo $reply["UserDislike"] == 1 ? 'dislike' : ''; ?>">
+                                <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex dislike_post"></i>
                                 <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-id="<?php echo $reply["PostID"] ?>"></i>
-                                <span class="mx-2 text-red-600"><?php echo $reply["Dislikes"] ?></span>
+                                <span class="mx-2 text-red-600 dislikes_amount"><?php echo $reply["Dislikes"] ?></span>
                             </div>
                         </div>
 
@@ -143,16 +143,16 @@ if (!empty($comments)) {
 
                         <div class="actions_div flex flex-row my-auto">
 
-                            <div class="action_like flex flex-row pe-2">
-                                <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
+                            <div class="action_like flex flex-row pe-2 <?php echo $comment["UserLike"] == 1 ? 'like' : ''; ?>">
+                                <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex like_post"></i>
                                 <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-id="<?php echo $comment["PostID"] ?>"></i>
-                                <span class="mx-2 text-red-600"><?php echo $comment["Likes"] ?></span>
+                                <span class="mx-2 text-red-600 likes_amount"><?php echo $comment["Likes"] ?></span>
                             </div>
 
-                            <div class="action_dislike flex flex-row pe-2">
-                                <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex"></i>
+                            <div class="action_dislike flex flex-row pe-2  <?php echo $comment["UserDislike"] == 1 ? 'dislike' : ''; ?>">
+                                <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex dislike_post"></i>
                                 <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-id="<?php echo $comment["PostID"] ?>"></i>
-                                <span class="mx-2 text-red-600"><?php echo $comment["Dislikes"] ?></span>
+                                <span class="mx-2 text-red-600 dislikes_amount"><?php echo $comment["Dislikes"] ?></span>
                             </div>
                         </div>
 

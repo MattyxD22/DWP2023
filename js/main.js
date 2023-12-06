@@ -508,7 +508,10 @@ $(document).ready(function () {
         ["clean"], // remove formatting button
       ];
 
-      quillEditor_reply = new Quill(".reply_rte", {
+      // use javascript instead of jquery to find the child element that should be converted to RTE
+      const editor = this.querySelector(".reply_rte");
+
+      quillEditor_reply = new Quill(editor, {
         modules: {
           toolbar: toolbarOptions,
         },
@@ -567,41 +570,6 @@ $(document).ready(function () {
     }
   });
 
-  $(document).on("click", ".like_post", function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    let elem = $(this); // put the event element into a variable, to be able to access it in the ajax request
-    let action = "addLike";
-    let postID = $(this).data("id");
-
-    // Check if the post has been liked by the user
-    if ($(elem).hasClass("liked")) {
-      action = "removeLike";
-    }
-
-    const data = {
-      action: action,
-      postID: postID,
-    };
-
-    $.ajax({
-      url: url_user,
-      type: "POST",
-      data: data,
-    }).done(function (data) {
-      console.log(data);
-      if ($(elem).hasClass("liked")) {
-        // prepare data obj for removinf the like
-        // remove "like" class so icon wont be red
-        $(elem).removeClass("like");
-      } else {
-        // add "like" class to icon will be red
-        $(elem).addClass("like");
-      }
-    });
-  });
-
   $(document).on("click", ".open_profile_event", function (e) {
     e.stopPropagation();
     e.preventDefault();
@@ -646,7 +614,7 @@ $(document).ready(function () {
     });
 
     // alert("cliked on user profile: " + userID);
-  });  
+  });
 
   $(document).on("click", ".updateUserBtn", function () {
     const container = $(this).closest(".updateUserContainer");
@@ -778,11 +746,17 @@ $(document).ready(function () {
     e.preventDefault();
 
     let elem = $(this); // put the event element into a variable, to be able to access it in the ajax request
+    let container = elem.closest(".actions_div");
+    let amount = container.find("likes_amount").html();
+    console.log(amount);
     let action = "addLike";
     let postID = $(this).data("id");
 
+    console.log(container);
+    console.log(container.find(".action_like"));
+
     // Check if the post has been liked by the user
-    if ($(elem).hasClass("liked")) {
+    if (container.find(".action_like").hasClass("like")) {
       action = "removeLike";
     }
 
@@ -791,36 +765,37 @@ $(document).ready(function () {
       postID: postID,
     };
 
-    console.log(data);
+    console.log("!", data);
 
     $.ajax({
       url: url_post,
       type: "POST",
       data: data,
     }).done(function (data) {
-      console.log(data);
-
-      // // Check if the post has been liked by the user
-      // if ($(elem).hasClass("liked")) {
-      //   // prepare data obj for removinf the like
-      //   // remove "like" class so icon wont be red
-      //   $(elem).removeClass("like");
-      // } else {
-      //   // add "like" class to icon will be red
-      //   $(elem).addClass("like");
-      // }
+      if ($(container).find(".action_like").hasClass("like")) {
+        container.find(".action_like").removeClass("like");
+        amount--;
+        container.find("likes_amount").html(amount);
+      } else {
+        container.find(".action_like").addClass("like");
+        amount++;
+        container.find("likes_amount").html(amount);
+      }
     });
   });
+
   $(document).on("click", ".dislike_post", function (e) {
     e.stopPropagation();
     e.preventDefault();
 
     let elem = $(this); // put the event element into a variable, to be able to access it in the ajax request
+    let container = elem.closest(".actions_div");
+    let amount = parseInt(container.find("dislikes_amount").html());
     let action = "addDislike";
     let postID = $(this).data("id");
 
     // Check if the post has been liked by the user
-    if ($(elem).hasClass("liked")) {
+    if ($(container).find(".action_dislike").hasClass("dislike")) {
       action = "removeLike";
     }
 
@@ -829,24 +804,22 @@ $(document).ready(function () {
       postID: postID,
     };
 
-    console.log(data);
+    console.log("!", data);
 
     $.ajax({
       url: url_post,
       type: "POST",
       data: data,
     }).done(function (data) {
-      console.log(data);
-
-      // // Check if the post has been liked by the user
-      // if ($(elem).hasClass("liked")) {
-      //   // prepare data obj for removinf the like
-      //   // remove "like" class so icon wont be red
-      //   $(elem).removeClass("like");
-      // } else {
-      //   // add "like" class to icon will be red
-      //   $(elem).addClass("like");
-      // }
+      if ($(container).find(".action_dislike").hasClass("dislike")) {
+        container.removeClass("dislike");
+        amount--;
+        container.find("dislikes_amount").html(amount);
+      } else {
+        container.find(".action_dislike").addClass("dislike");
+        amount++;
+        container.find("dislikes_amount").html(amount);
+      }
     });
   });
 

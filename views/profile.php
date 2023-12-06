@@ -114,6 +114,8 @@ $userFollowing = $userController->fetchFollowingUsers($userID);
 
                     <?php
                     foreach ($userPosts as $post) {
+
+
                         // Set variables with the information from the current post
                         $title = $post['Title']; // Assuming 'Title' is the correct key
                         $description = $post['Description']; // And so on for other variables
@@ -195,7 +197,7 @@ $userFollowing = $userController->fetchFollowingUsers($userID);
             </div>
 
             <div class="profile_content" data-type="4">
-                <div class="grid grid-cols-1 gap-4 p-8 ">
+                <div class="grid grid-cols-1 gap-4 p-8 w-full">
 
                     <?php
                     foreach ($userComments as $key => $comment) {
@@ -246,14 +248,14 @@ $userFollowing = $userController->fetchFollowingUsers($userID);
             <div class="profile_content" data-type="6">
                 <div class="flex flex-wrap gap-4 p-8">
                     <?php
-                        foreach($userFollowing as $key => $user) {
-                            $userID = $user["UserID"];
-                            $username = $user["Username"];
-                            $fname = $user["FName"];
-                            $lname = $user["LName"];
+                    foreach ($userFollowing as $key => $user) {
+                        $userID = $user["UserID"];
+                        $username = $user["Username"];
+                        $fname = $user["FName"];
+                        $lname = $user["LName"];
 
-                            include("./userCard.php");
-                        }
+                        include("./userCard.php");
+                    }
                     ?>
                 </div>
             </div>

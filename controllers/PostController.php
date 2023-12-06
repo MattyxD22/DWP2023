@@ -43,23 +43,24 @@ switch ($action) {
 
             $tmp = $file['tmp_name'];
 
-            $extension = pathinfo($file["name"], PATHINFO_EXTENSION);
-            print_r($extension);
+            //$extension = pathinfo($file["name"], PATHINFO_EXTENSION);
+            //print_r($extension);
             $tmp_name = file_get_contents($file['tmp_name']);
 
             $type = 1;
 
-            if ($extension == "MP4" || $extension == "mp4") {
-                $type = 2;
-            }
+            // if ($extension == "MP4" || $extension == "mp4") {
+            //     $type = 2;
+            // }
 
-            if ($extension == "WEBM" || $extension == "webm") {
-                $type = 2;
-            }
+            // if ($extension == "WEBM" || $extension == "webm") {
+            //     $type = 2;
+            // }
 
 
 
-            $temp_arr = array('data' => $tmp_name, 'type' => $type);
+            //$temp_arr = array('data' => $tmp_name, 'type' => $type);
+            $temp_arr = array('data' => $tmp_name);
             //print_r($temp_arr);
 
             array_push($filesArr, $temp_arr);

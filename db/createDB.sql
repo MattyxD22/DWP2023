@@ -199,13 +199,26 @@ DELIMITER ;
 
 
 DELIMITER //
-CREATE PROCEDURE getPost(IN postID INT(11))
+CREATE PROCEDURE getPost(IN PostID INT(11), IN UserID INT(11))
 BEGIN 
 
-SELECT PostTable.PostID, PostTable.Title, PostTable.Description, PostTable.CreatedDate, UserTable.Username, PostTable.CreatedBy, PostTable.Hidden
+SELECT 
+    PostTable.PostID, 
+    PostTable.Title, 
+    PostTable.Description, 
+    PostTable.CreatedDate, 
+    UserTable.Username, 
+    PostTable.CreatedBy, 
+    PostTable.Hidden, 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'Dislikes', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = UserID AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike',
+    (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = posttable.PostID) AS 'Reposts',
+    (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.UserID = UserID AND RepostTable.PostID = posttable.PostID) AS 'UserReposted'
 FROM PostTable 
 LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy 
-WHERE PostTable.PostID = postID;
+WHERE PostTable.PostID = PostID;
 
 END //
 
@@ -595,14 +608,16 @@ BEGIN
             p.Description,
             p.CreatedDate,
             p.CreatedBy,
-            u.Username AS Username,
+            usertable.Username AS Username,
             (SELECT COUNT(*) FROM LikesTable l WHERE l.PostID = p.PostID AND l.Type = 1) AS Likes,
-            (SELECT COUNT(*) FROM LikesTable l WHERE l.PostID = p.PostID AND l.Type = 2) AS Dislikes,
+            (SELECT COUNT(*) FROM LikesTable l WHERE l.PostID = p.PostID AND l.Type = 0) AS Dislikes,
+        	(SELECT COUNT(*) FROM likestable l WHERE l.UserID = userID AND l.PostID = p.PostID AND l.Type = 1) AS UserLike, 
+            (SELECT COUNT(*) FROM likestable l WHERE l.UserID = userID AND l.PostID = p.PostID AND l.Type = 0) AS UserDislike,
             0 AS Level
         FROM
             PostTable p
         LEFT JOIN
-            UserTable ON PostTable.CreatedBy = UserTable.UserID
+            UserTable ON p.CreatedBy = UserTable.UserID
         WHERE
             p.PostID = p_postID
         UNION ALL
@@ -614,14 +629,17 @@ BEGIN
             PostTable.CreatedBy,
             UserTable.Username AS Username,
             (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 1) AS 'Likes',
-            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 2) AS 'Dislikes',
+            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 0) AS 'Dislikes',
+        	(SELECT COUNT(*) FROM likestable WHERE likestable.UserID = userID AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', 
+        	(SELECT COUNT(*) FROM likestable WHERE likestable.UserID = userID AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike',
             ph.Level + 1 AS Level
         FROM
-            PostTable p
+            PostTable
+        LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy
         INNER JOIN
-            PostHierarchyCTE ph ON p.ParentID = ph.PostID
+            PostHierarchyCTE ph ON posttable.ParentID = ph.PostID
         LEFT JOIN
-            UserTable u ON p.CreatedBy = u.UserID
+            UserTable u ON posttable.CreatedBy = u.UserID
     )
 
     -- Selecting the final result from the CTE
@@ -634,13 +652,15 @@ BEGIN
         Username,
         Likes,
         Dislikes,
+        UserLike,
+        UserDislike,
         Level
     FROM
         PostHierarchyCTE
     ORDER BY
         Level, PostID;
 
-END//
+END //
 DELIMITER ;
 
 DELIMITER //

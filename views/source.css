@@ -119,6 +119,39 @@
     display: none;
 }
 
+.actions_div .action_like.like:hover .bi-hand-thumbs-up-fill {
+    display: none;
+}
+
+.actions_div .action_like.like:hover .bi-hand-thumbs-up {
+    display: flex;
+}
+
+.action_like.like .bi-hand-thumbs-up {
+    display: none;
+}
+
+.action_like.like .bi-hand-thumbs-up-fill {
+    display: flex;
+}
+
+.actions_div .action_dislike.dislike:hover .bi-hand-thumbs-down-fill {
+    display: none;
+}
+
+.actions_div .action_dislike.dislike:hover .bi-hand-thumbs-down {
+    display: flex;
+}
+
+.action_dislike.dislike .bi-hand-thumbs-down {
+    display: none;
+}
+
+.action_dislike.dislike .bi-hand-thumbs-down-fill {
+    display: flex;
+}
+
+
 /* .actions_div .bi-hand-thumbs-up-fill.liked {
     display: flex !important;
 }
@@ -243,50 +276,50 @@
     font-size: 14px;
 }
 
-.comment_container .reply_to_comment{
+.comment_container .reply_to_comment {
     display: none;
 }
 
-.comment_container.open .reply_to_comment{
+.comment_container.open .reply_to_comment {
     display: flex;
 }
 
 
-.repost_comment_container i{
+.repost_comment_container i {
     font-size: 16px;
     color: var(--red);
     margin: auto;
 }
 
-.repost_comment_container .reposted{
+.repost_comment_container .reposted {
     display: none;
 }
 
-.repost_comment_container:hover .reposted{
+.repost_comment_container:hover .reposted {
     display: flex;
 }
 
-.repost_comment_container .not_reposted{
+.repost_comment_container .not_reposted {
     display: flex;
 }
 
-.repost_comment_container:hover .not_reposted{
+.repost_comment_container:hover .not_reposted {
     display: none;
 }
 
-.repost_comment_container.reposted .not_reposted{
+.repost_comment_container.reposted .not_reposted {
     display: none !important;
 }
 
-.reply_comment_container .reply_to_comment_container{
+.reply_comment_container .reply_to_comment_container {
     display: none;
 }
 
-.reply_comment_container.open .reply_to_comment_container{
+.reply_comment_container.open .reply_to_comment_container {
     display: flex;
 }
 
-.reply_to_comment_container{
+.reply_to_comment_container {
     background-color: #3d3d3d;
     border: 1px solid var(--red);
     border-radius: 10px;
@@ -297,47 +330,47 @@
     z-index: 10;
 }
 
-.reply_to_comment_container{
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0, 0.45);
--webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0, 0.45);
--moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0, 0.45);
+.reply_to_comment_container {
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.45);
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.45);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.45);
 }
 
 
-.reply_to_comment_container textarea{
+.reply_to_comment_container textarea {
     height: 4rem;
 }
 
 
-.close_popup i{
+.close_popup i {
     color: var(--red);
 }
 
-.close_popup .bi-x-square{
+.close_popup .bi-x-square {
     display: flex;
 }
 
-.close_popup:hover .bi-x-square{
+.close_popup:hover .bi-x-square {
     display: none;
 }
 
-.close_popup .bi-x-square-fill{
+.close_popup .bi-x-square-fill {
     display: none;
 }
 
-.close_popup:hover .bi-x-square-fill{
+.close_popup:hover .bi-x-square-fill {
     display: flex;
 }
 
-.reply_popup_header{
+.reply_popup_header {
     border-bottom: 1px solid var(--red);
 }
 
-.reply_popup_footer{
+.reply_popup_footer {
     border-top: 1px solid var(--red);
 }
 
-.categoryRow_categoryPage{
+.categoryRow_categoryPage {
     min-height: 25rem;
     max-height: 25rem;
     height: 100%;
@@ -345,7 +378,7 @@
     overflow-y: hidden;
 }
 
-.imageContainer{
+.imageContainer {
     border: 1px solid var(--red);
     border-radius: 10px;
     background-color: #3D3D3D;
@@ -357,7 +390,7 @@
     -moz-box-shadow: 0px 0px 43px 10px rgba(255, 0, 0, 0.18);
 }
 
-.profile_item{
+.profile_item {
     border: 1px solid var(--red);
     border-radius: 10px;
     background-color: var(--std_bg);
@@ -369,14 +402,14 @@
     -moz-box-shadow: 0px 0px 43px 10px rgba(255, 0, 0, 0.18);
 }
 
-.profile_tab_container{
+.profile_tab_container {
 
     border-bottom: 1px solid var(--red);
     overflow-x: auto;
     overflow-y: hidden;
 }
 
-.tab_elem{
+.tab_elem {
     padding: 0.75rem 1.25rem;
     cursor: pointer;
     border-top-left-radius: 10px;
@@ -387,27 +420,27 @@
     justify-content: center;
 }
 
-.tab_elem.selected{
+.tab_elem.selected {
     background-color: var(--red) !important;
 }
 
-.tab_elem span{
+.tab_elem span {
     font-weight: bold;
     font-size: 1rem;
 }
 
 
-.tab_elem:hover{
+.tab_elem:hover {
     background-color: var(--btn_hover_red);
 }
 
-.profile_content{
+.profile_content {
     display: none;
     flex-direction: row;
     flex-wrap: wrap;
 }
 
-.profile_content.selected{
+.profile_content.selected {
     display: flex;
 }
 
@@ -415,76 +448,76 @@
     background-color: var(--std_bg);
 }
 
-.ql-picker-label{
+.ql-picker-label {
     color: var(--red) !important;
 }
 
-.ql-snow .ql-stroke{
+.ql-snow .ql-stroke {
     stroke: var(--red) !important;
 }
 
-.ql-fill{
+.ql-fill {
     fill: var(--red) !important;
 }
 
-.ql-editor.ql-blank::before{
+.ql-editor.ql-blank::before {
     color: #CACACA !important;
 }
 
-.ql-editor p{
+.ql-editor p {
     color: var(--red) !important;
 }
 
-.ql-editor{
+.ql-editor {
     height: 15rem !important;
 }
 
-.ql-editor ol li::before{
+.ql-editor ol li::before {
     color: white !important;
 }
 
-.ql-align-center{
+.ql-align-center {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.ql-align-right{
+.ql-align-right {
     display: flex;
     flex-direction: column;
     align-items: end;
 }
 
-.rules_bg{
+.rules_bg {
     background-color: var(--std_bg);
     border-radius: 10px;
 }
 
-.ruleNum{
+.ruleNum {
     font-size: 1.5rem;
     color: var(--red);
     font-weight: bold;
 }
 
-.ruleText{
+.ruleText {
     font-size: 1.25rem;
     color: var(--red);
     font-weight: bold;
 }
 
-.tab_elem.admin{
+.tab_elem.admin {
     min-height: 6rem !important;
     max-height: 6rem !important;
     height: 100% !important;
 }
 
-.profile_tab_container.admin{
+.profile_tab_container.admin {
     min-height: 4rem !important;
     max-height: 4rem !important;
     height: 100% !important;
 }
 
-.imgDialog{
+.imgDialog {
     background-color: #3D3D3D;
     border-radius: 6px;
     min-height: 500px;
@@ -498,24 +531,24 @@
     padding: 1rem;
 }
 
-.imgDialog::backdrop{
+.imgDialog::backdrop {
     opacity: 0.60 !important;
     background-color: black;
 }
 
-.modalImg{
+.modalImg {
     display: none;
 }
 
-.modalImg.active{
+.modalImg.active {
     display: flex;
 }
 
-.imgIndicator i{
+.imgIndicator i {
     color: #CACACA;
 }
 
-.imgIndicator.active i{
+.imgIndicator.active i {
     color: var(--red);
 }
 
@@ -532,16 +565,16 @@
     }
 }
 
-.imgDialog.showing{
+.imgDialog.showing {
     display: flex !important;
 }
 
-.profile_comment{
+.profile_comment {
     border: 1px solid var(--red);
     border-radius: 10px;
 }
 
-.comment_description{
+.comment_description {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -549,11 +582,11 @@
     -webkit-box-orient: vertical;
 }
 
-.edit_post_container .ellipsis{
+.edit_post_container .ellipsis {
     color: var(--red);
 }
 
-.edit_post_container .dropdown{
+.edit_post_container .dropdown {
     display: none;
     width: 10rem;
     border: 1px solid var(--red);
@@ -565,33 +598,33 @@
     top: 1.2rem;
 }
 
-.edit_post_container:hover .dropdown{
+.edit_post_container:hover .dropdown {
     display: flex;
 }
 
-.dropdown_item_post{
+.dropdown_item_post {
     border-bottom: 1px solid transparent;
 }
 
-.dropdown_item_post::after{
-    display:block;
+.dropdown_item_post::after {
+    display: block;
     content: '';
-    border-bottom: solid 1px var(--red);  
-    transform: scaleX(0);  
+    border-bottom: solid 1px var(--red);
+    transform: scaleX(0);
     transition: transform 250ms ease-in-out;
 }
 
-.dropdown_item_post:hover::after{
-    transform-origin:  0% 50%;
+.dropdown_item_post:hover::after {
+    transform-origin: 0% 50%;
     transform: scaleX(1);
 }
 
-.hide{
+.hide {
     display: none !important;
 }
 
 /* Basically just override the display:flex !important rule, 
 incase .hide doesnt override it */
-.hide.flex{
+.hide.flex {
     display: none !important;
 }

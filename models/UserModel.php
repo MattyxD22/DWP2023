@@ -368,7 +368,8 @@ class UserModel extends BaseModel
         }
     }
 
-    function fetchFollowingUsers($userID) {
+    function fetchFollowingUsers($userID)
+    {
         try {
             $cxn = parent::connectToDB();
             $sql = "CALL GetFollowingUsers(:userID);";

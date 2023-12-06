@@ -118,9 +118,10 @@ class PostModel extends BaseModel
 
             $sanitized_postID = htmlspecialchars($postID);
 
-            $get_post = "CALL getPost(:postID)";
+            $get_post = "CALL getPost(:postID, :userID)";
             $handle_getPost = $cxn->prepare($get_post);
             $handle_getPost->bindValue(":postID", $sanitized_postID);
+            $handle_getPost->bindValue(":userID", $_SESSION["UserID"]);
             $handle_getPost->execute();
             $post = $handle_getPost->fetch(\PDO::FETCH_ASSOC);
 
@@ -130,10 +131,19 @@ class PostModel extends BaseModel
             $handle_getPostImgs = $cxn->prepare($get_postImgs);
             $handle_getPostImgs->bindValue(":postID", $sanitized_postID);
             $handle_getPostImgs->execute();
-            
+
             $imgs = $handle_getPostImgs->fetchAll(\PDO::FETCH_ASSOC);
+            $handle_getPostImgs->closeCursor();
+            $get_Comments = "CALL GetReplyChain(:postID, :userID)";
+            $handle_getComment = $cxn->prepare($get_Comments);
 
+            $handle_getComment->bindValue(":postID", $sanitized_postID);
+            $handle_getComment->bindValue(":userID", $_SESSION["UserID"]);
+            $handle_getComment->execute();
+            $comments_results = $handle_getComment->fetchAll(\PDO::FETCH_ASSOC);
 
+            //$comments_results = $this->getComments($postID);
+            $commentsSize = sizeof($comments_results) - 1; // -1 because the post itself is also returned from the query
             $cxn = $this->closeDB();
 
 
@@ -162,14 +172,15 @@ class PostModel extends BaseModel
 
             $sanitized_postID = htmlspecialchars($postID);
 
-            $get_Comments = "CALL GetReplyChain(:postID)";
+            $get_Comments = "CALL GetReplyChain(:postID, :userID)";
             $handle_getComment = $cxn->prepare($get_Comments);
 
             $handle_getComment->bindValue(":postID", $sanitized_postID);
+            $handle_getComment->bindValue(":userID", $_SESSION["UserID"]);
             $handle_getComment->execute();
             $comments = $handle_getComment->fetchAll(\PDO::FETCH_ASSOC);
 
-            $cnx = $this->closeDB();
+            $cxn = $this->closeDB();
 
             return include("../views/comments.php");
         } catch (\PDOException $err) {
@@ -278,8 +289,9 @@ class PostModel extends BaseModel
         }
     }
 
-    function repost($postID, $userID) {
-        try  {
+    function repost($postID, $userID)
+    {
+        try {
             $cxn = $this->openDB();
 
             $sanitized_postID = htmlspecialchars($postID);
@@ -301,7 +313,8 @@ class PostModel extends BaseModel
     {
     }
 
-    function updatePost($postID, $title, $description){
+    function updatePost($postID, $title, $description)
+    {
         try {
             $cxn = $this->openDB();
 
@@ -323,7 +336,8 @@ class PostModel extends BaseModel
         }
     }
 
-    function hidePost($postID){
+    function hidePost($postID)
+    {
         try {
             $cxn = $this->openDB();
 
@@ -340,7 +354,8 @@ class PostModel extends BaseModel
         }
     }
 
-    function unhidePost($postID){
+    function unhidePost($postID)
+    {
         try {
             $cxn = $this->openDB();
 
@@ -357,7 +372,8 @@ class PostModel extends BaseModel
         }
     }
 
-    function deletePost($postID){
+    function deletePost($postID)
+    {
         try {
             $cxn = $this->openDB();
 
