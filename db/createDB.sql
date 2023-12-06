@@ -180,13 +180,16 @@ BEGIN
         (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = posttable.PostID) AS 'Reposts',
         (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.UserID = UserID AND RepostTable.PostID = posttable.PostID) AS 'UserReposted',
         MediaTable.ImgData, 
-        PostTable.CreatedDate 
+        PostTable.CreatedDate ,
+        UserMedia.ImgData AS UserImgData
     FROM 
         PostTable 
     LEFT JOIN 
         UserTable ON UserTable.UserID = PostTable.CreatedBy 
     LEFT JOIN 
         MediaTable ON MediaTable.PostID = PostTable.PostID
+    LEFT JOIN 
+        MediaTable AS UserMedia ON UserTable.MediaID = UserMedia.MediaID
     WHERE 
         PostTable.ParentID IS NULL 
     ORDER BY 
@@ -200,10 +203,21 @@ DELIMITER //
 CREATE PROCEDURE getPost(IN postID INT(11))
 BEGIN 
 
-SELECT PostTable.PostID, PostTable.Title, PostTable.Description, PostTable.CreatedDate, UserTable.Username
-FROM PostTable 
-LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy 
-WHERE PostTable.PostID = postID;
+SELECT 
+    PostTable.PostID, 
+    PostTable.Title, 
+    PostTable.Description, 
+    PostTable.CreatedDate, 
+    UserTable.Username, 
+    UserMedia.ImgData AS UserImgData
+FROM 
+    PostTable 
+LEFT JOIN 
+    UserTable ON UserTable.UserID = PostTable.CreatedBy 
+LEFT JOIN 
+    MediaTable AS UserMedia ON UserTable.MediaID = UserMedia.MediaID
+WHERE 
+    PostTable.PostID = postID;
 
 END //
 

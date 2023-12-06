@@ -1,6 +1,16 @@
 <div class="container w-full h-full flex flex-col post_Container px-4 py-4 mx-auto">
     <div class="post_header flex flex-row border-bottom-red pb-2">
-        <i class="bi bi-person-circle text-4xl my-auto"></i>
+        <?php 
+            if (isset($post["UserImgData"])) {
+        ?>
+            <img class="object-contain h-12 w-12 rounded-full" src="data:image/jpeg;base64,<?php echo base64_encode($post["UserImgData"]); ?>">
+        <?php 
+            } else {
+        ?>
+        <i class="bi bi-person-circle text-4xl"></i>
+        <?php
+            }
+        ?>
         <span class="ms-3 my-auto font-bold"><?php echo $post["Username"] ?></span>
 
 

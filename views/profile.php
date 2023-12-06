@@ -40,7 +40,7 @@ $userProfilePicture = $userController->fetchUserProfilePicture($userID);
             <?php 
             } else {
             ?>
-            <div class="bg-red-600 rounded-full w-14 h-14"></div>
+            <i class="bi bi-person-circle text-4xl"></i>
             <?php 
             }
             ?>

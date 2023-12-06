@@ -3,7 +3,17 @@
     <div class="feed_item" data-id="<?php echo $post["PostID"] ?>">
 
         <div class="feed_header h-1/6 align-center cursor-pointer open_profile_event" data-userid="<?php echo $post['UserID'] ?>">
-            <i class="bi bi-person-circle text-4xl"></i>
+        <?php 
+            if (isset($post["UserImgData"])) {
+        ?>
+            <img class="object-contain h-12 w-12 rounded-full" src="data:image/jpeg;base64,<?php echo base64_encode($post["UserImgData"]); ?>">
+        <?php 
+            } else {
+        ?>
+        <i class="bi bi-person-circle text-4xl"></i>
+        <?php
+            }
+        ?>
             <span class="ms-3 font-bold"><?php echo $post["Username"] ?></span>
         </div>
         <div class="feed_content h-4/6 flex flex-col">

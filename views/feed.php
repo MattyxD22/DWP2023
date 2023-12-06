@@ -20,10 +20,20 @@ $query = "SELECT posttable.PostID, posttable.Title, posttable.Description, postt
 (SELECT COUNT(*) FROM likestable WHERE likestable.UserID = " . $userID . " AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike',
 (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = posttable.PostID) AS 'Reposts',
 (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.UserID = UserID AND RepostTable.PostID = posttable.PostID) AS 'UserReposted',
-posttable.CreatedDate
-FROM posttable 
-LEFT JOIN MediaTable ON MediaTable.PostID = PostTable.PostID 
-LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID IS NULL ORDER BY posttable.CreatedDate DESC";
+posttable.CreatedDate,
+UserMedia.ImgData AS UserImgData
+FROM 
+    PostTable 
+LEFT JOIN 
+    MediaTable ON MediaTable.PostID = PostTable.PostID 
+LEFT JOIN 
+    UserTable ON UserTable.UserID = PostTable.CreatedBy
+LEFT JOIN 
+    MediaTable AS UserMedia ON UserTable.MediaID = UserMedia.MediaID
+WHERE 
+    PostTable.ParentID IS NULL 
+ORDER BY 
+    PostTable.CreatedDate DESC;";
 
     //$query2 = "SELECT mediatable.ImgData FROM mediatable WHERE mediatable.PostID = ";
 
