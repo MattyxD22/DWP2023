@@ -200,6 +200,13 @@ class UserController
         return $followingUser;
     }
 
+    function fetchUserProfilePicture($userID) {
+        global $userModel;
+
+        $profilePicture = $userModel->fetchUserProfilePicture($userID);
+        return $profilePicture;
+    }
+
     // function fetchReposts($userID)
     // {
     //     global $userModel;

@@ -25,12 +25,25 @@ $userDislikes = $userController->fetchDislikes($userID);
 $userComments = $userController->fetchUserComments($userID);
 $userReposts = $userController->fetchReposts($userID);
 $userFollowing = $userController->fetchFollowingUsers($userID);
+$userProfilePicture = $userController->fetchUserProfilePicture($userID);
 ?>
 
 <article class="text-white profile_page">
     <section class="flex w-full justify-around relative border-b border-red-600 border-solid py-10 flex-wrap">
+        
+        
         <div class="flex justify-center items-center gap-8">
+            <?php 
+            if (isset($userProfilePicture["ImgData"])) {
+                ?>
+            <img class="object-contain w-14 h-14 rounded-full" src="data:image/jpeg;base64,<?php echo base64_encode($userProfilePicture["ImgData"]); ?>">
+            <?php 
+            } else {
+            ?>
             <div class="bg-red-600 rounded-full w-14 h-14"></div>
+            <?php 
+            }
+            ?>
             <h1><?= htmlspecialchars($username) ?></h1>
         </div>
         <div class="flex flex-row">

@@ -341,6 +341,7 @@ class UserModel extends BaseModel
             $query->bindParam(":currentUser", $currentUser);
             $query->bindParam(":targetUser", $userID);
             $query->execute();
+            $cxn = $this->closeDB();
         } catch (\PDOException $e) {
             echo $e->getMessage();
         }
@@ -348,14 +349,29 @@ class UserModel extends BaseModel
 
     function fetchFollowingUsers($userID) {
         try {
-            $cxn = parent::connectToDB();
+            $cxn = $this->openDB();
             $sql = "CALL GetFollowingUsers(:userID);";
             $query = $cxn->prepare($sql);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $followedUsers = $query->fetchAll(\PDO::FETCH_ASSOC);
-            $cxn = null;
+            $cxn = $this->closeDB();
             return $followedUsers;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchUserProfilePicture($userID) {
+        try {
+            $cxn = $this->openDB();
+            $sql = "CALL GetMediaImgDataByUserID(:userID);";
+            $query = $cxn->prepare($sql);
+            $query->bindParam(":userID", $userID);
+            $query->execute();
+            $profilePicture = $query->fetch(\PDO::FETCH_ASSOC);
+            $cxn = $this->closeDB();
+            return $profilePicture;
         } catch (\PDOException $e) {
             echo $e->getMessage();
         }

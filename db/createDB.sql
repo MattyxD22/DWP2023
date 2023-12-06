@@ -666,3 +666,15 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE GetMediaImgDataByUserID(IN _UserID INT)
+BEGIN
+    SELECT MediaTable.ImgData
+    FROM UserTable
+    JOIN MediaTable ON UserTable.MediaID = MediaTable.MediaID
+    WHERE UserTable.UserID = _UserID;
+END //
+
+DELIMITER ;
