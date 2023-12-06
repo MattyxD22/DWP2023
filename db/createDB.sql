@@ -655,3 +655,15 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE GetFollowingUsers(IN user_id INT)
+BEGIN
+    SELECT u.UserID, u.Username, u.FName, u.LName, u.Email
+    FROM UserTable u
+    INNER JOIN FollowingTable f ON u.UserID = f.FollowingID
+    WHERE f.UserID = user_id;
+END //
+
+DELIMITER ;

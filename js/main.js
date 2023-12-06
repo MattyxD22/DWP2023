@@ -625,6 +625,29 @@ $(document).ready(function () {
     // alert("cliked on user profile: " + userID);
   });
 
+  $(document).on("click", ".user-card", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const userID = $(this).data("userid");
+
+    const data = {
+      action: "fromPost",
+      userID: userID,
+    };
+
+    $.ajax({
+      url: url_user,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      $(".state_col").empty();
+      $(".state_col").append(data);
+    });
+
+    // alert("cliked on user profile: " + userID);
+  });  
+
   $(document).on("click", ".updateUserBtn", function () {
     const container = $(this).closest(".updateUserContainer");
 
