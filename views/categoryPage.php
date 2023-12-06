@@ -51,10 +51,10 @@
                                                 <span class="mx-2 text-red-600"><?php echo $post->Dislikes ?></span>
                                             </div>
                                         </div>
-                                        <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
+                                        <!-- <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
                                             <i class="bi bi-chat-square-heart not_reposted"></i>
                                             <i class="bi bi-chat-square-heart-fill reposted"></i>
-                                        </div>
+                                        </div> -->
                                     </div>
 
                                 </div>
@@ -110,10 +110,10 @@
                                     <span class="mx-2 text-red-600"><?php echo $post["Dislikes"] ?></span>
                                 </div>
                             </div>
-                            <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
+                            <!-- <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
                                 <i class="bi bi-chat-square-heart not_reposted"></i>
                                 <i class="bi bi-chat-square-heart-fill reposted"></i>
-                            </div>
+                            </div> -->
                         </div>
 
                     </div>

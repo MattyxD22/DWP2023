@@ -23,7 +23,7 @@ $query = "SELECT posttable.PostID, posttable.Title, posttable.Description, postt
 posttable.CreatedDate
 FROM posttable 
 LEFT JOIN MediaTable ON MediaTable.PostID = PostTable.PostID 
-LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID IS NULL ORDER BY posttable.CreatedDate DESC";
+LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID IS NULL AND posttable.Hidden = 0 AND posttable.Deleted = 0 ORDER BY posttable.CreatedDate DESC";
 
     //$query2 = "SELECT mediatable.ImgData FROM mediatable WHERE mediatable.PostID = ";
 
@@ -31,25 +31,9 @@ LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.Pa
     $db_conn = mysqli_select_db($connection, DB_NAME);
     $data = mysqli_query($connection, $query);
     $results = mysqli_fetch_all($data);
-    // $imgArray = [];
-
-    // foreach ($results as $result) {
-    //     $postID = $result[0];
-    //     $imgArray[$postID] = [
-    //         'PostID' => $postID,
-    //         'Data' => []
-    //     ];
-
-    //     // Fetch images for the current post
-    //     $query2 = "SELECT mediatable.ImgData FROM mediatable WHERE mediatable.PostID = $postID ORDER BY mediatable.PostID";
-    //     $imgDataResult = mysqli_query($connection, $query2);
-
-    //     while ($imgDataRow = mysqli_fetch_assoc($imgDataResult)) {
-    //         $imgArray[$postID]['Data'][] = $imgDataRow['ImgData'];
-    //     }
-    // }
 
     foreach ($results as &$result) {
+        //print_r($result);
         $result["Images"] = [];
 
         // Fetch all images associated with the current post
@@ -61,6 +45,19 @@ LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.Pa
         if (!empty($imgData)) {
             $result["Images"] = $imgData;
         }
+
+        //$results["Comments"] = [];
+
+        // $query3 = "CALL getChainRepliesCount(". $result[0] .")";
+
+        // $data3 = mysqli_query($connection, $query3);
+        // $commentsData = mysqli_fetch_all($data3);
+
+        // // Add images to the 'Images' key in the $result array
+        // if (!empty($commentsData)) {
+        //     $result["Comments"] = $commentsData;
+        // }
+
     }
 
     //echo $imgArray;

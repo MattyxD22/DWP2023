@@ -184,7 +184,7 @@ class UserModel extends BaseModel
     {
         try {
             $cxn = $this->openDB();
-            $statement = "SELECT COUNT(*) AS NumberOfPostsWithoutParent FROM PostTable WHERE CreatedBy = :userID AND ParentID IS NULL;";
+            $statement = "SELECT COUNT(*) AS NumberOfPostsWithoutParent FROM PostTable WHERE CreatedBy = :userID AND ParentID IS NULL AND PostTable.Deleted = 0;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
@@ -216,16 +216,37 @@ class UserModel extends BaseModel
     {
         try {
             $cxn = $this->openDB();
-            $statement = "SELECT PostID, Description, CreatedDate, CreatedBy, Title, CategoryID, mediatable.ImgData FROM PostTable LEFT JOIN mediatable ON mediatable.PostID = PostTable.PostID WHERE ParentID IS NULL AND CreatedBy = :userID ORDER BY PostID DESC;";
+            //$statement = "SELECT PostID, Description, CreatedDate, CreatedBy, Title, CategoryID, mediatable.ImgData FROM PostTable LEFT JOIN mediatable ON mediatable.PostID = PostTable.PostID WHERE ParentID IS NULL AND CreatedBy = :userID ORDER BY PostID DESC;";
+            $statement = "CALL  fetchUserPosts(:userID)";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetchAll(\PDO::FETCH_ASSOC);
             $cxn = $this->closeDB();
+            $result["Image"] = [];
+
+            foreach ($result as $post) {
+                $cxn = $this->openDB();
+                $statement2 = "SELECT mediatable.ImgData FROM mediatable WHERE mediatable.PostID = :postID LIMIT 1";
+
+                $query2 = $cxn->prepare($statement2);
+                $query2->bindParam(":postID", $post["PostID"]);
+                $query2->execute();
+                $imgData = $query2->fetchAll(\PDO::FETCH_ASSOC);
+                if (!empty($imgData)) {
+                    $post["Image"] = $imgData;
+                }
+                //print_r($post["Image"]);
+
+                $cxn = $this->closeDB();
+            }
+
+
+
             return $result;
         } catch (\PDOException $e) {
             echo $e->getMessage();
-        }        
+        }
     }
 
     function fetchLikesById($userID)
@@ -274,7 +295,8 @@ class UserModel extends BaseModel
         }
     }
 
-    function fetchRepostsByUserID($userID) {
+    function fetchRepostsByUserID($userID)
+    {
         try {
             $cxn = parent::connectToDB();
 
@@ -341,6 +363,21 @@ class UserModel extends BaseModel
             $query->bindParam(":currentUser", $currentUser);
             $query->bindParam(":targetUser", $userID);
             $query->execute();
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    function fetchFollowingUsers($userID) {
+        try {
+            $cxn = parent::connectToDB();
+            $sql = "CALL GetFollowingUsers(:userID);";
+            $query = $cxn->prepare($sql);
+            $query->bindParam(":userID", $userID);
+            $query->execute();
+            $followedUsers = $query->fetchAll(\PDO::FETCH_ASSOC);
+            $cxn = null;
+            return $followedUsers;
         } catch (\PDOException $e) {
             echo $e->getMessage();
         }

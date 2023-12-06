@@ -31,6 +31,8 @@ CREATE TABLE PostTable(
     CreatedBy INT(11),
     Title VARCHAR(50),   
     CategoryID INT(11),
+    Hidden INT(11) DEFAULT 0,
+    Deleted INT(11) DEFAULT 0,
     FOREIGN KEY(ParentID) REFERENCES PostTable(PostID),
     FOREIGN KEY(CreatedBy) REFERENCES UserTable(UserID)
 ) ENGINE = INNODB;
@@ -188,7 +190,7 @@ BEGIN
     LEFT JOIN 
         MediaTable ON MediaTable.PostID = PostTable.PostID
     WHERE 
-        PostTable.ParentID IS NULL 
+        PostTable.ParentID IS NULL AND PostTable.Hidden = 0 AND PostTable.Deleted = 0
     ORDER BY 
         PostTable.CreatedDate DESC;
 END //
@@ -200,7 +202,7 @@ DELIMITER //
 CREATE PROCEDURE getPost(IN postID INT(11))
 BEGIN 
 
-SELECT PostTable.PostID, PostTable.Title, PostTable.Description, PostTable.CreatedDate, UserTable.Username
+SELECT PostTable.PostID, PostTable.Title, PostTable.Description, PostTable.CreatedDate, UserTable.Username, PostTable.CreatedBy, PostTable.Hidden
 FROM PostTable 
 LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy 
 WHERE PostTable.PostID = postID;
@@ -460,7 +462,7 @@ FROM
 LEFT JOIN 
     MediaTable ON MediaTable.PostID = PostTable.PostID
 WHERE 
-    PostTable.ParentID IS NULL AND PostTable.CreatedBy = UserID
+    PostTable.ParentID IS NULL AND posttable.Deleted = 0 AND PostTable.CreatedBy = UserID
 ORDER BY 
     PostTable.PostID DESC;
 
@@ -583,27 +585,26 @@ END //
 DELIMITER ;
 
 DELIMITER //
-
-CREATE PROCEDURE GetReplyChain(IN PostID INT(11))
+CREATE PROCEDURE GetReplyChain(p_postID INT)
 BEGIN
-    
+    -- Recursive common table expression to get post hierarchy
     WITH RECURSIVE PostHierarchyCTE AS (
         SELECT
-            PostTable.PostID,
-            PostTable.ParentID,
-            PostTable.Description,
-            PostTable.CreatedDate,
-            PostTable.CreatedBy,
-            UserTable.Username AS Username,
-            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 1) AS 'Likes',
-            (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 2) AS 'Dislikes',
+            p.PostID,
+            p.ParentID,
+            p.Description,
+            p.CreatedDate,
+            p.CreatedBy,
+            u.Username AS Username,
+            (SELECT COUNT(*) FROM LikesTable l WHERE l.PostID = p.PostID AND l.Type = 1) AS Likes,
+            (SELECT COUNT(*) FROM LikesTable l WHERE l.PostID = p.PostID AND l.Type = 2) AS Dislikes,
             0 AS Level
         FROM
-            PostTable
+            PostTable p
         LEFT JOIN
             UserTable ON PostTable.CreatedBy = UserTable.UserID
         WHERE
-            PostTable.PostID = PostID
+            p.PostID = p_postID
         UNION ALL
         SELECT
             PostTable.PostID,
@@ -616,14 +617,14 @@ BEGIN
             (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 2) AS 'Dislikes',
             ph.Level + 1 AS Level
         FROM
-            PostTable
+            PostTable p
         INNER JOIN
-            PostHierarchyCTE ph ON PostTable.ParentID = ph.PostID
+            PostHierarchyCTE ph ON p.ParentID = ph.PostID
         LEFT JOIN
-            UserTable ON PostTable.CreatedBy = UserTable.UserID
+            UserTable u ON p.CreatedBy = u.UserID
     )
 
-    -- Selecting the final result
+    -- Selecting the final result from the CTE
     SELECT
         PostID,
         ParentID,
@@ -639,8 +640,7 @@ BEGIN
     ORDER BY
         Level, PostID;
 
-END //
-
+END//
 DELIMITER ;
 
 DELIMITER //
@@ -652,6 +652,18 @@ BEGIN
     ELSE
         INSERT INTO RepostTable (UserID, PostID) VALUES (p_UserID, p_PostID);
     END IF;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE GetFollowingUsers(IN user_id INT)
+BEGIN
+    SELECT u.UserID, u.Username, u.FName, u.LName, u.Email
+    FROM UserTable u
+    INNER JOIN FollowingTable f ON u.UserID = f.FollowingID
+    WHERE f.UserID = user_id;
 END //
 
 DELIMITER ;

@@ -5,7 +5,7 @@
     </div> -->
 
     <div class="p-2 overflow-hidden">
-        <span class="comment_description" title="<?php echo $comment["Description"] ?>"><?php echo $comment["Description"] ?></span>
+        <pre class="comment_description" title="<?php echo base64_decode($comment["Description"]) ?>"><?php echo base64_decode($comment["Description"]) ?></pre>
     </div>
 
 </div>

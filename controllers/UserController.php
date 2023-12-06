@@ -181,6 +181,13 @@ class UserController
         return $reposts;
     }
 
+    function fetchFollowingUsers($userID) {
+        global $userModel;
+
+        $followingUser = $userModel->fetchFollowingUsers($userID);
+        return $followingUser;
+    }
+
     // function fetchReposts($userID)
     // {
     //     global $userModel;
