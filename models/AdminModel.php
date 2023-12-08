@@ -54,7 +54,7 @@ class AdminModel extends BaseModel
     {
         try {
             $cxn = $this->openDB();
-            $statement = "SELECT * FROM contactinfotable LIMIT 1";
+            $statement = "SELECT * FROM ContactInfoTable LIMIT 1";
             $query = $cxn->prepare($statement);
             $query->execute();
             $result = $query->fetch();
@@ -80,7 +80,7 @@ class AdminModel extends BaseModel
             $streetName = htmlspecialchars($contactData['streetName']);
 
             $cxn = $this->openDB();
-            $statement = "UPDATE contactinfotable SET Email = :email, FName = :fname, LName = :lname,
+            $statement = "UPDATE ContactInfoTable SET Email = :email, FName = :fname, LName = :lname,
              PhoneNumber = :phoneNumber, City = :city, StreetName = :streetName, HouseNumber = :houseNumber;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":fname", $fName);
@@ -103,7 +103,7 @@ class AdminModel extends BaseModel
     {
         try {
             $cxn = $this->openDB();
-            $statement = "SELECT UserID, Username, FName, LName, Email, Banned FROM usertable WHERE IsAdmin = 0 OR UserID = :userID;";
+            $statement = "SELECT UserID, Username, FName, LName, Email, Banned FROM UserTable WHERE IsAdmin = 0 OR UserID = :userID;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
@@ -294,10 +294,11 @@ class AdminModel extends BaseModel
         }
     }
 
-    function updateDescription($description) {
+    function updateDescription($description)
+    {
         try {
             $cnx = $this->connectToDB();
-            $sql = "UPDATE abouttable SET Description = :description";
+            $sql = "UPDATE AboutTable SET Description = :description";
             $query = $cnx->prepare($sql);
             $query->bindParam(":description", $description);
             $query->execute();

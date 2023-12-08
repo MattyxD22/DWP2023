@@ -154,24 +154,35 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
                 <div class="grid grid-cols-3 gap-4 p-8 ">
 
                     <?php
-                         foreach ($userPosts as $key => $post) {
-                            if ($isUserBlocked) {
-                                break;
-                            }
-                            // Set variables with the information from the current post
-                            $title = $post['Title']; // Assuming 'Title' is the correct key
-                            $description = $post['Description']; // And so on for other variables
-                            $img =  $post["ImgData"];
-                            $postID = $post["PostID"];
-                            $likesAmount = $post["Likes"];
-                            $userLike = $post["UserLike"];
-                            $userDislike = $post["UserDislike"];
-                            $dislikesAmount = $post["Dislikes"];
-                            $repostAmount = $post["Reposts"];
-                            $userReposted = $post["UserReposted"];
-                            // Now include the profileItem.php file, which will use the variables above
-                            include('./profileItem.php');
+                    foreach ($userPosts as $post) {
+                        if ($isUserBlocked) {
+                            break;
                         }
+
+                        // Set variables with the information from the current post
+                        $title = $post['Title']; // Assuming 'Title' is the correct key
+                        $description = $post['Description']; // And so on for other variables
+
+                        $img = "";
+                        //print_r($post);
+                        if (!empty($post["ImgData"])) {
+                            //print_r($post["ImgData"]);
+                            $img = $post["ImgData"];
+                        }
+
+
+                        $postID = $post["PostID"];
+
+                        $likesAmount = $post["Likes"];
+                        $userLike = $post["UserLike"];
+                        $userDislike = $post["UserDislike"];
+                        $dislikesAmount = $post["Dislikes"];
+                        $repostAmount = $post["Reposts"];
+                        $userReposted = $post["UserReposted"];
+
+                        // Now include the profileItem.php file, which will use the variables above
+                        include('./profileItem.php');
+                    }
                     ?>
                 </div>
             </div>
@@ -250,7 +261,7 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
                         include("./userIsBlocked.php");
                     }
                 ?>
-                <div class="grid grid-cols-1 gap-4 p-8 ">
+                <div class="grid grid-cols-1 gap-4 p-8  w-full">
 
                     <?php
                     foreach ($userComments as $key => $comment) {
@@ -263,12 +274,12 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
                         $img = $comment["ImgData"];
 
                         $postID = $comment["PostID"];
-                        $likesAmount = $comment["Likes"];
-                        $userLike = $comment["UserLike"];
-                        $userDislike = $comment["UserDislike"];
-                        $dislikesAmount = $comment["Dislikes"];
-                        $repostAmount = $comment["Reposts"];
-                        $userReposted = $comment["UserReposted"];
+                        // $likesAmount = $comment["Likes"];
+                        // $userLike = $comment["UserLike"];
+                        // $userDislike = $comment["UserDislike"];
+                        // $dislikesAmount = $comment["Dislikes"];
+                        // $repostAmount = $comment["Reposts"];
+                        // $userReposted = $comment["UserReposted"];
 
                         // Now include the profileItem.php file, which will use the variables above
                         include('./profileComments.php');
@@ -325,8 +336,8 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
                             $fname = $user["FName"];
                             $lname = $user["LName"];
 
-                            include("./userCard.php");
-                        }
+                        include("./userCard.php");
+                    }
                     ?>
                 </div>
             </div>

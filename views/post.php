@@ -14,21 +14,142 @@
         <span class="ms-3 my-auto font-bold"><?php echo $post["Username"] ?></span>
 
 
+        <?php
+        if ($post["CreatedBy"] == $_SESSION["UserID"]) {
+
+
+        ?>
+            <div class="edit_post_container relative ms-auto my-auto clickable">
+                <i class="bi bi-three-dots ellipsis"></i>
+                <div class="dropdown">
+
+                    <span class="text-red-600 text-xl font-bold py-1 dropdown_item_post edit_post clickable">Edit Post</span>
+
+                    <?php
+
+                    if ($post["Hidden"] == 1) {
+
+
+
+                    ?>
+
+                        <span class="text-red-600 text-xl font-bold py-1 dropdown_item_post unhide_post clickable" data-post="<?php echo $post["PostID"] ?>">Unhide Post</span>
+                    <?php  } else { ?>
+
+
+                        <span class="text-red-600 text-xl font-bold py-1 dropdown_item_post hide_post clickable" data-post="<?php echo $post["PostID"] ?>">Hide Post</span>
+
+                    <?php } ?>
+
+                    <span class="text-red-600 text-xl font-bold py-1 dropdown_item_post delete_post clickable" data-post="<?php echo $post["PostID"] ?>">Delete Post</span>
+
+
+                </div>
+            </div>
+        <?php  } else if ($post["CreatedBy"] != $_SESSION["UserID"] &&  $_SESSION["isAdmin"] == true) { ?>
+
+            <div class="edit_post_container relative ms-auto my-auto clickable">
+                <i class="bi bi-three-dots ellipsis"></i>
+                <div class="dropdown">
+                    <span class="text-red-600 text-xl font-bold py-1 dropdown_item_post edit_post clickable">Edit Post</span>
+                    <span class="text-red-600 text-xl font-bold py-1 dropdown_item_post delete_post clickable" data-post="<?php echo $post["PostID"] ?>">Delete Post</span>
+                </div>
+
+
+            </div>
+
+        <?php  } ?>
+
 
 
 
     </div>
 
-    <div class="post_content flex flex-col py-2">
-        <span class="text-red-600 text-2xl font-bold py-2"> <?php echo $post["Title"] ?></span>
-        <span class="text-red-600 py-2"> <?php echo $post["Description"] ?> </span>
+    <div class="post_content flex flex-col py-2 h-full">
+        <span class="text-red-600 text-2xl font-bold py-2 post_title_span"> <?php echo $post["Title"] ?></span>
+        <input type="text" class="std_input edit_post_title hide my-1" value="<?php echo $post["Title"] ?>" />
+
+        <pre class="text-red-600 py-2 post_description_span"><?php echo base64_decode($post["Description"]) ?></pre>
+
+        <div class="edit_post_rte hide my-1">
+            <?php echo base64_decode($post["Description"]) ?>
+        </div>
+
+        <!-- <textarea class="std_input edit_post_description h-full  hide my-1"><?php echo base64_decode($post["Description"]) ?></textarea> -->
+        <button type="button" class="std_button btn_update_post my-1 ms-auto hide" data-post="<?php echo $post["PostID"] ?>"><span class="text-white text-lg">Update Post</span></button>
     </div>
 
     <div class="post_image_container h-full flex">
 
         <?php if (!empty($imgs)) { ?>
-            <div class="feed_img_container flex flex-row justify-center items-center my-auto mx-auto">
-                <img class="h-auto max-w-full" src="data:image/jpeg;base64,<?php echo base64_encode($imgs["ImgData"]); ?>">
+
+
+
+            <div class="feed_img_container flex flex-row justify-center items-center my-auto w-full">
+
+                <div class="dialogContainer flex flex-col my-auto h-full w-full overflow-hidden">
+
+                    <div class="dialogContainer_image pb-5 w-full flex flex-row h-full overflow-hidden">
+                        <button class="direction_scroll" data-direction="back" type="button" data-te-target="#carouselExampleCrossfade" data-te-slide="prev">
+                            <span class="inline-block h-8 w-8">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                                </svg>
+                            </span>
+                            <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Previous</span>
+                        </button>
+
+                        <div class="dialogContainer_image flex flex-row justify-center mx-auto" style="max-height: 500px; min-height: 500px;">
+                            <?php
+                            $counter = 1;
+                            foreach ($imgs as $key => $img) {
+
+                                if ($counter == 1) { ?>
+                                    <img class="object-contain h-full modalImg active" data-img="<?php echo $counter ?>" src="data:image/jpeg;base64,<?php echo base64_encode($img["ImgData"]); ?>">
+
+                                <?php
+                                } else if ($counter > 1) {
+                                ?>
+                                    <img class="object-contain h-full modalImg" data-img="<?php echo $counter ?>" src="data:image/jpeg;base64,<?php echo base64_encode($img["ImgData"]); ?>">
+                                <?php
+                                }
+                                $counter++; ?>
+                            <?php } ?>
+                        </div>
+                        <button class="direction_scroll" data-direction="forward" type="button" data-te-target="#carouselExampleCrossfade" data-te-slide="next">
+                            <span class="inline-block h-8 w-8">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </span>
+                            <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Next</span>
+                        </button>
+                    </div>
+                    <div class="flex flex-row relative">
+                        <!--Carousel indicators -->
+                        <div class="absolute inset-x-0 bottom-0 z-[2] flex list-none justify-center p-0" data-te-carousel-indicators>
+
+                            <?php
+                            $x = 1;
+                            while ($x < $counter) {
+
+                                if ($x == 1) {
+                            ?>
+                                    <button type="button" class="imgIndicator active mx-1" data-img="<?php echo $x ?>"><i class="bi bi-circle-fill"></i></button>
+                                <?php } else {
+                                ?>
+                                    <button type="button" class="imgIndicator mx-1" data-img="<?php echo $x ?>"><i class="bi bi-circle-fill"></i></button>
+                            <?php
+                                }
+                                $x++;
+                            }
+
+                            ?>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- <img class="h-auto max-w-full" src="data:image/jpeg;base64,<?php echo base64_encode($imgs["ImgData"]); ?>"> -->
             </div>
         <?php } ?>
 
@@ -42,43 +163,57 @@
 
         <!-- <textarea id="comment" rows="4" class="w-full std_input comment_textArea" placeholder="Write a comment..."></textarea> -->
 
-        <button type="button" class="std_button submit_comment text-white ms-auto mt-2" data-id="<?php echo $post["PostID"] ?>">
-            Post comment
-        </button>
+        <div class="flex flex-row post_actions">
+            <div class="likes_div pe-4 my-auto">
 
-        <!-- <form>
-            <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 postComment_Container">
-                <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
-                    <label for="comment" class="sr-only">Your comment</label>
-                    <textarea id="comment" rows="4" class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 comment_textArea" placeholder="Write a comment..." required></textarea>
-                </div>
-                <div class="flex items-center justify-end px-3 py-2 border-t dark:border-gray-600">
-                    <button type="button" class="std_button submit_comment text-white" data-id="<?php echo $post["PostID"] ?>">
-                        Post comment
-                    </button>
-                    <div class="flex pl-0 space-x-1 sm:pl-2">
-                        <button type="button" class="inline-flex justify-center items-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-                            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 20">
-                                <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M1 6v8a5 5 0 1 0 10 0V4.5a3.5 3.5 0 1 0-7 0V13a2 2 0 0 0 4 0V6" />
-                            </svg>
-                            <span class="sr-only">Attach file</span>
-                        </button>
-                        <button type="button" class="inline-flex justify-center items-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-                            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                                <path d="M8 0a7.992 7.992 0 0 0-6.583 12.535 1 1 0 0 0 .12.183l.12.146c.112.145.227.285.326.4l5.245 6.374a1 1 0 0 0 1.545-.003l5.092-6.205c.206-.222.4-.455.578-.7l.127-.155a.934.934 0 0 0 .122-.192A8.001 8.001 0 0 0 8 0Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" />
-                            </svg>
-                            <span class="sr-only">Set location</span>
-                        </button>
-                        <button type="button" class="inline-flex justify-center items-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-                            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                                <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                            </svg>
-                            <span class="sr-only">Upload image</span>
-                        </button>
-                    </div>
-                </div>
+                <span class="text-red-600 text-l font-bold likes_amount" data-amount="<?php echo $post["Likes"]; ?>"><?php echo $post["Likes"]; ?></span>
+                <span class="text-white text-l font-bold ms-1">Likes</span>
+
             </div>
-        </form> -->
+
+            <div class="dislikes_div pe-4 my-auto">
+                <span class="text-red-600 text-l font-bold dislikes_amount" data-amount="<?php echo $post["Dislikes"]; ?>"><?php echo $post["Dislikes"]; ?></span>
+                <span class="text-white text-l font-bold ms-1">Dislikes</span>
+            </div>
+
+
+            <div class="reposts_div pe-4 my-auto">
+                <span class="text-red-600 text-l font-bold repost_amount"><?php echo $post["Reposts"]; ?></span>
+                <span class="text-white text-l font-bold ms-1">Reposts</span>
+            </div>
+
+
+            <div class="comments_div pe-4 my-auto">
+                <span class="text-red-600 text-l font-bold"><?php echo $commentsSize; ?></span>
+                <span class="text-white text-l font-bold ms-1">Comments</span>
+            </div>
+
+            <div class="actions_div flex flex-row ms-1 my-auto">
+
+                <div>
+                    <i class="bi bi-arrow-down-up text-xl text-red-600 flex repost_post cursor-pointer mx-1" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $post["PostID"] ?>"></i>
+                </div>
+
+                <div class="action_like mx-1 <?php echo $post["UserLike"] == 1 ? 'like' : ''; ?>">
+                    <i class=" bi bi-hand-thumbs-up text-xl text-red-600 flex like_post" data-id="<?php echo $post["PostID"] ?>"></i>
+                    <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $post["PostID"] ?>"></i>
+
+                </div>
+
+                <div class="action_dislike mx-1 <?php echo $post["UserDislike"] == 1 ? 'dislike' : ''; ?>">
+                    <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex dislike_post" data-id="<?php echo $post["PostID"] ?>"></i>
+                    <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $post["PostID"] ?>"></i>
+
+                </div>
+
+            </div>
+
+            <button type="button" class="std_button submit_comment text-white ms-auto mt-2" data-id="<?php echo $post["PostID"] ?>">
+                Post comment
+            </button>
+        </div>
+
+
     </div>
 
     <div class="comment_section flex flex-col">

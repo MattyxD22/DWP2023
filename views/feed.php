@@ -31,7 +31,7 @@ LEFT JOIN
 LEFT JOIN 
     MediaTable AS UserMedia ON UserTable.MediaID = UserMedia.MediaID
 WHERE 
-    PostTable.ParentID IS NULL AND
+    PostTable.ParentID IS NULL AND PostTable.Hidden = 0 AND PostTable.Deleted = 0 ORDER BY PostTable.CreatedDate DESC AND
         NOT EXISTS (
             SELECT 1 FROM BlockedTable
             WHERE BlockedTable.UserID = UserID AND BlockedTable.BlockedID = PostTable.CreatedBy
@@ -39,35 +39,19 @@ WHERE
 ORDER BY 
     PostTable.CreatedDate DESC;";
 
-    //$query2 = "SELECT mediatable.ImgData FROM mediatable WHERE mediatable.PostID = ";
+    //$query2 = "SELECT MediaTable.ImgData FROM MediaTable WHERE MediaTable.PostID = ";
 
     //$db = mysqli_connect(DB_NAME, DB_USER, DB_PASS, DB_NAME) or die("error opening mysqli");
     $db_conn = mysqli_select_db($connection, DB_NAME);
     $data = mysqli_query($connection, $query);
     $results = mysqli_fetch_all($data);
-    // $imgArray = [];
-
-    // foreach ($results as $result) {
-    //     $postID = $result[0];
-    //     $imgArray[$postID] = [
-    //         'PostID' => $postID,
-    //         'Data' => []
-    //     ];
-
-    //     // Fetch images for the current post
-    //     $query2 = "SELECT mediatable.ImgData FROM mediatable WHERE mediatable.PostID = $postID ORDER BY mediatable.PostID";
-    //     $imgDataResult = mysqli_query($connection, $query2);
-
-    //     while ($imgDataRow = mysqli_fetch_assoc($imgDataResult)) {
-    //         $imgArray[$postID]['Data'][] = $imgDataRow['ImgData'];
-    //     }
-    // }
 
     foreach ($results as &$result) {
+        //print_r($result);
         $result["Images"] = [];
 
         // Fetch all images associated with the current post
-        $query2 = "SELECT mediatable.ImgData FROM mediatable WHERE mediatable.PostID = " . $result[0] . " ORDER BY mediatable.PostID;";
+        $query2 = "SELECT MediaTable.ImgData FROM MediaTable WHERE MediaTable.PostID = " . $result[0] . " ORDER BY MediaTable.PostID;";
         $data2 = mysqli_query($connection, $query2);
         $imgData = mysqli_fetch_all($data2);
 
@@ -75,6 +59,19 @@ ORDER BY
         if (!empty($imgData)) {
             $result["Images"] = $imgData;
         }
+
+        //$results["Comments"] = [];
+
+        // $query3 = "CALL getChainRepliesCount(". $result[0] .")";
+
+        // $data3 = mysqli_query($connection, $query3);
+        // $commentsData = mysqli_fetch_all($data3);
+
+        // // Add images to the 'Images' key in the $result array
+        // if (!empty($commentsData)) {
+        //     $result["Comments"] = $commentsData;
+        // }
+
     }
 
     //echo $imgArray;
@@ -89,7 +86,8 @@ ORDER BY
                 <?php include('../views/sideBar.php') ?>
             </div>
             <div class="feed_col w-full h-full flex flex-col overflow-y-auto py-3 px-3 state_col">
-                <?php foreach ($results as $key => $post) {
+                <?php
+                foreach ($results as $key => $post) {
 
 
 

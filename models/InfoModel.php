@@ -55,7 +55,7 @@ class InfoModel extends BaseModel
 
         try {
             $cxn = $this->openDB();
-            $sql = "SELECT * FROM contactinfotable LIMIT 1";
+            $sql = "SELECT * FROM ContactInfoTable LIMIT 1";
             $query = $cxn->prepare($sql);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
@@ -67,10 +67,11 @@ class InfoModel extends BaseModel
         }
     }
 
-    function fetchAboutUsDescription() {
+    function fetchAboutUsDescription()
+    {
         try {
             $cxn = $this->openDB();
-            $sql = "SELECT * FROM abouttable LIMIT 1";
+            $sql = "SELECT * FROM AboutTable LIMIT 1";
             $query = $cxn->prepare($sql);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
@@ -81,5 +82,4 @@ class InfoModel extends BaseModel
             echo $e->getMessage();
         }
     }
-
 }

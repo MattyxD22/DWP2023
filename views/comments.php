@@ -37,18 +37,18 @@ if (!empty($comments)) {
                     </div>
                     <div class="comment_footer flex flex-row py-2">
 
-                        <div class="actions_div flex flex-row my-auto">
+                        <div class="actions_div post_actions flex flex-row my-auto">
 
-                            <div class="action_like flex flex-row pe-2">
-                                <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
+                            <div class="action_like flex flex-row pe-2 <?php echo $reply["UserLike"] == 1 ? 'like' : ''; ?>">
+                                <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex like_post" data-id="<?php echo $reply["PostID"] ?>"></i>
                                 <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-id="<?php echo $reply["PostID"] ?>"></i>
-                                <span class="mx-2 text-red-600"><?php echo $reply["Dislikes"] ?></span>
+                                <span class="mx-2 text-red-600 likes_amount" data-amount="<?php echo $reply["Likes"] ?>"><?php echo $reply["Likes"] ?></span>
                             </div>
 
-                            <div class="action_dislike flex flex-row pe-2">
-                                <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex"></i>
+                            <div class="action_dislike flex flex-row pe-2  <?php echo $reply["UserDislike"] == 1 ? 'dislike' : ''; ?>">
+                                <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex dislike_post" data-id="<?php echo $reply["PostID"] ?>"></i>
                                 <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-id="<?php echo $reply["PostID"] ?>"></i>
-                                <span class="mx-2 text-red-600"><?php echo $reply["Dislikes"] ?></span>
+                                <span class="mx-2 text-red-600 dislikes_amount" data-amount="<?php echo $reply["Dislikes"] ?>"><?php echo $reply["Dislikes"] ?></span>
                             </div>
                         </div>
 
@@ -62,12 +62,15 @@ if (!empty($comments)) {
                                     </div>
                                 </div>
 
-                                <div class="reply_popup_content py-1 px-1 flex flex-row">
-                                    <textarea class="std_input w-[100%]" placeholder="Your reply Here"></textarea>
+                                <div class="reply_popup_content py-1 px-1 flex flex-col">
+                                    <div class="reply_rte">
+
+                                    </div>
+                                    <!-- <textarea class="std_input w-[100%]" placeholder="Your reply Here"></textarea> -->
                                 </div>
 
                                 <div class="reply_popup_footer py-1 px-1 flex flex-row justify-end">
-                                    <button type="button" class="std_button submit_reply text-white" data-org-id="<?php echo $postID ?>" data-id=" <?php echo $reply["PostID"] ?>">
+                                    <button type="button" class="std_button submit_reply text-white" data-orgid=" <?php echo $postID ?>" data-id=" <?php echo $reply["PostID"] ?>">
                                         Post Reply
                                     </button>
                                 </div>
@@ -76,10 +79,10 @@ if (!empty($comments)) {
                             </div>
                         </div>
 
-                        <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
+                        <!-- <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
                             <i class="bi bi-chat-square-heart not_reposted"></i>
                             <i class="bi bi-chat-square-heart-fill reposted"></i>
-                        </div>
+                        </div> -->
 
                     </div>
                 </div>
@@ -138,18 +141,18 @@ if (!empty($comments)) {
                     </div>
                     <div class="comment_footer flex flex-row py-2">
 
-                        <div class="actions_div flex flex-row my-auto">
+                        <div class="actions_div post_actions flex flex-row my-auto">
 
-                            <div class="action_like flex flex-row pe-2">
-                                <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
+                            <div class="action_like flex flex-row pe-2 <?php echo $comment["UserLike"] == 1 ? 'like' : ''; ?>">
+                                <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex like_post"></i>
                                 <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-id="<?php echo $comment["PostID"] ?>"></i>
-                                <span class="mx-2 text-red-600"><?php echo $comment["Likes"] ?></span>
+                                <span class="mx-2 text-red-600 likes_amount" data-amount="<?php echo $comment["Likes"]; ?>"><?php echo $comment["Likes"] ?></span>
                             </div>
 
-                            <div class="action_dislike flex flex-row pe-2">
-                                <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex"></i>
+                            <div class="action_dislike flex flex-row pe-2  <?php echo $comment["UserDislike"] == 1 ? 'dislike' : ''; ?>">
+                                <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex dislike_post"></i>
                                 <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-id="<?php echo $comment["PostID"] ?>"></i>
-                                <span class="mx-2 text-red-600"><?php echo $comment["Dislikes"] ?></span>
+                                <span class="mx-2 text-red-600 dislikes_amount" data-amount="<?php echo $comment["Dislikes"]; ?>"><?php echo $comment["Dislikes"] ?></span>
                             </div>
                         </div>
 
@@ -163,12 +166,17 @@ if (!empty($comments)) {
                                     </div>
                                 </div>
 
-                                <div class="reply_popup_content py-1 px-1 flex flex-row">
-                                    <textarea class="std_input w-[100%]" placeholder="Your reply Here"></textarea>
+                                <div class="reply_popup_content py-1 px-1 flex flex-col">
+
+                                    <div class="reply_rte">
+
+                                    </div>
+
+                                    <!-- <textarea class="std_input w-[100%]" placeholder="Your reply Here"></textarea> -->
                                 </div>
 
                                 <div class="reply_popup_footer py-1 px-1 flex flex-row justify-end">
-                                    <button type="button" class="std_button submit_reply text-white" data-org-id="<?php echo $post["PostID"] ?>" data-id=" <?php echo $comment["PostID"] ?>">
+                                    <button type="button" class="std_button submit_reply text-white" data-orgid=" <?php echo $postID ?>" data-id="<?php echo $comment["PostID"] ?>">
                                         Post Reply
                                     </button>
                                 </div>
@@ -177,10 +185,10 @@ if (!empty($comments)) {
                             </div>
                         </div>
 
-                        <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
+                        <!-- <div class="flex flex-row repost_comment_container px-2" title="repost this comment">
                             <i class="bi bi-chat-square-heart not_reposted"></i>
                             <i class="bi bi-chat-square-heart-fill reposted"></i>
-                        </div>
+                        </div> -->
 
                     </div>
                 </div>

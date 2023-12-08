@@ -18,11 +18,11 @@
         </div>
         <div class="feed_content h-4/6 flex flex-col">
             <div class="feed_title_container py-2 px-2">
-                <span><?php echo $post["Title"] ?></span>
+                <span class="text-red-600 text-2xl font-bold"><?php echo $post["Title"] ?></span>
             </div>
 
             <div class="feed_title_container py-2 px-2">
-                <span><?php echo $post["Description"] ?></span>
+                <pre class="text-red-600"><?php echo base64_decode($post["Description"]) ?></pre>
             </div>
 
             <div class="feed_image_container h-full overflow-hidden flex">
@@ -124,17 +124,17 @@
         </div>
 
 
-        <div class="feed_footer h-1/6 pt-2">
+        <div class="feed_footer post_actions h-1/6 pt-2">
 
             <div class="likes_div pe-4 my-auto">
 
-                <span class="text-red-600 text-l font-bold <?php echo $post["UserLike"] == 1 ? 'underline' : ''; ?>"><?php echo $post["Likes"]; ?></span>
+                <span class="text-red-600 text-l font-bold likes_amount <?php echo $post["UserLike"] == 1 ? 'underline' : ''; ?>" data-amount="<?php echo $post["Likes"]; ?>"><?php echo $post["Likes"]; ?></span>
                 <span class="text-white text-l font-bold ms-1">Likes</span>
 
             </div>
 
             <div class="dislikes_div pe-4 my-auto">
-                <span class="text-red-600 text-l font-bold <?php echo $post["UserDislike"] == 1 ? 'underline' : ''; ?>"><?php echo $post["Dislikes"]; ?></span>
+                <span class="text-red-600 text-l font-bold dislikes_amount <?php echo $post["UserDislike"] == 1 ? 'underline' : ''; ?>" data-amount="<?php echo $post["Dislikes"]; ?>"><?php echo $post["Dislikes"]; ?></span>
                 <span class="text-white text-l font-bold ms-1">Dislikes</span>
             </div>
 
@@ -152,17 +152,17 @@
             <div class="actions_div flex flex-row ms-auto my-auto">
 
                 <div>
-                    <i class="bi bi-arrow-down-up text-xl text-red-600 flex repost_post cursor-pointer" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $post["PostID"] ?>"></i>
+                    <i class="bi bi-arrow-down-up text-xl text-red-600 flex repost_post cursor-pointer mx-1" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $post["PostID"] ?>"></i>
                 </div>
 
-                <div class="action_like">
-                    <i class="bi bi-hand-thumbs-up text-xl text-red-600 flex"></i>
-                    <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $post["PostID"] ?>"></i>
+                <div class="action_like mx-1 <?php echo $post["UserLike"] == 1 ? 'like' : ''; ?>">
+                    <i class=" bi bi-hand-thumbs-up text-xl text-red-600 flex like_post" data-id="<?php echo $post["PostID"] ?>"></i>
+                    <i class="bi bi-hand-thumbs-up-fill text-xl text-red-600 cursor-pointer like_post liked" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $post["PostID"] ?>"></i>
 
                 </div>
 
-                <div class="action_dislike">
-                    <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex"></i>
+                <div class="action_dislike mx-1 <?php echo $post["UserDislike"] == 1 ? 'dislike' : ''; ?>">
+                    <i class="bi bi-hand-thumbs-down text-xl text-red-600 flex dislike_post" data-id="<?php echo $post["PostID"] ?>"></i>
                     <i class="bi bi-hand-thumbs-down-fill text-xl text-red-600 cursor-pointer dislike_post" data-user="<?php echo $_SESSION["UserID"] ?>" data-id="<?php echo $post["PostID"] ?>"></i>
 
                 </div>

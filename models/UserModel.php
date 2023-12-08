@@ -58,7 +58,7 @@ class UserModel extends BaseModel
             $sanitized_password = htmlspecialchars($password);
 
 
-            $checkUser = "SELECT COUNT(*) AS 'EXISTS' FROM usertable WHERE usertable.Username = :username OR usertable.Email = :email";
+            $checkUser = "SELECT COUNT(*) AS 'EXISTS' FROM UserTable WHERE UserTable.Username = :username OR UserTable.Email = :email";
             $handleCheckUser = $cxn->prepare($checkUser);
             $handleCheckUser->bindParam(":username", $sanitized_username);
             $handleCheckUser->bindParam(":email", $sanitized_email);
@@ -68,7 +68,7 @@ class UserModel extends BaseModel
 
             // if username or email doesnt exist, continue to create user and send user to login page
             if ($handleCheckUserResult["EXISTS"] == 0) {
-                $statement = "INSERT INTO usertable (username, email, password) VALUES (:username, :email, :password);";
+                $statement = "INSERT INTO UserTable (username, email, password) VALUES (:username, :email, :password);";
 
                 $handle = $cxn->prepare($statement);
                 $handle->bindParam(':username', $sanitized_username);
@@ -97,7 +97,7 @@ class UserModel extends BaseModel
 
 
             // First, try treating the input as a username
-            $statement = "SELECT UserID, IsAdmin, password FROM usertable WHERE username = :input AND (Banned IS NULL OR Banned = 0) LIMIT 1";
+            $statement = "SELECT UserID, IsAdmin, password FROM UserTable WHERE username = :input AND (Banned IS NULL OR Banned = 0) LIMIT 1";
             $handle = $cxn->prepare($statement);
             $handle->bindParam(':input', $username);
             $handle->execute();
@@ -105,7 +105,7 @@ class UserModel extends BaseModel
 
             // If no match was found for username, try treating the input as an email
             if (!$result) {
-                $statement = "SELECT UserID, IsAdmin, password FROM usertable WHERE email = :input AND (Banned IS NULL OR Banned = 0) LIMIT 1";
+                $statement = "SELECT UserID, IsAdmin, password FROM UserTable WHERE email = :input AND (Banned IS NULL OR Banned = 0) LIMIT 1";
                 $handle = $cxn->prepare($statement);
                 $handle->bindParam(':input', $username);
                 $handle->execute();
@@ -184,7 +184,7 @@ class UserModel extends BaseModel
     {
         try {
             $cxn = $this->openDB();
-            $statement = "SELECT COUNT(*) AS NumberOfPostsWithoutParent FROM PostTable WHERE CreatedBy = :userID AND ParentID IS NULL;";
+            $statement = "SELECT COUNT(*) AS NumberOfPostsWithoutParent FROM PostTable WHERE CreatedBy = :userID AND ParentID IS NULL AND PostTable.Deleted = 0;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
@@ -200,7 +200,7 @@ class UserModel extends BaseModel
     {
         try {
             $cxn = $this->openDB();
-            $statement = "SELECT username FROM usertable WHERE userid = :userID;";
+            $statement = "SELECT username FROM UserTable WHERE userid = :userID;";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
@@ -216,16 +216,37 @@ class UserModel extends BaseModel
     {
         try {
             $cxn = $this->openDB();
-            $statement = "CALL fetchUserPosts(:userID)";
+            //$statement = "SELECT PostID, Description, CreatedDate, CreatedBy, Title, CategoryID, MediaTable.ImgData FROM PostTable LEFT JOIN MediaTable ON MediaTable.PostID = PostTable.PostID WHERE ParentID IS NULL AND CreatedBy = :userID ORDER BY PostID DESC;";
+            $statement = "CALL  fetchUserPosts(:userID)";
             $query = $cxn->prepare($statement);
             $query->bindParam(":userID", $userID);
             $query->execute();
             $result = $query->fetchAll(\PDO::FETCH_ASSOC);
             $cxn = $this->closeDB();
+            $result["Image"] = [];
+
+            foreach ($result as $post) {
+                $cxn = $this->openDB();
+                $statement2 = "SELECT MediaTable.ImgData FROM MediaTable WHERE MediaTable.PostID = :postID LIMIT 1";
+
+                $query2 = $cxn->prepare($statement2);
+                $query2->bindParam(":postID", $post["PostID"]);
+                $query2->execute();
+                $imgData = $query2->fetchAll(\PDO::FETCH_ASSOC);
+                if (!empty($imgData)) {
+                    $post["Image"] = $imgData;
+                }
+                //print_r($post["Image"]);
+
+                $cxn = $this->closeDB();
+            }
+
+
+
             return $result;
         } catch (\PDOException $e) {
             echo $e->getMessage();
-        }        
+        }
     }
 
     function fetchLikesById($userID)
@@ -274,7 +295,8 @@ class UserModel extends BaseModel
         }
     }
 
-    function fetchRepostsByUserID($userID) {
+    function fetchRepostsByUserID($userID)
+    {
         try {
             $cxn = parent::connectToDB();
 
@@ -347,7 +369,8 @@ class UserModel extends BaseModel
         }
     }
 
-    function fetchFollowingUsers($userID) {
+    function fetchFollowingUsers($userID)
+    {
         try {
             $cxn = $this->openDB();
             $sql = "CALL GetFollowingUsers(:userID);";

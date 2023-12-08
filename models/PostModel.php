@@ -68,11 +68,11 @@ class PostModel extends BaseModel
             $postID =  $handleCreatePost->fetch(\PDO::FETCH_ASSOC);
             $cxn = $this->closeDB();
 
-            if (!empty($categories)) {
-
+            if (!empty($categories) && !empty($categories[0])) {
+                print_r("Not empty?: ");
+                print_r($categories);
                 foreach ($categories as $key => $category) {
                     $cxn = $this->openDB();
-                    print_r($category);
                     $addCategory = "CALL addPostToCategory(:CategoryID, :postID)";
                     $handle_addCategory = $cxn->prepare($addCategory);
                     $handle_addCategory->bindValue(":CategoryID", $category);
@@ -94,9 +94,10 @@ class PostModel extends BaseModel
                 // Use foreach loop, if multiple files exists
                 foreach ($filesArr as $key => $file) {
                     $cxn = $this->openDB();
-                    $addImg = "CALL addFileToPost(:type, :postID, :file)";
+                    //print_r($file);
+                    $addImg = "CALL addFileToPost(1, :postID, :file)";
                     $handle_addImg = $cxn->prepare($addImg);
-                    $handle_addImg->bindValue(":type", 1);
+                    //$handle_addImg->bindValue(":type", $file["type"]);
                     $handle_addImg->bindValue(":postID", $postID["PostID"]);
                     $handle_addImg->bindParam(":file", $file["data"]);
                     $handle_addImg->execute();
@@ -117,9 +118,10 @@ class PostModel extends BaseModel
 
             $sanitized_postID = htmlspecialchars($postID);
 
-            $get_post = "CALL getPost(:postID)";
+            $get_post = "CALL getPost(:postID, :userID)";
             $handle_getPost = $cxn->prepare($get_post);
             $handle_getPost->bindValue(":postID", $sanitized_postID);
+            $handle_getPost->bindValue(":userID", $_SESSION["UserID"]);
             $handle_getPost->execute();
             $post = $handle_getPost->fetch(\PDO::FETCH_ASSOC);
 
@@ -129,23 +131,21 @@ class PostModel extends BaseModel
             $handle_getPostImgs = $cxn->prepare($get_postImgs);
             $handle_getPostImgs->bindValue(":postID", $sanitized_postID);
             $handle_getPostImgs->execute();
-            //header("content-type: image/jpeg");
-            $imgs = $handle_getPostImgs->fetch(\PDO::FETCH_ASSOC);
-            //print_r($imgs["ImgData"]);
 
+            $imgs = $handle_getPostImgs->fetchAll(\PDO::FETCH_ASSOC);
+            $handle_getPostImgs->closeCursor();
+            $get_Comments = "CALL GetReplyChain(:postID, :userID)";
+            $handle_getComment = $cxn->prepare($get_Comments);
+
+            $handle_getComment->bindValue(":postID", $sanitized_postID);
+            $handle_getComment->bindValue(":userID", $_SESSION["UserID"]);
+            $handle_getComment->execute();
+            $comments_results = $handle_getComment->fetchAll(\PDO::FETCH_ASSOC);
+
+            //$comments_results = $this->getComments($postID);
+            $commentsSize = sizeof($comments_results) - 1; // -1 because the post itself is also returned from the query
             $cxn = $this->closeDB();
-            //$cxn = $this->connectToDB();
 
-            // $get_comments = "CALL getComments(:postID)";
-            // $handle_getComments = $cxn->prepare($get_comments);
-            // $handle_getComments->bindValue(":postID", $sanitized_postID);
-            // $handle_getComments->execute();
-            // $comments = $handle_getComments->fetch(\PDO::FETCH_ASSOC);
-
-            // $content = [
-            //     'data' => $post,
-            //     'view' => include("../views/post.php")
-            // ];
 
             return include("../views/post.php");
             //return $content;
@@ -172,14 +172,15 @@ class PostModel extends BaseModel
 
             $sanitized_postID = htmlspecialchars($postID);
 
-            $get_Comments = "CALL GetReplyChain(:postID)";
+            $get_Comments = "CALL GetReplyChain(:postID, :userID)";
             $handle_getComment = $cxn->prepare($get_Comments);
 
             $handle_getComment->bindValue(":postID", $sanitized_postID);
+            $handle_getComment->bindValue(":userID", $_SESSION["UserID"]);
             $handle_getComment->execute();
             $comments = $handle_getComment->fetchAll(\PDO::FETCH_ASSOC);
 
-            $cnx = $this->closeDB();
+            $cxn = $this->closeDB();
 
             return include("../views/comments.php");
         } catch (\PDOException $err) {
@@ -288,9 +289,10 @@ class PostModel extends BaseModel
         }
     }
 
-    function repost($postID, $userID) {
-        try  {
-            $cxn = parent::connectToDB();
+    function repost($postID, $userID)
+    {
+        try {
+            $cxn = $this->openDB();
 
             $sanitized_postID = htmlspecialchars($postID);
             $sanitized_userID = htmlspecialchars($userID);
@@ -301,7 +303,7 @@ class PostModel extends BaseModel
             $handle_repost->bindValue(":postID", $sanitized_postID);
             $handle_repost->bindValue(":userID", $sanitized_userID);
             $handle_repost->execute();
-            $cxn = null;
+            $cxn = $this->closeDB();
         } catch (\PDOException $err) {
             print($err->getMessage());
         }
@@ -309,5 +311,82 @@ class PostModel extends BaseModel
 
     function addCategoryToPost($postID, $categoryID)
     {
+    }
+
+    function updatePost($postID, $title, $description)
+    {
+        try {
+            $cxn = $this->openDB();
+
+            $sanitized_Title = htmlspecialchars($title);
+            $sanitized_Description = htmlspecialchars($description);
+
+            $sql = "UPDATE PostTable SET PostTable.Title = :title, PostTable.Description = :description WHERE PostTable.PostID = :postID";
+            $handle_sql = $cxn->prepare($sql);
+
+            $handle_sql->bindValue(":postID", $postID);
+            $handle_sql->bindValue(":title", $sanitized_Title);
+            $handle_sql->bindValue(":description", $sanitized_Description);
+            $handle_sql->execute();
+            $cnx = $this->closeDB();
+
+            return "200";
+        } catch (\PDOException $err) {
+            print($err->getMessage());
+        }
+    }
+
+    function hidePost($postID)
+    {
+        try {
+            $cxn = $this->openDB();
+
+            $sql = "UPDATE PostTable SET PostTable.Hidden = 1 WHERE PostTable.PostID = :postID";
+            $handle_sql = $cxn->prepare($sql);
+
+            $handle_sql->bindValue(":postID", $postID);
+            $handle_sql->execute();
+            $cnx = $this->closeDB();
+
+            return "200";
+        } catch (\PDOException $err) {
+            print($err->getMessage());
+        }
+    }
+
+    function unhidePost($postID)
+    {
+        try {
+            $cxn = $this->openDB();
+
+            $sql = "UPDATE PostTable SET PostTable.Hidden = 0 WHERE PostTable.PostID = :postID";
+            $handle_sql = $cxn->prepare($sql);
+
+            $handle_sql->bindValue(":postID", $postID);
+            $handle_sql->execute();
+            $cnx = $this->closeDB();
+
+            return "200";
+        } catch (\PDOException $err) {
+            print($err->getMessage());
+        }
+    }
+
+    function deletePost($postID)
+    {
+        try {
+            $cxn = $this->openDB();
+
+            $sql = "UPDATE PostTable SET PostTable.Deleted = 1 WHERE PostTable.PostID = :postID";
+            $handle_sql = $cxn->prepare($sql);
+
+            $handle_sql->bindValue(":postID", $postID);
+            $handle_sql->execute();
+            $cnx = $this->closeDB();
+
+            return "200";
+        } catch (\PDOException $err) {
+            print($err->getMessage());
+        }
     }
 }

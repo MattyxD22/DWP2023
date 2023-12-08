@@ -73,25 +73,18 @@ $users = [""];
                         include("../views/editUserInfo.php");
                 ?>
             </section>
-        </section>
-    
-        <section class="p-4 gap-2 profile_content" data-type="2">
-            <?php 
-                include("../views/updateRules.php");
-            ?>
-        </section>
 
-        <section class="p-4 gap-2 profile_content" data-type="3">
-            <?php 
+            <section class="p-4 gap-2 profile_content" data-type="3">
+                <?php
                 include("../views/updateContact.php");
-            ?>
-        </section>
+                ?>
+            </section>
 
-        <section class="p-4 gap-2 profile_content" data-type="4">
-            <?php 
+            <section class="p-4 gap-2 profile_content" data-type="4">
+                <?php
                 include("../views/updateDescription.php");
-            ?>
-        </section>
+                ?>
+            </section>
 
         <?php
         }
