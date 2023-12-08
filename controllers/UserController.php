@@ -204,6 +204,13 @@ class UserController
         return $followingUser;
     }
 
+    function fetchBlockedUsers($userID) {
+        global $userModel;
+
+        $blockedUsers = $userModel->fetchBlockedUsers($userID);
+        return $blockedUsers;
+    }
+
     function fetchUserProfilePicture($userID) {
         global $userModel;
 

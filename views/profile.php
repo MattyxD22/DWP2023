@@ -25,6 +25,7 @@ $userDislikes = $userController->fetchDislikes($userID);
 $userComments = $userController->fetchUserComments($userID);
 $userReposts = $userController->fetchReposts($userID);
 $userFollowing = $userController->fetchFollowingUsers($userID);
+$usersBlocked = $userController->fetchBlockedUsers($userID);
 $userProfilePicture = $userController->fetchUserProfilePicture($userID);
 ?>
 
@@ -123,6 +124,21 @@ $userProfilePicture = $userController->fetchUserProfilePicture($userID);
                     <!-- <span class="tab_first_text me-2">Your</span> -->
                     <span>Following</span>
                 </div>
+
+
+                
+                <?php
+                    if (!isset($_GET['userid']) || $_SESSION['UserID'] == $userID) {
+                ?>
+                    <div class="tab_elem" data-type="7">
+                        <!-- <span class="tab_first_text me-2">Your</span> -->
+                        <span>Blocked</span>
+                    </div>
+                <?php
+                    }
+                ?>
+
+                
 
 
             </div>
@@ -262,6 +278,21 @@ $userProfilePicture = $userController->fetchUserProfilePicture($userID);
                             $lname = $user["LName"];
 
                             include("./userCard.php");
+                        }
+                    ?>
+                </div>
+            </div>
+
+            <div class="profile_content" data-type="7">
+                <div class="flex flex-wrap gap-4 p-8">
+                    <?php
+                        foreach($usersBlocked as $key => $user) {
+                            $userID = $user["UserID"];
+                            $username = $user["Username"];
+                            $fname = $user["FName"];
+                            $lname = $user["LName"];
+
+                             include("./userCard.php");
                         }
                     ?>
                 </div>

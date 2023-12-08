@@ -379,6 +379,21 @@ class UserModel extends BaseModel
         }
     }
 
+    function fetchBlockedUsers($userID) {
+        try {
+            $cxn = $this->openDB();
+            $sql = "CALL GetBlockedUsers(:userID);";
+            $query = $cxn->prepare($sql);
+            $query->bindParam(":userID", $userID);
+            $query->execute();
+            $blockedUsers = $query->fetchAll(\PDO::FETCH_ASSOC);
+            $cxn = $this->closeDB();
+            return $blockedUsers;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
     function fetchUserProfilePicture($userID) {
         try {
             $cxn = $this->openDB();

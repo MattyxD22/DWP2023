@@ -691,6 +691,18 @@ DELIMITER ;
 
 DELIMITER //
 
+CREATE PROCEDURE GetBlockedUsers(IN user_id INT)
+BEGIN
+    SELECT u.UserID, u.Username, u.FName, u.LName, u.Email
+    FROM UserTable u
+    INNER JOIN BlockedTable b ON u.UserID = b.BlockedID
+    WHERE b.UserID = user_id;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
 CREATE PROCEDURE GetMediaImgDataByUserID(IN _UserID INT)
 BEGIN
     SELECT MediaTable.ImgData
@@ -718,6 +730,9 @@ BEGIN
     ELSE
         INSERT INTO BlockedTable (UserID, BlockedID)
         VALUES (userID, blockedUserID);
+
+        DELETE FROM FollowingTable
+        WHERE UserID = userID AND FollowingID = blockedUserID;
     END IF;
 END //
 
