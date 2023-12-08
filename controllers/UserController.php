@@ -54,6 +54,18 @@ switch ($action) {
         $email = $_POST["email"];
         $username = $_POST["username"];
         $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+        $recaptcha = $_POST['g-recaptcha-response'];
+        $secret_key = CAPTCHA_SECRET_KEY;
+        $url = 'https://www.google.com/recaptcha/api/siteverify?secret='
+          . $secret_key . '&response=' . $recaptcha;  
+          $response = file_get_contents($url); 
+          $response = json_decode($response); 
+          if ($response->success == true) { 
+            echo '<script>alert("Google reCAPTACHA verified")</script>'; 
+        } else { 
+            echo '<script>alert("Error in Google reCAPTACHA")</script>'; 
+            return;
+        } 
         $userModel->create($username, $email, $password);
         break;
     case "login":
@@ -108,6 +120,10 @@ switch ($action) {
     case "followUser":
         $userIDToFollow = $_POST["userID"];
         $userModel->followUser($userIDToFollow);
+        break;
+    case "blockUser":
+        $userIDToBlock = $_POST["userID"];
+        $userModel->blockUser($userIDToBlock);
         break;
 }
 
@@ -186,6 +202,27 @@ class UserController
 
         $followingUser = $userModel->fetchFollowingUsers($userID);
         return $followingUser;
+    }
+
+    function fetchBlockedUsers($userID) {
+        global $userModel;
+
+        $blockedUsers = $userModel->fetchBlockedUsers($userID);
+        return $blockedUsers;
+    }
+
+    function fetchUserProfilePicture($userID) {
+        global $userModel;
+
+        $profilePicture = $userModel->fetchUserProfilePicture($userID);
+        return $profilePicture;
+    }
+
+    function fecthIsUserBlocked($userID) {
+        global $userModel;
+
+        $isUserBlocked = $userModel->fecthIsUserBlocked($userID);
+        return $isUserBlocked;
     }
 
     // function fetchReposts($userID)

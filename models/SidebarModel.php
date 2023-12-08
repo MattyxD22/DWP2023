@@ -89,7 +89,7 @@ class SidebarModel extends BaseModel
                 $result["Images"] = [];
 
                 // Fetch all images associated with the current post
-                $query2 = "SELECT mediatable.ImgData FROM mediatable WHERE mediatable.PostID = :PostID ORDER BY mediatable.PostID;";
+                $query2 = "SELECT MediaTable.ImgData FROM MediaTable WHERE MediaTable.PostID = :PostID ORDER BY MediaTable.PostID;";
                 $handle_getFeed = $cxn->prepare($query2);
                 $handle_getFeed->bindParam(":PostID", $result["PostID"]);
                 $handle_getFeed->execute();
@@ -128,9 +128,10 @@ class SidebarModel extends BaseModel
 
             foreach ($results as $key => $category) {
 
-                $getPosts = "CALL getPostsInCategory(:CategoryID)";
+                $getPosts = "CALL getPostsInCategory(:CategoryID, :userID)";
                 $handle_getPosts = $cxn->prepare($getPosts);
                 $handle_getPosts->bindValue(":CategoryID", $category["CategoryID"]);
+                $handle_getPosts->bindValue(":userID", $_SESSION["UserID"]);
                 $handle_getPosts->execute();
                 $post = $handle_getPosts->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -144,6 +145,9 @@ class SidebarModel extends BaseModel
                         'Username' => $postVal['Username'],
                         'Likes' => $postVal['Likes'],
                         'Dislikes' => $postVal['Dislikes'],
+                        'Username' => $postVal['Username'],
+                        'UserLike' => $postVal['UserLike'],
+                        'UserDislike' => $postVal['UserDislike'],
                         'Comments' => $postVal['Comments'],
                         'ImgData' => $postVal['ImgData'],
                     ]);
@@ -153,8 +157,9 @@ class SidebarModel extends BaseModel
                 $handle_getPosts->closeCursor();
             }
 
-            $getUncatorized = "CALL getUncatorizedPosts()";
+            $getUncatorized = "CALL getUncatorizedPosts(:userID)";
             $handle_getUncatorized = $cxn->prepare($getUncatorized);
+            $handle_getUncatorized->bindValue(":userID", $_SESSION["UserID"]);
             $handle_getUncatorized->execute();
             $resultsUncatorized = $handle_getUncatorized->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -182,7 +187,7 @@ class SidebarModel extends BaseModel
 
             $handle_request->closeCursor();
 
-            $aboutsql = "SELECT * FROM abouttable LIMIT 1";
+            $aboutsql = "SELECT * FROM AboutTable LIMIT 1";
             $prep = $cnx->prepare($aboutsql);
             $prep->execute();
             $aboutDescription = $prep->fetch(\PDO::FETCH_ASSOC);

@@ -25,12 +25,27 @@ $userDislikes = $userController->fetchDislikes($userID);
 $userComments = $userController->fetchUserComments($userID);
 $userReposts = $userController->fetchReposts($userID);
 $userFollowing = $userController->fetchFollowingUsers($userID);
+$usersBlocked = $userController->fetchBlockedUsers($userID);
+$userProfilePicture = $userController->fetchUserProfilePicture($userID);
+$isUserBlocked = $userController->fecthIsUserBlocked($userID);
 ?>
 
 <article class="text-white profile_page">
     <section class="flex w-full justify-around relative border-b border-red-600 border-solid py-10 flex-wrap">
+
+
         <div class="flex justify-center items-center gap-8">
-            <div class="bg-red-600 rounded-full w-14 h-14"></div>
+            <?php
+            if (isset($userProfilePicture["ImgData"])) {
+            ?>
+                <img class="object-contain w-14 h-14 rounded-full" src="data:image/jpeg;base64,<?php echo base64_encode($userProfilePicture["ImgData"]); ?>">
+            <?php
+            } else {
+            ?>
+                <i class="bi bi-person-circle text-4xl"></i>
+            <?php
+            }
+            ?>
             <h1><?= htmlspecialchars($username) ?></h1>
         </div>
         <div class="flex flex-row">
@@ -54,12 +69,18 @@ $userFollowing = $userController->fetchFollowingUsers($userID);
                 <button type="button" class="std_button followUnfollowBtn" data-userid="<?php echo $userID ?>">
                     <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
                 </button>
+                <button type="button" class="std_button blockUnblockButton" data-userid="<?php echo $userID ?>">
+                    <span class="createPost_Span text-2xl font-bold text-red-600">Block</span>
+                </button>
             </div>
         <?php
         } else {
         ?>
             <button type="button" class="std_button opacity-0">
                 <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
+            </button>
+            <button type="button" class="std_button opacity-0">
+                <span class="createPost_Span text-2xl font-bold text-red-600">Block</span>
             </button>
             </div>
         <?php
@@ -106,37 +127,83 @@ $userFollowing = $userController->fetchFollowingUsers($userID);
                 </div>
 
 
+
+                <?php
+                if (!isset($_GET['userid']) || $_SESSION['UserID'] == $userID) {
+                ?>
+                    <div class="tab_elem" data-type="7">
+                        <!-- <span class="tab_first_text me-2">Your</span> -->
+                        <span>Blocked</span>
+                    </div>
+                <?php
+                }
+                ?>
+
+
+
+
             </div>
 
             <div class="profile_content selected" data-type="1">
+                <?php
+                if ($isUserBlocked) {
+                    include("./userIsBlocked.php");
+                }
+                ?>
 
                 <div class="grid grid-cols-3 gap-4 p-8 ">
 
                     <?php
-                         foreach ($userPosts as $key => $post) {
-                            // Set variables with the information from the current post
-                            $title = $post['Title']; // Assuming 'Title' is the correct key
-                            $description = $post['Description']; // And so on for other variables
-                            $img = ""; //$post["ImgData"];
-                            $postID = $post["PostID"];
-                            $likesAmount = $post["Likes"];
-                            $userLike = $post["UserLike"];
-                            $userDislike = $post["UserDislike"];
-                            $dislikesAmount = $post["Dislikes"];
-                            $repostAmount = $post["Reposts"];
-                            $userReposted = $post["UserReposted"];
-                            // Now include the profileItem.php file, which will use the variables above
-                            include('./profileItem.php');
+                    foreach ($userPosts as $post) {
+                        if ($isUserBlocked) {
+                            break;
                         }
+
+                        if (!isset($post["PostID"])) {
+                            break;
+                        }
+
+                        // Set variables with the information from the current post
+                        $title = $post['Title']; // Assuming 'Title' is the correct key
+                        $description = $post['Description']; // And so on for other variables
+
+                        $img = "";
+                        //print_r($post);
+                        if (!empty($post["ImgData"])) {
+                            //print_r($post["ImgData"]);
+                            $img = $post["ImgData"];
+                        }
+
+
+                        $postID = $post["PostID"];
+
+                        $likesAmount = $post["Likes"];
+                        $userLike = $post["UserLike"];
+                        $userDislike = $post["UserDislike"];
+                        $dislikesAmount = $post["Dislikes"];
+                        $repostAmount = $post["Reposts"];
+                        $userReposted = $post["UserReposted"];
+
+                        // Now include the profileItem.php file, which will use the variables above
+                        include('./profileItem.php');
+                    }
                     ?>
                 </div>
             </div>
 
             <div class="profile_content" data-type="2">
+                <?php
+                if ($isUserBlocked) {
+                    include("./userIsBlocked.php");
+                }
+                ?>
                 <div class="grid grid-cols-3 gap-4 p-8 ">
 
                     <?php
                     foreach ($userLikes as $key => $like) {
+                        if ($isUserBlocked) {
+                            break;
+                        }
                         // Set variables with the information from the current post
                         $title = $like['Title']; // Assuming 'Title' is the correct key
                         $description = $like['Description']; // And so on for other variables
@@ -159,10 +226,18 @@ $userFollowing = $userController->fetchFollowingUsers($userID);
             </div>
 
             <div class="profile_content" data-type="3">
+                <?php
+                if ($isUserBlocked) {
+                    include("./userIsBlocked.php");
+                }
+                ?>
                 <div class="grid grid-cols-3 gap-4 p-8 ">
 
                     <?php
                     foreach ($userDislikes as $key => $dislike) {
+                        if ($isUserBlocked) {
+                            break;
+                        }
                         // Set variables with the information from the current post
                         $title = $dislike['Title']; // Assuming 'Title' is the correct key
                         $description = $dislike['Description']; // And so on for other variables
@@ -185,22 +260,30 @@ $userFollowing = $userController->fetchFollowingUsers($userID);
             </div>
 
             <div class="profile_content" data-type="4">
-                <div class="grid grid-cols-1 gap-4 p-8 ">
+                <?php
+                if ($isUserBlocked) {
+                    include("./userIsBlocked.php");
+                }
+                ?>
+                <div class="grid grid-cols-1 gap-4 p-8  w-full">
 
                     <?php
                     foreach ($userComments as $key => $comment) {
+                        if ($isUserBlocked) {
+                            break;
+                        }
                         // Set variables with the information from the current post
                         $title = ""; //$comment['Title']; // Assuming 'Title' is the correct key
                         $description = $comment['Description']; // And so on for other variables
                         //$img = $comment["ImgData"];
 
                         $postID = $comment["PostID"];
-                        $likesAmount = $comment["Likes"];
-                        $userLike = $comment["UserLike"];
-                        $userDislike = $comment["UserDislike"];
-                        $dislikesAmount = $comment["Dislikes"];
-                        $repostAmount = $comment["Reposts"];
-                        $userReposted = $comment["UserReposted"];
+                        // $likesAmount = $comment["Likes"];
+                        // $userLike = $comment["UserLike"];
+                        // $userDislike = $comment["UserDislike"];
+                        // $dislikesAmount = $comment["Dislikes"];
+                        // $repostAmount = $comment["Reposts"];
+                        // $userReposted = $comment["UserReposted"];
 
                         // Now include the profileItem.php file, which will use the variables above
                         include('./profileComments.php');
@@ -211,10 +294,17 @@ $userFollowing = $userController->fetchFollowingUsers($userID);
             </div>
 
             <div class="profile_content" data-type="5">
+                <?php
+                if ($isUserBlocked) {
+                    include("./userIsBlocked.php");
+                }
+                ?>
                 <div class="grid grid-cols-3 gap-4 p-8">
-                    <?php 
-                    
+                    <?php
                     foreach ($userReposts as $key => $repost) {
+                        if ($isUserBlocked) {
+                            break;
+                        }
                         $title = $repost["Title"];
                         $description = $repost["Description"];
                         $img = $repost["ImgData"];
@@ -234,16 +324,39 @@ $userFollowing = $userController->fetchFollowingUsers($userID);
             </div>
 
             <div class="profile_content" data-type="6">
+                <?php
+                if ($isUserBlocked) {
+                    include("./userIsBlocked.php");
+                }
+                ?>
                 <div class="flex flex-wrap gap-4 p-8">
                     <?php
-                        foreach($userFollowing as $key => $user) {
-                            $userID = $user["UserID"];
-                            $username = $user["Username"];
-                            $fname = $user["FName"];
-                            $lname = $user["LName"];
-
-                            include("./userCard.php");
+                    foreach ($userFollowing as $key => $user) {
+                        if ($isUserBlocked) {
+                            break;
                         }
+                        $userID = $user["UserID"];
+                        $username = $user["Username"];
+                        $fname = $user["FName"];
+                        $lname = $user["LName"];
+
+                        include("./userCard.php");
+                    }
+                    ?>
+                </div>
+            </div>
+
+            <div class="profile_content" data-type="7">
+                <div class="flex flex-wrap gap-4 p-8">
+                    <?php
+                    foreach ($usersBlocked as $key => $user) {
+                        $userID = $user["UserID"];
+                        $username = $user["Username"];
+                        $fname = $user["FName"];
+                        $lname = $user["LName"];
+
+                        include("./userCard.php");
+                    }
                     ?>
                 </div>
             </div>

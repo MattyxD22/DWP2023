@@ -12,7 +12,7 @@ $users = [""];
 
         <?php
         if (isset($_SESSION["isAdmin"]) && $_SESSION["isAdmin"] == 1) {
-            $users = AdminController::fetchUsers($_SESSION["UserID"]);
+            $users = $adminController->fetchUsers($_SESSION["UserID"]);
         ?>
             <div class="profile_tab_container admin px-1 pt-2 flex flex-row w-full justify-between h-24">
                 <div class="tab_elem admin selected" data-type="1">
@@ -70,43 +70,21 @@ $users = [""];
                     </script>
 
                     <?php
-                    echo '
-                    <section class="flex flex-col px-4 gap-2">
-                        <span>Change Email</span>
-                        <input type="text" id="NewEmail" class="newEmail text-red-600">
-                    </section>
-
-                    <section class="flex flex-col px-4 gap-2">
-                        <span>Change Password</span>
-                        <input type="password" id="newPassword" class="newPassword text-red-600">
-                    </section>
-
-                    <section class="flex justify-center">
-                        <button type="button" class="std_button updateUserBtn">
-                                <span class="createPost_Span text-2xl font-bold text-red-600">Save</span>
-                        </button>
-                    </section>';
+                        include("../views/editUserInfo.php");
                 ?>
             </section>
-        </section>
-    
-        <section class="p-4 gap-2 profile_content" data-type="2">
-            <?php 
-                include("../views/updateRules.php");
-            ?>
-        </section>
 
-        <section class="p-4 gap-2 profile_content" data-type="3">
-            <?php 
+            <section class="p-4 gap-2 profile_content" data-type="3">
+                <?php
                 include("../views/updateContact.php");
-            ?>
-        </section>
+                ?>
+            </section>
 
-        <section class="p-4 gap-2 profile_content" data-type="4">
-            <?php 
+            <section class="p-4 gap-2 profile_content" data-type="4">
+                <?php
                 include("../views/updateDescription.php");
-            ?>
-        </section>
+                ?>
+            </section>
 
         <?php
         }
@@ -115,22 +93,7 @@ $users = [""];
 
         <?php
         if (!isset($_SESSION["isAdmin"]) || $_SESSION["isAdmin"] != 1) {
-            echo '
-                    <section class="flex flex-col px-4 gap-2">
-                        <span>Change Email</span>
-                        <input type="text" id="NewEmail" class="newEmail text-red-600">
-                    </section>
-
-                    <section class="flex flex-col px-4 gap-2">
-                        <span>Change Password</span>
-                        <input type="password" id="newPassword" class="newPassword text-red-600">
-                    </section>
-
-                    <section class="flex justify-center">
-                        <button type="button" class="std_button updateUserBtn">
-                                <span class="createPost_Span text-2xl font-bold text-red-600">Save</span>
-                        </button>
-                    </section>';
+            include("../views/editUserInfo.php");
         }
         ?>
 

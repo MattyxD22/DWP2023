@@ -14,9 +14,12 @@ if ($_POST) {
 } else if ($_GET) {
     // retrieve action parameter from _GET requests
     $action = $_GET["action"];
+} else if ($_FILES) {
+    // retrieve action parameter from _GET requests
+    $action = $_FILES["action"];
 } else {
     // debug/test
-    $action = "none";
+    $action = 'none';
 }
 
 if (session_status() == PHP_SESSION_NONE) {
@@ -25,20 +28,33 @@ if (session_status() == PHP_SESSION_NONE) {
 
 switch ($action) {
     case "updateUser":
+        $isAdmin = false;
         if (isset($_POST["user"])) {
             $userObj = json_decode($_POST["user"], true); // Decodes the JSON string into an associative array
-            var_dump($userObj);
             echo $userObj['UserID'];
             $userID = is_object($userObj) ? $userObj->UserID : $userObj['UserID']; // Extract UserID
+            $isAdmin = true;
         } else {
-            var_dump($_POST);
             $userID = $_SESSION["UserID"]; // Fall back to the session UserID
+        }
+
+        $file_content = '';
+
+        if (isset($_FILES['file'])) {
+            $file = $_FILES['file']['tmp_name'];
+            $file_content = file_get_contents($file);
         }
 
         $userBan = $_POST["userBan"];
         $userNewEmail = $_POST["userNewEmail"];
         $userNewPassword = password_hash($_POST["userNewPassword"], PASSWORD_DEFAULT);
-        $result = $adminModel2->updateUser($userID, $userBan, $userNewEmail, $userNewPassword);
+        // $userNewImage = $_POST["userNewImage"];
+        if ($isAdmin == true) {
+            $result = $adminModel2->updateUserAdmin($userID, $userBan, $userNewEmail, $userNewPassword, $file_content);
+        } else {
+            $result = $adminModel2->updateUser($userID, $userNewEmail, $userNewPassword, $file_content);
+        }
+        
 
         // return $adminModel2->createComment($postID, $comment, $userID);
         break;
