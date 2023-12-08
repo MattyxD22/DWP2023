@@ -121,6 +121,10 @@ switch ($action) {
         $userIDToFollow = $_POST["userID"];
         $userModel->followUser($userIDToFollow);
         break;
+    case "blockUser":
+        $userIDToBlock = $_POST["userID"];
+        $userModel->blockUser($userIDToBlock);
+        break;
 }
 
 class UserController

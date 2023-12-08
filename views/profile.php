@@ -67,6 +67,9 @@ $userProfilePicture = $userController->fetchUserProfilePicture($userID);
                 <button type="button" class="std_button followUnfollowBtn" data-userid="<?php echo $userID ?>">
                     <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
                 </button>
+                <button type="button" class="std_button blockUnblockButton" data-userid="<?php echo $userID ?>">
+                    <span class="createPost_Span text-2xl font-bold text-red-600">Block</span>
+                </button>
             </div>
         <?php
         } else {
@@ -74,6 +77,9 @@ $userProfilePicture = $userController->fetchUserProfilePicture($userID);
             <button type="button" class="std_button opacity-0">
                 <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
             </button>
+            <button type="button" class="std_button opacity-0">
+                    <span class="createPost_Span text-2xl font-bold text-red-600">Block</span>
+                </button>
             </div>
         <?php
         }

@@ -63,6 +63,14 @@ CREATE TABLE FollowingTable (
     FOREIGN KEY(FollowingID) REFERENCES UserTable(UserID)
 ) ENGINE = INNODB;
 
+CREATE TABLE BlockedTable (
+    ID INT(11) AUTO_INCREMENT PRIMARY KEY,
+    UserID INT(11),
+    BlockedID INT(11),
+    FOREIGN KEY(UserID) REFERENCES UserTable(UserID),
+    FOREIGN KEY(BlockedID) REFERENCES UserTable(UserID)
+) ENGINE = INNODB;
+
 
 CREATE TABLE LikesTable(
     ID INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -689,6 +697,28 @@ BEGIN
     FROM UserTable
     JOIN MediaTable ON UserTable.MediaID = MediaTable.MediaID
     WHERE UserTable.UserID = _UserID;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE BlockUnblockUser(IN userID INT, IN blockedUserID INT)
+BEGIN
+    DECLARE entryExists BOOLEAN DEFAULT FALSE;
+
+    SELECT EXISTS(
+        SELECT 1 FROM BlockedTable
+        WHERE UserID = userID AND BlockedID = blockedUserID
+    ) INTO entryExists;
+
+    IF entryExists THEN
+        DELETE FROM BlockedTable
+        WHERE UserID = userID AND BlockedID = blockedUserID;
+    ELSE
+        INSERT INTO BlockedTable (UserID, BlockedID)
+        VALUES (userID, blockedUserID);
+    END IF;
 END //
 
 DELIMITER ;

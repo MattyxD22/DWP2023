@@ -362,6 +362,23 @@ class UserModel extends BaseModel
         }
     }
 
+    function blockUser($userID) {
+        try {
+            $currentUser = $_SESSION["UserID"];
+
+            $cxn = $this->openDB();
+            $sql = "CALL BlockUnblockUser(:userID, :userToBlock)";
+            $query = $cxn->prepare($sql);
+            $query->bindValue(":userID", $currentUser);
+            $query->bindValue(":userToBlock", $userID);
+            $query->execute();
+            $cxn = $this->closeDB();
+
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
     function fetchUserProfilePicture($userID) {
         try {
             $cxn = $this->openDB();

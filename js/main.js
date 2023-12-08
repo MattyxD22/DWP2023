@@ -586,6 +586,7 @@ $(document).ready(function () {
     });
   });
 
+  //Follow/unfollow
   $(document).on("click", ".followUnfollowBtn", function (e) {
     e.stopPropagation();
     e.preventDefault();
@@ -594,6 +595,27 @@ $(document).ready(function () {
 
     const data = {
       action: "followUser",
+      userID: userID,
+    };
+
+   $.ajax({
+      url: url_user,
+      type: "POST",
+      data: data,
+    }).done(function (data) {
+      console.log(data);
+    });
+  });
+
+  //Block/unblock
+  $(document).on("click", ".blockUnblockButton", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const userID = $(this).data("userid");
+
+    const data = {
+      action: "blockUser",
       userID: userID,
     };
 
