@@ -271,7 +271,7 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
                         // Set variables with the information from the current post
                         $title = ""; //$comment['Title']; // Assuming 'Title' is the correct key
                         $description = $comment['Description']; // And so on for other variables
-                        $img = $comment["ImgData"];
+                        //$img = $comment["ImgData"];
 
                         $postID = $comment["PostID"];
                         // $likesAmount = $comment["Likes"];
