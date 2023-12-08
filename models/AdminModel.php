@@ -138,28 +138,56 @@ class AdminModel extends BaseModel
 
     function updateUserAdmin($userID, $userBan, $userNewEmail, $userNewPassword, $userNewImage) {
         try {  
+
             if (!empty($userNewImage)) {
                 $newMediaID = $this->uploadUserImage($userNewImage);
             } else {
                 $newMediaID = "";
             }
 
-            var_dump($newMediaID);
-
             $cxn = $this->openDB();
-            $sql = "UPDATE UserTable
-                    SET Banned = COALESCE(:userBan, Banned),
-                        Email = COALESCE(NULLIF(:userNewEmail, ''), Email),
-                        Password = COALESCE(NULLIF(:userNewPassword, ''), Password),
-                        MediaID = COALESCE(NULLIF(:mediaID, ''), MediaID)
-                    WHERE UserID = :userID;";
-            $query = $cxn->prepare($sql);
-            $query->bindParam(':userID', $userID);
-            $query->bindParam(':userBan', $userBan);
-            $query->bindParam(':userNewEmail', $userNewEmail);
-            $query->bindParam(':userNewPassword', $userNewPassword);
-            $query->bindParam(':mediaID', $newMediaID);
-            $query->execute();
+
+            if (isset($userNewPassword)) {
+                $sql = "UPDATE UserTable
+                        SET Password = :newPassword
+                    WHERE UserID = :userID";
+                $query = $cxn->prepare($sql);
+                $query->bindValue(":newPassword", $userNewPassword);
+                $query->bindValue(':userID', $userID);
+                $query->execute();
+            }
+
+            if (isset($userBan)) {
+                $sql = "UPDATE UserTable
+                        SET Banned = :userBan
+                    WHERE UserID = :userID";
+                $query = $cxn->prepare($sql);
+                $query->bindValue(":userBan", $userBan);
+                $query->bindValue(':userID', $userID);
+                $query->execute();
+            }
+
+            if (!empty($userNewEmail)) {
+                echo "we in";
+                $sql = "UPDATE UserTable
+                        SET Email = :userNewEmail
+                    WHERE UserID = :userID";
+                $query = $cxn->prepare($sql);
+                $query->bindValue(":userNewEmail", $userNewEmail);
+                $query->bindValue(':userID', $userID);
+                $query->execute();
+            }
+
+            if (isset($newMediaID)) {
+                $sql = "UPDATE UserTable
+                        SET MediaID = :mediaID
+                    WHERE UserID = :userID";
+                $query = $cxn->prepare($sql);
+                $query->bindValue(":mediaID", $newMediaID);
+                $query->bindValue(':userID', $userID);
+                $query->execute();
+            }
+
             $cxn = $this->closeDB();
         } catch (\Exception $e) {
             print($e->getMessage());
@@ -167,43 +195,6 @@ class AdminModel extends BaseModel
             return false;
         }
 
-    }
-
-    function updateUser($userID, $userNewEmail, $userNewPassword, $userNewImage)
-    {
-        try {
-
-            if (!empty($userNewImage)) {
-                $newMediaID = $this->uploadUserImage($userNewImage);
-            } else {
-                $newMediaID = "";
-            }
-
-            $cxn = $this->openDB();
-            $query = $cxn->prepare("UPDATE UserTable
-                                    SET Email = COALESCE(NULLIF(:userNewEmail, ''), Email),
-                                        Password = COALESCE(NULLIF(:userNewPassword, ''), Password),
-                                        MediaID = COALESCE(NULLIF(:mediaID, ''), MediaID)
-                                    WHERE UserID = :userID;");
-
-            // Bind the parameters
-            $query->bindParam(':userID', $userID);
-            $query->bindParam(':userNewEmail', $userNewEmail);
-            $query->bindParam(':userNewPassword', $userNewPassword);
-            $query->bindParam(':mediaID', $newMediaID);
-            $query->execute();
-            if ($query->rowCount() > 0) {
-                $cnx = $this->closeDB();
-                return true;
-            } else {
-                $cnx = $this->closeDB();
-                return false;
-            }
-        } catch (\Exception $e) {
-            print($e->getMessage());
-            $cnx = $this->closeDB();
-            return false;
-        }
     }
 
     function deleteRule($ruleID)

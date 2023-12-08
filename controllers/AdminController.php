@@ -47,13 +47,16 @@ switch ($action) {
 
         $userBan = $_POST["userBan"];
         $userNewEmail = $_POST["userNewEmail"];
-        $userNewPassword = password_hash($_POST["userNewPassword"], PASSWORD_DEFAULT);
-        // $userNewImage = $_POST["userNewImage"];
-        if ($isAdmin == true) {
-            $result = $adminModel2->updateUserAdmin($userID, $userBan, $userNewEmail, $userNewPassword, $file_content);
-        } else {
-            $result = $adminModel2->updateUser($userID, $userNewEmail, $userNewPassword, $file_content);
+        $userNewPassword = null;
+        if (isset($_POST["userNewPassword"])) {
+            $userNewPassword = password_hash($_POST["userNewPassword"], PASSWORD_DEFAULT);
         }
+
+
+
+
+        $result = $adminModel2->updateUserAdmin($userID, $userBan, $userNewEmail, $userNewPassword, $file_content);
+
         
 
         // return $adminModel2->createComment($postID, $comment, $userID);
