@@ -31,7 +31,11 @@ LEFT JOIN
 LEFT JOIN 
     MediaTable AS UserMedia ON UserTable.MediaID = UserMedia.MediaID
 WHERE 
-    PostTable.ParentID IS NULL 
+    PostTable.ParentID IS NULL AND
+        NOT EXISTS (
+            SELECT 1 FROM BlockedTable
+            WHERE BlockedTable.UserID = UserID AND BlockedTable.BlockedID = PostTable.CreatedBy
+        )
 ORDER BY 
     PostTable.CreatedDate DESC;";
 

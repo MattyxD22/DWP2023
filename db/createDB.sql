@@ -199,7 +199,11 @@ BEGIN
     LEFT JOIN 
         MediaTable AS UserMedia ON UserTable.MediaID = UserMedia.MediaID
     WHERE 
-        PostTable.ParentID IS NULL 
+        PostTable.ParentID IS NULL AND
+        NOT EXISTS (
+            SELECT 1 FROM BlockedTable
+            WHERE BlockedTable.UserID = UserID AND BlockedTable.BlockedID = PostTable.CreatedBy
+        )
     ORDER BY 
         PostTable.CreatedDate DESC;
 END //
@@ -381,8 +385,8 @@ DELIMITER //
 CREATE PROCEDURE getUncatorizedPosts()
 BEGIN 
 
-SELECT posttable.PostID, posttable.CreatedDate, posttable.CreatedBy, posttable.Title, usertable.Username, mediatable.ImgData, (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 2) AS 'Dislikes' FROM PostTable
-LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy
+SELECT posttable.PostID, posttable.CreatedDate, posttable.CreatedBy, posttable.Title, UserTable.Username, mediatable.ImgData, (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 2) AS 'Dislikes' FROM PostTable
+LEFT JOIN UserTable ON UserTable.UserID = posttable.CreatedBy
 LEFT JOIN mediatable ON mediatable.PostID = posttable.PostID
 WHERE posttable.CategoryID IS NULL;
 
@@ -531,8 +535,8 @@ DELIMITER //
 CREATE PROCEDURE fetchUserCommentsByID(IN UserID INT(11))
 BEGIN 
 
-SELECT DISTINCT posttable.PostID, posttable.ParentID, posttable.Description, posttable.CreatedDate, usertable.Username FROM posttable 
-LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy
+SELECT DISTINCT posttable.PostID, posttable.ParentID, posttable.Description, posttable.CreatedDate, UserTable.Username FROM posttable 
+LEFT JOIN UserTable ON UserTable.UserID = posttable.CreatedBy
 LEFT JOIN posttable p2 ON p2.ParentID = posttable.PostID
 WHERE posttable.ParentID IS NOT NULL AND posttable.CreatedBy = UserID
 
