@@ -31,7 +31,7 @@ LEFT JOIN
 LEFT JOIN 
     MediaTable AS UserMedia ON UserTable.MediaID = UserMedia.MediaID
 WHERE 
-    PostTable.ParentID IS NULL AND PostTable.Hidden = 0 AND PostTable.Deleted = 0 ORDER BY PostTable.CreatedDate DESC AND
+    PostTable.ParentID IS NULL AND PostTable.Hidden = 0 AND PostTable.Deleted = 0 AND
         NOT EXISTS (
             SELECT 1 FROM BlockedTable
             WHERE BlockedTable.UserID = UserID AND BlockedTable.BlockedID = PostTable.CreatedBy
