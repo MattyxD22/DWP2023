@@ -27,6 +27,7 @@ $userReposts = $userController->fetchReposts($userID);
 $userFollowing = $userController->fetchFollowingUsers($userID);
 $usersBlocked = $userController->fetchBlockedUsers($userID);
 $userProfilePicture = $userController->fetchUserProfilePicture($userID);
+$isUserBlocked = $userController->fecthIsUserBlocked($userID);
 ?>
 
 <article class="text-white profile_page">
@@ -144,11 +145,19 @@ $userProfilePicture = $userController->fetchUserProfilePicture($userID);
             </div>
 
             <div class="profile_content selected" data-type="1">
+                <?php
+                    if ($isUserBlocked) {
+                        include("./userIsBlocked.php");
+                    }
+                ?>
 
                 <div class="grid grid-cols-3 gap-4 p-8 ">
 
                     <?php
                          foreach ($userPosts as $key => $post) {
+                            if ($isUserBlocked) {
+                                break;
+                            }
                             // Set variables with the information from the current post
                             $title = $post['Title']; // Assuming 'Title' is the correct key
                             $description = $post['Description']; // And so on for other variables
@@ -168,10 +177,18 @@ $userProfilePicture = $userController->fetchUserProfilePicture($userID);
             </div>
 
             <div class="profile_content" data-type="2">
+                <?php
+                    if ($isUserBlocked) {
+                        include("./userIsBlocked.php");
+                    }
+                ?>
                 <div class="grid grid-cols-3 gap-4 p-8 ">
 
                     <?php
                     foreach ($userLikes as $key => $like) {
+                        if ($isUserBlocked) {
+                            break;
+                        }
                         // Set variables with the information from the current post
                         $title = $like['Title']; // Assuming 'Title' is the correct key
                         $description = $like['Description']; // And so on for other variables
@@ -194,10 +211,18 @@ $userProfilePicture = $userController->fetchUserProfilePicture($userID);
             </div>
 
             <div class="profile_content" data-type="3">
+                <?php
+                    if ($isUserBlocked) {
+                        include("./userIsBlocked.php");
+                    }
+                ?>
                 <div class="grid grid-cols-3 gap-4 p-8 ">
 
                     <?php
                     foreach ($userDislikes as $key => $dislike) {
+                        if ($isUserBlocked) {
+                            break;
+                        }
                         // Set variables with the information from the current post
                         $title = $dislike['Title']; // Assuming 'Title' is the correct key
                         $description = $dislike['Description']; // And so on for other variables
@@ -220,10 +245,18 @@ $userProfilePicture = $userController->fetchUserProfilePicture($userID);
             </div>
 
             <div class="profile_content" data-type="4">
+                <?php
+                    if ($isUserBlocked) {
+                        include("./userIsBlocked.php");
+                    }
+                ?>
                 <div class="grid grid-cols-1 gap-4 p-8 ">
 
                     <?php
                     foreach ($userComments as $key => $comment) {
+                        if ($isUserBlocked) {
+                            break;
+                        }
                         // Set variables with the information from the current post
                         $title = ""; //$comment['Title']; // Assuming 'Title' is the correct key
                         $description = $comment['Description']; // And so on for other variables
@@ -246,10 +279,17 @@ $userProfilePicture = $userController->fetchUserProfilePicture($userID);
             </div>
 
             <div class="profile_content" data-type="5">
+                <?php
+                    if ($isUserBlocked) {
+                        include("./userIsBlocked.php");
+                    }
+                ?>
                 <div class="grid grid-cols-3 gap-4 p-8">
                     <?php 
-                    
                     foreach ($userReposts as $key => $repost) {
+                        if ($isUserBlocked) {
+                            break;
+                        }
                         $title = $repost["Title"];
                         $description = $repost["Description"];
                         $img = $repost["ImgData"];
@@ -269,9 +309,17 @@ $userProfilePicture = $userController->fetchUserProfilePicture($userID);
             </div>
 
             <div class="profile_content" data-type="6">
+                <?php
+                    if ($isUserBlocked) {
+                        include("./userIsBlocked.php");
+                    }
+                ?>
                 <div class="flex flex-wrap gap-4 p-8">
                     <?php
                         foreach($userFollowing as $key => $user) {
+                            if ($isUserBlocked) {
+                                break;
+                            }
                             $userID = $user["UserID"];
                             $username = $user["Username"];
                             $fname = $user["FName"];

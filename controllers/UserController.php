@@ -218,6 +218,13 @@ class UserController
         return $profilePicture;
     }
 
+    function fecthIsUserBlocked($userID) {
+        global $userModel;
+
+        $isUserBlocked = $userModel->fecthIsUserBlocked($userID);
+        return $isUserBlocked;
+    }
+
     // function fetchReposts($userID)
     // {
     //     global $userModel;

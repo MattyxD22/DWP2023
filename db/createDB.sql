@@ -737,3 +737,15 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE GetIsUserBlocked(IN currentUserID INT, IN otherUserID INT, OUT isBlocked BOOLEAN)
+BEGIN
+    SELECT EXISTS(
+        SELECT 1 FROM BlockedTable
+        WHERE UserID = currentUserID AND BlockedID = otherUserID
+    ) INTO isBlocked;
+END //
+
+DELIMITER ;

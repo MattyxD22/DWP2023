@@ -394,6 +394,28 @@ class UserModel extends BaseModel
         }
     }
 
+    function fecthIsUserBlocked($userID) {
+        try {
+            $currentUser = $_SESSION["UserID"];
+            $cxn = $this->openDB();
+            $sql = "CALL GetIsUserBlocked(:userID, :isBlockedUser, @isBlocked);";
+            $query = $cxn->prepare($sql);
+            $query->bindParam(":userID", $currentUser);
+            $query->bindParam(":isBlockedUser", $userID);
+            $query->execute();
+
+            $sql = "SELECT @isBlocked AS isBlocked";
+            $query = $cxn->prepare($sql);
+            $query->execute();
+            $result = $query->fetch(\PDO::FETCH_ASSOC);
+            $isBlocked = $result['isBlocked'];
+            $cxn = $this->closeDB();
+            return $isBlocked;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
     function fetchUserProfilePicture($userID) {
         try {
             $cxn = $this->openDB();
