@@ -323,10 +323,22 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE getPostsInCategory(IN CategoryID INT(11))
+CREATE PROCEDURE getPostsInCategory(IN CategoryID INT(11), IN UserID INT(11))
 BEGIN 
 
-SELECT PostTable.PostID, PostTable.CreatedDate, PostTable.CreatedBy, PostTable.Title, UserTable.Username, (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 2) AS 'Dislikes', (SELECT COUNT(PostTable.Description) FROM PostTable WHERE PostTable.ParentID IS NOT NULL AND PostTable.PostID = CategoryPostTable.PostID) AS 'Comments', MediaTable.ImgData FROM CategoryTable
+SELECT 
+    PostTable.PostID, 
+    PostTable.CreatedDate, 
+    PostTable.CreatedBy, 
+    PostTable.Title, 
+    UserTable.Username, 
+    (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 1) AS 'Likes', 
+    (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 2) AS 'Dislikes', 
+    (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.UserID = UserID AND LikesTable.Type = 1) AS 'UserLike', 
+    (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.UserID = UserID AND LikesTable.Type = 2) AS 'UserDislike', 
+    (SELECT COUNT(PostTable.Description) FROM PostTable WHERE PostTable.ParentID IS NOT NULL AND PostTable.PostID = CategoryPostTable.PostID) AS 'Comments', 
+    MediaTable.ImgData 
+    FROM CategoryTable
 LEFT JOIN CategoryPostTable ON CategoryPostTable.CategoryID = CategoryTable.CategoryID
 LEFT JOIN PostTable ON PostTable.PostID = CategoryPostTable.PostID
 LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy
@@ -370,10 +382,21 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE getUncatorizedPosts()
+CREATE PROCEDURE getUncatorizedPosts(IN UserID INT(11))
 BEGIN 
 
-SELECT posttable.PostID, posttable.CreatedDate, posttable.CreatedBy, posttable.Title, usertable.Username, mediatable.ImgData, (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 2) AS 'Dislikes' FROM PostTable
+SELECT 
+    posttable.PostID, 
+    posttable.CreatedDate, 
+    posttable.CreatedBy, 
+    posttable.Title, 
+    usertable.Username, 
+    mediatable.ImgData, 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', 
+    (SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 2) AS 'Dislikes',
+    (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.UserID = UserID AND LikesTable.Type = 1) AS 'UserLike', 
+    (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.UserID = UserID AND LikesTable.Type = 2) AS 'UserDislike'
+    FROM PostTable
 LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy
 LEFT JOIN mediatable ON mediatable.PostID = posttable.PostID
 WHERE posttable.CategoryID IS NULL;
@@ -598,7 +621,7 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE GetReplyChain(p_postID INT)
+CREATE PROCEDURE GetReplyChain(p_postID INT, IN UserID INT(11))
 BEGIN
     -- Recursive common table expression to get post hierarchy
     WITH RECURSIVE PostHierarchyCTE AS (

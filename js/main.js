@@ -545,7 +545,7 @@ $(document).ready(function () {
 
     if (reply != "<p><br></p>") {
       let commentID = $(this).data("id");
-      let orgID = $(this).data("org-id") || 0; // Original post ID - cant remember what it does
+      let orgID = $(this).data("orgid") || 0; // Original post ID - cant remember what it does
 
       const data = {
         action: "createComment",
@@ -746,8 +746,8 @@ $(document).ready(function () {
     e.preventDefault();
 
     let elem = $(this); // put the event element into a variable, to be able to access it in the ajax request
-    let container = elem.closest(".actions_div");
-    let amount = container.find("likes_amount").html();
+    let container = elem.closest(".post_actions");
+    let amount = container.find(".likes_amount").data("amount");
     console.log(amount);
     let action = "addLike";
     let postID = $(this).data("id");
@@ -775,12 +775,22 @@ $(document).ready(function () {
       if ($(container).find(".action_like").hasClass("like")) {
         container.find(".action_like").removeClass("like");
         amount--;
-        container.find("likes_amount").html(amount);
+        container.find(".likes_amount").html(amount);
       } else {
         container.find(".action_like").addClass("like");
         amount++;
-        container.find("likes_amount").html(amount);
+        container.find(".likes_amount").html(amount);
+
+        if ($(container).find(".action_dislike").hasClass("dislike")) {
+          container.find(".action_dislike").removeClass("dislike");
+          const dislikeAmount =
+            container.find(".dislikes_amount").data("amount") - 1;
+
+          container.find(".dislikes_amount").html(dislikeAmount);
+          container.find(".dislikes_amount").data("amount", dislikeAmount);
+        }
       }
+      container.find(".likes_amount").data("amount", amount);
     });
   });
 
@@ -789,8 +799,8 @@ $(document).ready(function () {
     e.preventDefault();
 
     let elem = $(this); // put the event element into a variable, to be able to access it in the ajax request
-    let container = elem.closest(".actions_div");
-    let amount = parseInt(container.find("dislikes_amount").html());
+    let container = elem.closest(".post_actions");
+    let amount = parseInt(container.find(".dislikes_amount").html());
     let action = "addDislike";
     let postID = $(this).data("id");
 
@@ -812,14 +822,23 @@ $(document).ready(function () {
       data: data,
     }).done(function (data) {
       if ($(container).find(".action_dislike").hasClass("dislike")) {
-        container.removeClass("dislike");
+        container.find(".action_dislike").removeClass("dislike");
         amount--;
-        container.find("dislikes_amount").html(amount);
+        container.find(".dislikes_amount").html(amount);
       } else {
         container.find(".action_dislike").addClass("dislike");
         amount++;
-        container.find("dislikes_amount").html(amount);
+        container.find(".dislikes_amount").html(amount);
+
+        if ($(container).find(".action_like").hasClass("like")) {
+          container.find(".action_like").removeClass("like");
+          const likeAmount = container.find(".likes_amount").data("amount") - 1;
+
+          container.find(".likes_amount").html(likeAmount);
+          container.find(".likes_amount").data("amount", likeAmount);
+        }
       }
+      container.find(".dislikes_amount").data("amount", amount);
     });
   });
 

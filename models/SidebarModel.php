@@ -128,9 +128,10 @@ class SidebarModel extends BaseModel
 
             foreach ($results as $key => $category) {
 
-                $getPosts = "CALL getPostsInCategory(:CategoryID)";
+                $getPosts = "CALL getPostsInCategory(:CategoryID, :userID)";
                 $handle_getPosts = $cxn->prepare($getPosts);
                 $handle_getPosts->bindValue(":CategoryID", $category["CategoryID"]);
+                $handle_getPosts->bindValue(":userID", $_SESSION["UserID"]);
                 $handle_getPosts->execute();
                 $post = $handle_getPosts->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -144,6 +145,9 @@ class SidebarModel extends BaseModel
                         'Username' => $postVal['Username'],
                         'Likes' => $postVal['Likes'],
                         'Dislikes' => $postVal['Dislikes'],
+                        'Username' => $postVal['Username'],
+                        'UserLike' => $postVal['UserLike'],
+                        'UserDislike' => $postVal['UserDislike'],
                         'Comments' => $postVal['Comments'],
                         'ImgData' => $postVal['ImgData'],
                     ]);
@@ -153,8 +157,9 @@ class SidebarModel extends BaseModel
                 $handle_getPosts->closeCursor();
             }
 
-            $getUncatorized = "CALL getUncatorizedPosts()";
+            $getUncatorized = "CALL getUncatorizedPosts(:userID)";
             $handle_getUncatorized = $cxn->prepare($getUncatorized);
+            $handle_getUncatorized->bindValue(":userID", $_SESSION["UserID"]);
             $handle_getUncatorized->execute();
             $resultsUncatorized = $handle_getUncatorized->fetchAll(\PDO::FETCH_ASSOC);
 
