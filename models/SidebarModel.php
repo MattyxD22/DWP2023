@@ -89,7 +89,7 @@ class SidebarModel extends BaseModel
                 $result["Images"] = [];
 
                 // Fetch all images associated with the current post
-                $query2 = "SELECT mediatable.ImgData FROM mediatable WHERE mediatable.PostID = :PostID ORDER BY mediatable.PostID;";
+                $query2 = "SELECT MediaTable.ImgData FROM MediaTable WHERE MediaTable.PostID = :PostID ORDER BY MediaTable.PostID;";
                 $handle_getFeed = $cxn->prepare($query2);
                 $handle_getFeed->bindParam(":PostID", $result["PostID"]);
                 $handle_getFeed->execute();
@@ -187,7 +187,7 @@ class SidebarModel extends BaseModel
 
             $handle_request->closeCursor();
 
-            $aboutsql = "SELECT * FROM abouttable LIMIT 1";
+            $aboutsql = "SELECT * FROM AboutTable LIMIT 1";
             $prep = $cnx->prepare($aboutsql);
             $prep->execute();
             $aboutDescription = $prep->fetch(\PDO::FETCH_ASSOC);

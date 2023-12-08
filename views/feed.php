@@ -12,20 +12,20 @@ if (isset($_SESSION["UserID"])) {
 
     $userID = $_SESSION["UserID"];
 
-$query = "SELECT posttable.PostID, posttable.Title, posttable.Description, posttable.CreatedDate, usertable.Username, posttable.CreatedBy, mediaTable.ImgData, 
-(SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = posttable.PostID) AS 'Comments', 
-(SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', 
-(SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'Dislikes', 
-(SELECT COUNT(*) FROM likestable WHERE likestable.UserID = " . $userID . " AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', 
-(SELECT COUNT(*) FROM likestable WHERE likestable.UserID = " . $userID . " AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike',
-(SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = posttable.PostID) AS 'Reposts',
-(SELECT COUNT(*) FROM RepostTable WHERE RepostTable.UserID = UserID AND RepostTable.PostID = posttable.PostID) AS 'UserReposted',
-posttable.CreatedDate
-FROM posttable 
+    $query = "SELECT PostTable.PostID, PostTable.Title, PostTable.Description, PostTable.CreatedDate, UserTable.Username, PostTable.CreatedBy, MediaTable.ImgData, 
+(SELECT COUNT(*) FROM PostTable p2 WHERE p2.ParentID = PostTable.PostID) AS 'Comments', 
+(SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 1) AS 'Likes', 
+(SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 0) AS 'Dislikes', 
+(SELECT COUNT(*) FROM LikesTable WHERE LikesTable.UserID = " . $userID . " AND LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 1) AS 'UserLike', 
+(SELECT COUNT(*) FROM LikesTable WHERE LikesTable.UserID = " . $userID . " AND LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 0) AS 'UserDislike',
+(SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = PostTable.PostID) AS 'Reposts',
+(SELECT COUNT(*) FROM RepostTable WHERE RepostTable.UserID = UserID AND RepostTable.PostID = PostTable.PostID) AS 'UserReposted',
+PostTable.CreatedDate
+FROM PostTable 
 LEFT JOIN MediaTable ON MediaTable.PostID = PostTable.PostID 
-LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.ParentID IS NULL AND posttable.Hidden = 0 AND posttable.Deleted = 0 ORDER BY posttable.CreatedDate DESC";
+LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy WHERE PostTable.ParentID IS NULL AND PostTable.Hidden = 0 AND PostTable.Deleted = 0 ORDER BY PostTable.CreatedDate DESC";
 
-    //$query2 = "SELECT mediatable.ImgData FROM mediatable WHERE mediatable.PostID = ";
+    //$query2 = "SELECT MediaTable.ImgData FROM MediaTable WHERE MediaTable.PostID = ";
 
     //$db = mysqli_connect(DB_NAME, DB_USER, DB_PASS, DB_NAME) or die("error opening mysqli");
     $db_conn = mysqli_select_db($connection, DB_NAME);
@@ -37,7 +37,7 @@ LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.Pa
         $result["Images"] = [];
 
         // Fetch all images associated with the current post
-        $query2 = "SELECT mediatable.ImgData FROM mediatable WHERE mediatable.PostID = " . $result[0] . " ORDER BY mediatable.PostID;";
+        $query2 = "SELECT MediaTable.ImgData FROM MediaTable WHERE MediaTable.PostID = " . $result[0] . " ORDER BY MediaTable.PostID;";
         $data2 = mysqli_query($connection, $query2);
         $imgData = mysqli_fetch_all($data2);
 
@@ -72,7 +72,8 @@ LEFT JOIN usertable ON usertable.UserID = posttable.CreatedBy WHERE posttable.Pa
                 <?php include('../views/sideBar.php') ?>
             </div>
             <div class="feed_col w-full h-full flex flex-col overflow-y-auto py-3 px-3 state_col">
-                <?php foreach ($results as $key => $post) {
+                <?php
+                foreach ($results as $key => $post) {
 
 
 
