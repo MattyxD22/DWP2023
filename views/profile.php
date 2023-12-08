@@ -32,18 +32,18 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
 
 <article class="text-white profile_page">
     <section class="flex w-full justify-around relative border-b border-red-600 border-solid py-10 flex-wrap">
-        
-        
+
+
         <div class="flex justify-center items-center gap-8">
-            <?php 
+            <?php
             if (isset($userProfilePicture["ImgData"])) {
-                ?>
-            <img class="object-contain w-14 h-14 rounded-full" src="data:image/jpeg;base64,<?php echo base64_encode($userProfilePicture["ImgData"]); ?>">
-            <?php 
+            ?>
+                <img class="object-contain w-14 h-14 rounded-full" src="data:image/jpeg;base64,<?php echo base64_encode($userProfilePicture["ImgData"]); ?>">
+            <?php
             } else {
             ?>
-            <i class="bi bi-person-circle text-4xl"></i>
-            <?php 
+                <i class="bi bi-person-circle text-4xl"></i>
+            <?php
             }
             ?>
             <h1><?= htmlspecialchars($username) ?></h1>
@@ -80,8 +80,8 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
                 <span class="createPost_Span text-2xl font-bold text-red-600">Follow</span>
             </button>
             <button type="button" class="std_button opacity-0">
-                    <span class="createPost_Span text-2xl font-bold text-red-600">Block</span>
-                </button>
+                <span class="createPost_Span text-2xl font-bold text-red-600">Block</span>
+            </button>
             </div>
         <?php
         }
@@ -127,28 +127,28 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
                 </div>
 
 
-                
+
                 <?php
-                    if (!isset($_GET['userid']) || $_SESSION['UserID'] == $userID) {
+                if (!isset($_GET['userid']) || $_SESSION['UserID'] == $userID) {
                 ?>
                     <div class="tab_elem" data-type="7">
                         <!-- <span class="tab_first_text me-2">Your</span> -->
                         <span>Blocked</span>
                     </div>
                 <?php
-                    }
+                }
                 ?>
 
-                
+
 
 
             </div>
 
             <div class="profile_content selected" data-type="1">
                 <?php
-                    if ($isUserBlocked) {
-                        include("./userIsBlocked.php");
-                    }
+                if ($isUserBlocked) {
+                    include("./userIsBlocked.php");
+                }
                 ?>
 
                 <div class="grid grid-cols-3 gap-4 p-8 ">
@@ -156,6 +156,10 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
                     <?php
                     foreach ($userPosts as $post) {
                         if ($isUserBlocked) {
+                            break;
+                        }
+
+                        if (!isset($post["PostID"])) {
                             break;
                         }
 
@@ -189,9 +193,9 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
 
             <div class="profile_content" data-type="2">
                 <?php
-                    if ($isUserBlocked) {
-                        include("./userIsBlocked.php");
-                    }
+                if ($isUserBlocked) {
+                    include("./userIsBlocked.php");
+                }
                 ?>
                 <div class="grid grid-cols-3 gap-4 p-8 ">
 
@@ -223,9 +227,9 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
 
             <div class="profile_content" data-type="3">
                 <?php
-                    if ($isUserBlocked) {
-                        include("./userIsBlocked.php");
-                    }
+                if ($isUserBlocked) {
+                    include("./userIsBlocked.php");
+                }
                 ?>
                 <div class="grid grid-cols-3 gap-4 p-8 ">
 
@@ -257,9 +261,9 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
 
             <div class="profile_content" data-type="4">
                 <?php
-                    if ($isUserBlocked) {
-                        include("./userIsBlocked.php");
-                    }
+                if ($isUserBlocked) {
+                    include("./userIsBlocked.php");
+                }
                 ?>
                 <div class="grid grid-cols-1 gap-4 p-8  w-full">
 
@@ -291,12 +295,12 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
 
             <div class="profile_content" data-type="5">
                 <?php
-                    if ($isUserBlocked) {
-                        include("./userIsBlocked.php");
-                    }
+                if ($isUserBlocked) {
+                    include("./userIsBlocked.php");
+                }
                 ?>
                 <div class="grid grid-cols-3 gap-4 p-8">
-                    <?php 
+                    <?php
                     foreach ($userReposts as $key => $repost) {
                         if ($isUserBlocked) {
                             break;
@@ -321,20 +325,20 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
 
             <div class="profile_content" data-type="6">
                 <?php
-                    if ($isUserBlocked) {
-                        include("./userIsBlocked.php");
-                    }
+                if ($isUserBlocked) {
+                    include("./userIsBlocked.php");
+                }
                 ?>
                 <div class="flex flex-wrap gap-4 p-8">
                     <?php
-                        foreach($userFollowing as $key => $user) {
-                            if ($isUserBlocked) {
-                                break;
-                            }
-                            $userID = $user["UserID"];
-                            $username = $user["Username"];
-                            $fname = $user["FName"];
-                            $lname = $user["LName"];
+                    foreach ($userFollowing as $key => $user) {
+                        if ($isUserBlocked) {
+                            break;
+                        }
+                        $userID = $user["UserID"];
+                        $username = $user["Username"];
+                        $fname = $user["FName"];
+                        $lname = $user["LName"];
 
                         include("./userCard.php");
                     }
@@ -345,14 +349,14 @@ $isUserBlocked = $userController->fecthIsUserBlocked($userID);
             <div class="profile_content" data-type="7">
                 <div class="flex flex-wrap gap-4 p-8">
                     <?php
-                        foreach($usersBlocked as $key => $user) {
-                            $userID = $user["UserID"];
-                            $username = $user["Username"];
-                            $fname = $user["FName"];
-                            $lname = $user["LName"];
+                    foreach ($usersBlocked as $key => $user) {
+                        $userID = $user["UserID"];
+                        $username = $user["Username"];
+                        $fname = $user["FName"];
+                        $lname = $user["LName"];
 
-                             include("./userCard.php");
-                        }
+                        include("./userCard.php");
+                    }
                     ?>
                 </div>
             </div>
