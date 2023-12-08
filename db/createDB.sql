@@ -390,14 +390,14 @@ SELECT
     PostTable.CreatedDate, 
     PostTable.CreatedBy, 
     PostTable.Title, 
-    usertable.Username, 
+    UserTable.Username, 
     MediaTable.ImgData, 
     (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 1) AS 'Likes', 
     (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 2) AS 'Dislikes',
     (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.UserID = UserID AND LikesTable.Type = 1) AS 'UserLike', 
     (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.UserID = UserID AND LikesTable.Type = 2) AS 'UserDislike'
     FROM PostTable
-LEFT JOIN usertable ON usertable.UserID = PostTable.CreatedBy
+LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy
 LEFT JOIN MediaTable ON MediaTable.PostID = PostTable.PostID
 WHERE PostTable.CategoryID IS NULL;
 
@@ -546,8 +546,8 @@ DELIMITER //
 CREATE PROCEDURE fetchUserCommentsByID(IN UserID INT(11))
 BEGIN 
 
-SELECT DISTINCT PostTable.PostID, PostTable.ParentID, PostTable.Description, PostTable.CreatedDate, usertable.Username FROM PostTable 
-LEFT JOIN usertable ON usertable.UserID = PostTable.CreatedBy
+SELECT DISTINCT PostTable.PostID, PostTable.ParentID, PostTable.Description, PostTable.CreatedDate, UserTable.Username FROM PostTable 
+LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy
 LEFT JOIN PostTable p2 ON p2.ParentID = PostTable.PostID
 WHERE PostTable.ParentID IS NOT NULL AND PostTable.CreatedBy = UserID
 
@@ -631,7 +631,7 @@ BEGIN
             p.Description,
             p.CreatedDate,
             p.CreatedBy,
-            usertable.Username AS Username,
+            UserTable.Username AS Username,
             (SELECT COUNT(*) FROM LikesTable l WHERE l.PostID = p.PostID AND l.Type = 1) AS Likes,
             (SELECT COUNT(*) FROM LikesTable l WHERE l.PostID = p.PostID AND l.Type = 0) AS Dislikes,
         	(SELECT COUNT(*) FROM LikesTable l WHERE l.UserID = userID AND l.PostID = p.PostID AND l.Type = 1) AS UserLike, 
@@ -658,7 +658,7 @@ BEGIN
             ph.Level + 1 AS Level
         FROM
             PostTable
-        LEFT JOIN usertable ON usertable.UserID = PostTable.CreatedBy
+        LEFT JOIN UserTable ON UserTable.UserID = PostTable.CreatedBy
         INNER JOIN
             PostHierarchyCTE ph ON PostTable.ParentID = ph.PostID
         LEFT JOIN

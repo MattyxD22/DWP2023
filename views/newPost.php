@@ -37,7 +37,7 @@
 
             </div>
             <div class="newPost_MediaCol flex flex-col h-1/8 py-2">
-                <span class="text-red-600 text-2xl font-bold mb-2">Upload Image(s) or Video(s)</span>
+                <span class="text-red-600 text-2xl font-bold mb-2">Upload Image(s)</span>
                 <input multiple="true" accept=".png, .bmp, .jpg, .jpeg" class="files_input_newPost block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer dark:text-gray-400 focus:outline-none dark:border-gray-600 dark:placeholder-red-400 std_input h-[35px]" id="file_input" type="file">
             </div>
             <div class="newPost_CreateCol flex flex-row h-1/8 py-2 mt-auto justify-end">

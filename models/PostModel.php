@@ -68,11 +68,11 @@ class PostModel extends BaseModel
             $postID =  $handleCreatePost->fetch(\PDO::FETCH_ASSOC);
             $cxn = $this->closeDB();
 
-            if (!empty($categories)) {
-
+            if (!empty($categories) && !empty($categories[0])) {
+                print_r("Not empty?: ");
+                print_r($categories);
                 foreach ($categories as $key => $category) {
                     $cxn = $this->openDB();
-                    print_r($category);
                     $addCategory = "CALL addPostToCategory(:CategoryID, :postID)";
                     $handle_addCategory = $cxn->prepare($addCategory);
                     $handle_addCategory->bindValue(":CategoryID", $category);
@@ -94,10 +94,10 @@ class PostModel extends BaseModel
                 // Use foreach loop, if multiple files exists
                 foreach ($filesArr as $key => $file) {
                     $cxn = $this->openDB();
-                    print_r($file);
-                    $addImg = "CALL addFileToPost(:type, :postID, :file)";
+                    //print_r($file);
+                    $addImg = "CALL addFileToPost(1, :postID, :file)";
                     $handle_addImg = $cxn->prepare($addImg);
-                    $handle_addImg->bindValue(":type", $file["type"]);
+                    //$handle_addImg->bindValue(":type", $file["type"]);
                     $handle_addImg->bindValue(":postID", $postID["PostID"]);
                     $handle_addImg->bindParam(":file", $file["data"]);
                     $handle_addImg->execute();
