@@ -7,8 +7,6 @@ $infoController = new InfoController();
 
 $infoObj = $infoController->fetchAboutUsDetails();
 
-print_r($infoObj);
-
 $fName = $infoObj["FName"];
 $lName = $infoObj["LName"];
 $email = $infoObj["Email"];

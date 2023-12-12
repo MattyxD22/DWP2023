@@ -59,7 +59,6 @@ class InfoModel extends BaseModel
             $query = $cxn->prepare($sql);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
-            print_r($result);
             $cxn = $this->closeDB();
             return $result;
         } catch (\PDOException $e) {
@@ -75,7 +74,6 @@ class InfoModel extends BaseModel
             $query = $cxn->prepare($sql);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
-            print_r($result);
             $cxn = $this->closeDB();
             return $result["Description"];
         } catch (\PDOException $e) {

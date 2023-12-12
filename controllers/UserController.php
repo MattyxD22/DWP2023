@@ -60,12 +60,10 @@ switch ($action) {
           . $secret_key . '&response=' . $recaptcha;  
           $response = file_get_contents($url); 
           $response = json_decode($response); 
-          if ($response->success == true) { 
-            echo '<script>alert("Google reCAPTACHA verified")</script>'; 
-        } else { 
+          if ($response->success != true) { 
             echo '<script>alert("Error in Google reCAPTACHA")</script>'; 
             return;
-        } 
+        }
         $userModel->create($username, $email, $password);
         break;
     case "login":
