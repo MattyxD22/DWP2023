@@ -193,8 +193,8 @@ $(document).ready(function () {
 
       $(input.files).each(function (index, value) {
         // console.log($(this)[0]);
-        console.log($(input.files));
-        console.log($(this)[0], $(this)[0].name);
+        //console.log($(input.files));
+        //console.log($(this)[0], $(this)[0].name);
 
         formData.append("file" + index, $(this)[0], $(this)[0].name);
       });
@@ -203,17 +203,29 @@ $(document).ready(function () {
       formData.append("title", title);
       formData.append("description", description);
       formData.append("categories", categories);
-      console.log(formData);
+      //console.log(formData);
 
       $.ajax({
         url: url_post,
         data: formData,
-        dataType: "JSON",
+        //dataType: "JSON",
         type: "POST",
         contentType: false, // NEEDED, DON'T OMIT THIS
         processData: false, // NEEDED, DON'T OMIT THIS
       }).done(function (data) {
-        alert("Post Created successfully");
+        if (data == "Filesize too big") {
+          alert(
+            "The filesize for one or more of the files are too big, keep it below 2mb"
+          );
+        } else if (data == "filetype is not allowed") {
+          alert(
+            "The filetype of one or more of your files that you have selected is not allowed"
+          );
+        } else {
+          alert("Post created successfully");
+        }
+
+        //alert("Post Created successfully");
         //console.log(data);
       });
     } else {
@@ -620,7 +632,12 @@ $(document).ready(function () {
     const container = $(this).closest(".updateUserContainer");
 
     const user = container.find(".selectedUserToUpdate").val();
-    const userBan = container.find(".selectedUserBanStatus").is(":checked");
+    let userBan = 0;
+
+    if(container.find(".selectedUserBanStatus").prop('checked') == true){
+      userBan = 1;
+    }
+
     const userNewEmail = container.find(".newEmail").val();
     const userNewPassword = container.find(".newPassword").val();
 
@@ -724,7 +741,7 @@ $(document).ready(function () {
       userID: userID,
     };
 
-   $.ajax({
+    $.ajax({
       url: url_user,
       type: "POST",
       data: data,

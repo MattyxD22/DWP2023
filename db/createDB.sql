@@ -14,7 +14,7 @@ CREATE TABLE UserTable(
     FName VARCHAR(50),
     LName VARCHAR(50),
     Email VARCHAR(50) UNIQUE,
-    Password VARCHAR(100),
+    Password TEXT,
     SignedUpDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     Banned INT(11),
     MediaID INT(11),
@@ -111,7 +111,6 @@ CREATE TABLE ContactInfoTable(
     HouseNumber Text
 ) ENGINE = INNODB;
 
-ALTER TABLE UserTable ADD FOREIGN KEY (MediaID) REFERENCES MediaTable(MediaID);
 ALTER TABLE PostTable ADD FOREIGN KEY (CategoryID) REFERENCES CategoryPostTable(ID);
 
 insert into UserTable (Username, FName, LName, Email, Password) values ('jflipsen0', 'Jess', 'Flipsen', 'jflipsen0@latimes.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
