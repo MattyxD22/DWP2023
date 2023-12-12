@@ -14,7 +14,7 @@ CREATE TABLE UserTable(
     FName VARCHAR(50),
     LName VARCHAR(50),
     Email VARCHAR(50) UNIQUE,
-    Password VARCHAR(100),
+    Password TEXT,
     SignedUpDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     Banned INT(11),
     MediaID INT(11),

@@ -28,7 +28,6 @@ class AdminModel extends BaseModel
     {
     }
 
-
     /**
      * prevent the instance from being cloned (which would create a second instance of it)
      */
