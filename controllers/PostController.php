@@ -35,38 +35,44 @@ switch ($action) {
         //$files = $_FILES["file"];
 
         $filesArr = [];
+        $limit = 2 * 1024 * 1024; // 2mb or 2.097.152 bytes
+
+        // array which contains allowed extensions, more elements can always be added later
+        $allowed_extensions = array("jpg", "jpeg", "png", "bmp", "JPG", "JPEG", "PNG", "BMP");
 
         $count = 0;
         foreach ($_FILES as $file) {
 
+            try {
+                //Check if filesize is bigger than 2mb
+                // can always be extended further, for example to allow videos to be uploaded
+                if ($file["size"] > $limit) {
+                    throw new Exception("Filesize too big", 1);
+                }
+
+                // get filetype and check if it is something else than image filetypes
+                $extension = pathinfo($file["name"], PATHINFO_EXTENSION);
+
+                if (!in_array($extension, $allowed_extensions)) {
+                    throw new Exception("filetype is not allowed", 2);
+                }
 
 
-            $tmp = $file['tmp_name'];
+                $tmp = $file['tmp_name'];
+                $tmp_name = file_get_contents($file['tmp_name']);
 
-            //$extension = pathinfo($file["name"], PATHINFO_EXTENSION);
-            //print_r($extension);
-            $tmp_name = file_get_contents($file['tmp_name']);
+                $type = 1;
 
-            $type = 1;
+                $temp_arr = array('data' => $tmp_name);
 
-            // if ($extension == "MP4" || $extension == "mp4") {
-            //     $type = 2;
-            // }
+                array_push($filesArr, $temp_arr);
 
-            // if ($extension == "WEBM" || $extension == "webm") {
-            //     $type = 2;
-            // }
-
-
-
-            //$temp_arr = array('data' => $tmp_name, 'type' => $type);
-            $temp_arr = array('data' => $tmp_name);
-            //print_r($temp_arr);
-
-            array_push($filesArr, $temp_arr);
-
-            $tmp_name = '';
-            $tmp = '';
+                $tmp_name = '';
+                $tmp = '';
+            } catch (\Exception $e) {
+                print_r($e->getMessage());
+                return $e->getCode();
+            }
         }
 
         $postID = $postModel->createPost($userID, $title, $description, $categories, $filesArr);
