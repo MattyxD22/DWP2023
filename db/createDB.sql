@@ -131,6 +131,20 @@ FROM
 CROSS JOIN 
     ContactInfoTable;
 
+DELIMITER //
+
+CREATE TRIGGER AfterBlockUnfollowTrigger
+AFTER INSERT ON BlockedTable
+FOR EACH ROW
+BEGIN
+    DELETE FROM FollowingTable
+    WHERE UserID = NEW.UserID AND FollowingID = NEW.BlockedID;
+END //
+
+DELIMITER ;
+
+
+
 ALTER TABLE PostTable ADD FOREIGN KEY (CategoryID) REFERENCES CategoryPostTable(ID);
 
 insert into UserTable (Username, FName, LName, Email, Password) values ('jflipsen0', 'Jess', 'Flipsen', 'jflipsen0@latimes.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
@@ -787,9 +801,6 @@ BEGIN
     ELSE
         INSERT INTO BlockedTable (UserID, BlockedID)
         VALUES (userID, blockedUserID);
-
-        DELETE FROM FollowingTable
-        WHERE UserID = userID AND FollowingID = blockedUserID;
     END IF;
 END //
 
