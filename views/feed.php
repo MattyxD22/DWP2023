@@ -23,21 +23,21 @@ if (isset($_SESSION["UserID"])) {
 PostTable.CreatedDate,
 UserMedia.ImgData AS UserImgData
 FROM 
-    PostTable 
+    PostView 
 LEFT JOIN 
-    MediaTable ON MediaTable.PostID = PostTable.PostID 
+    MediaTable ON MediaTable.PostID = PostView.PostID 
 LEFT JOIN 
-    UserTable ON UserTable.UserID = PostTable.CreatedBy
+    UserTable ON UserTable.UserID = PostView.CreatedBy
 LEFT JOIN 
     MediaTable AS UserMedia ON UserTable.MediaID = UserMedia.MediaID
 WHERE 
-    PostTable.ParentID IS NULL AND PostTable.Hidden = 0 AND PostTable.Deleted = 0 AND
+    PostView.Hidden = 0 AND PostView.Deleted = 0 AND
         NOT EXISTS (
             SELECT 1 FROM BlockedTable
-            WHERE BlockedTable.UserID = UserID AND BlockedTable.BlockedID = PostTable.CreatedBy
+            WHERE BlockedTable.UserID = UserID AND BlockedTable.BlockedID = PostView.CreatedBy
         )
 ORDER BY 
-    PostTable.CreatedDate DESC;";
+    PostView.CreatedDate DESC;";
 
     //$query2 = "SELECT MediaTable.ImgData FROM MediaTable WHERE MediaTable.PostID = ";
 

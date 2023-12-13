@@ -1,5 +1,5 @@
 <div class="flex h-full w-full px-2 py-2">
-    <div class="rules_bg flex flex-col ps-2 pe-4 py-2 overflow-auto">
+    <div class="rules_bg flex flex-col ps-2 pe-4 py-2 overflow-auto w-full">
 
         <?php
         $count = 1;

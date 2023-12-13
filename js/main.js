@@ -651,10 +651,10 @@ $(document).ready(function () {
     if (file) {
       formData.append("file", file, file.name);
     }
-    formData.append("user", user);
+    formData.append("user", user ? user : '');
     formData.append("userBan", userBan);
-    formData.append("userNewEmail", userNewEmail);
-    formData.append("userNewPassword", userNewPassword);
+    formData.append("userNewEmail", userNewEmail ? userNewEmail : '');
+    formData.append("userNewPassword", userNewPassword ? userNewPassword : '');
 
     /* const data = {
       action: "updateUser",

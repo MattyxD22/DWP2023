@@ -55,29 +55,12 @@ class InfoModel extends BaseModel
 
         try {
             $cxn = $this->openDB();
-            $sql = "SELECT * FROM ContactInfoTable LIMIT 1";
+            $sql = "SELECT * FROM CombinedInfoView LIMIT 1";
             $query = $cxn->prepare($sql);
             $query->execute();
             $result = $query->fetch(\PDO::FETCH_ASSOC);
-            print_r($result);
             $cxn = $this->closeDB();
             return $result;
-        } catch (\PDOException $e) {
-            echo $e->getMessage();
-        }
-    }
-
-    function fetchAboutUsDescription()
-    {
-        try {
-            $cxn = $this->openDB();
-            $sql = "SELECT * FROM AboutTable LIMIT 1";
-            $query = $cxn->prepare($sql);
-            $query->execute();
-            $result = $query->fetch(\PDO::FETCH_ASSOC);
-            print_r($result);
-            $cxn = $this->closeDB();
-            return $result["Description"];
         } catch (\PDOException $e) {
             echo $e->getMessage();
         }

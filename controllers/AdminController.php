@@ -29,9 +29,9 @@ if (session_status() == PHP_SESSION_NONE) {
 switch ($action) {
     case "updateUser":
         $isAdmin = false;
-        if (isset($_POST["user"])) {
+        if (isset($_POST["user"]) && !empty($_POST["user"])) {
             $userObj = json_decode($_POST["user"], true); // Decodes the JSON string into an associative array
-            echo $userObj['UserID'];
+            // echo $userObj['UserID'];
             $userID = is_object($userObj) ? $userObj->UserID : $userObj['UserID']; // Extract UserID
             $isAdmin = true;
         } else {
@@ -40,7 +40,7 @@ switch ($action) {
 
         $file_content = '';
 
-        if (isset($_FILES['file'])) {
+        if (isset($_FILES['file']) && !empty($_FILES['file'])) {
             $file = $_FILES['file']['tmp_name'];
             $file_content = file_get_contents($file);
         }
@@ -48,7 +48,7 @@ switch ($action) {
         $userBan = $_POST["userBan"];
         $userNewEmail = $_POST["userNewEmail"];
         $userNewPassword = null;
-        if (isset($_POST["userNewPassword"])) {
+        if (isset($_POST["userNewPassword"]) && !empty($_POST["userNewPassword"])) {
             $userNewPassword = password_hash($_POST["userNewPassword"], PASSWORD_DEFAULT);
         }
 
