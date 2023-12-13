@@ -168,7 +168,6 @@ class AdminModel extends BaseModel
             }
 
             if (!empty($userNewEmail)) {
-                echo "we in";
                 $sql = "UPDATE UserTable
                         SET Email = :userNewEmail
                     WHERE UserID = :userID";
@@ -178,7 +177,7 @@ class AdminModel extends BaseModel
                 $query->execute();
             }
 
-            if (isset($newMediaID)) {
+            if (isset($newMediaID) && !empty($newMediaID)) {
                 $sql = "UPDATE UserTable
                         SET MediaID = :mediaID
                     WHERE UserID = :userID";
