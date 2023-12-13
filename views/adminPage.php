@@ -73,6 +73,7 @@ $users = [""];
                         include("../views/editUserInfo.php");
                 ?>
             </section>
+        </section>
 
             <section class="profile_content" data-type="2">
                 <?php 

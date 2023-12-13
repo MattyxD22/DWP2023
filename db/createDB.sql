@@ -14,7 +14,7 @@ CREATE TABLE UserTable(
     FName VARCHAR(50),
     LName VARCHAR(50),
     Email VARCHAR(50) UNIQUE,
-    Password VARCHAR(100),
+    Password TEXT,
     SignedUpDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     Banned INT(11),
     MediaID INT(11),
@@ -208,6 +208,123 @@ insert into RulesTable (Rule) values ('✋🏿 💪🏿 👐🏿 🙌🏿 👏�
 insert into RulesTable (Rule) values ('̗̺͖̹̯͓Ṯ̤͍̥͇͈h̲́e͏͓̼̗̙̼̣͔ ͇̜̱̠͓͍ͅN͕͠e̗̱z̘̝̜̺͙p̤̺̹͍̯͚e̠̻̠͜r̨̤͍̺̖͔̖̖d̠̟̭̬̝͟i̦͖̩͓͔̤a̠̗̬͉̙n͚͜ ̻̞̰͚ͅh̵͉i̳̞v̢͇ḙ͎͟-҉̭̩̼͔m̤̭̫i͕͇̝̦n̗͙ḍ̟ ̯̲͕͞ǫ̟̯̰̲͙̻̝f ̪̰̰̗̖̭̘͘c̦͍̲̞͍̩̙ḥ͚a̮͎̟̙͜ơ̩̹͎s̤.̝̝ ҉Z̡̖̜͖̰̣͉̜a͖̰͙̬͡l̲̫̳͍̩g̡̟̼̱͚̞̬ͅo̗͜.̟');
 insert into RulesTable (Rule) values ('❤️ 💔 💌 💕 💞 💓 💗 💖 💘 💝 💟 💜 💛 💚 💙');
 insert into RulesTable (Rule) values ('👩🏽');
+
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Artisan Bread Making', 'TGVhcm4gdG8gbWFrZSBhcnRpc2FuIGJyZWFkIHdpdGggdGhpcyBzaW1wbGUgZ3VpZGU=', 19);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Sourdough Starter Tips', 'VGlwcyBmb3IgbWFpbnRhaW5pbmcgYSBoZWFsdGh5IHNvdXJkb3VnaCBzdGFydGVy', 21);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Gluten-Free Bread Recipes', 'RGVsaWNpb3VzIGFuZCBlYXN5IGdsdXRlbi1mcmVlIGJyZWFkIHJlY2lwZXMgZm9yIGV2ZXJ5b25l', 3);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('French Baguette Secrets', 'U2VjcmV0cyBiZWhpbmQgbWFraW5nIHRoZSBwZXJmZWN0IEZyZW5jaCBiYWd1ZXR0ZQ==', 10);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Rye Bread Benefits', 'RGlzY292ZXIgdGhlIGhlYWx0aCBiZW5lZml0cyBvZiByeWUgYnJlYWQ=', 21);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Baking Bread at Home', 'U3RlcC1ieS1zdGVwIGd1aWRlIHRvIGJha2luZyBicmVhZCBhdCBob21l', 17);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Whole Wheat Bread Benefits', 'SGVhbHRoIGJlbmVmaXRzIG9mIHdob2xlIHdoZWF0IGJyZWFk', 11);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Brioche Baking Secrets', 'U2VjcmV0cyB0byBtYWtpbmcgc29mdCBhbmQgcmljaCBicmlvY2hl', 18);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Multigrain Bread Guide', 'QSBjb21wcmVoZW5zaXZlIGd1aWRlIHRvIGJha2luZyBtdWx0aWdyYWluIGJyZWFk', 18);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Pita Bread Recipe', 'U2ltcGxlIGFuZCB0YXN0eSBob21lbWFkZSBwaXRhIGJyZWFkIHJlY2lwZQ==', 22);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Ciabatta Bread Techniques', 'VGVjaG5pcXVlcyBmb3IgcGVyZmVjdCBjaWFiYXR0YSBicmVhZA==', 23);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Banana Bread Delight', 'RGVsaWNpb3VzIGFuZCBtb2lzdCBiYW5hbmEgYnJlYWQgcmVjaXBl', 7);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Focaccia Bread Tips', 'VGlwcyBmb3IgYmFraW5nIEl0YWxpYW4gZm9jYWNjaWEgYnJlYWQ=', 10);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Challah Bread Tradition', 'VHJhZGl0aW9uYWwgSmV3aXNoIGNoYWxsYWggYnJlYWQgcmVjaXBl', 11);
+INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Irish Soda Bread', 'SG93IHRvIG1ha2UgdHJhZGl0aW9uYWwgSXJpc2ggc29kYSBicmVhZA==', 9);
+
+insert into LikesTable (UserID, PostID, Type) values (12, 6, 0);
+insert into LikesTable (UserID, PostID, Type) values (25, 12, 1);
+insert into LikesTable (UserID, PostID, Type) values (22, 14, 1);
+insert into LikesTable (UserID, PostID, Type) values (2, 3, 1);
+insert into LikesTable (UserID, PostID, Type) values (10, 4, 0);
+insert into LikesTable (UserID, PostID, Type) values (8, 13, 1);
+insert into LikesTable (UserID, PostID, Type) values (24, 1, 1);
+insert into LikesTable (UserID, PostID, Type) values (18, 11, 0);
+insert into LikesTable (UserID, PostID, Type) values (5, 6, 0);
+insert into LikesTable (UserID, PostID, Type) values (13, 12, 0);
+insert into LikesTable (UserID, PostID, Type) values (14, 8, 1);
+insert into LikesTable (UserID, PostID, Type) values (23, 14, 0);
+insert into LikesTable (UserID, PostID, Type) values (21, 14, 1);
+insert into LikesTable (UserID, PostID, Type) values (2, 1, 1);
+insert into LikesTable (UserID, PostID, Type) values (11, 9, 1);
+insert into LikesTable (UserID, PostID, Type) values (16, 9, 0);
+insert into LikesTable (UserID, PostID, Type) values (10, 9, 0);
+insert into LikesTable (UserID, PostID, Type) values (16, 6, 0);
+insert into LikesTable (UserID, PostID, Type) values (12, 14, 0);
+insert into LikesTable (UserID, PostID, Type) values (24, 6, 0);
+insert into LikesTable (UserID, PostID, Type) values (23, 10, 0);
+insert into LikesTable (UserID, PostID, Type) values (15, 2, 1);
+insert into LikesTable (UserID, PostID, Type) values (25, 8, 1);
+insert into LikesTable (UserID, PostID, Type) values (18, 6, 0);
+insert into LikesTable (UserID, PostID, Type) values (19, 9, 1);
+insert into LikesTable (UserID, PostID, Type) values (16, 12, 1);
+insert into LikesTable (UserID, PostID, Type) values (7, 10, 0);
+insert into LikesTable (UserID, PostID, Type) values (25, 13, 0);
+insert into LikesTable (UserID, PostID, Type) values (16, 13, 1);
+insert into LikesTable (UserID, PostID, Type) values (14, 7, 0);
+insert into LikesTable (UserID, PostID, Type) values (5, 2, 0);
+insert into LikesTable (UserID, PostID, Type) values (6, 3, 1);
+insert into LikesTable (UserID, PostID, Type) values (15, 7, 0);
+insert into LikesTable (UserID, PostID, Type) values (20, 13, 1);
+insert into LikesTable (UserID, PostID, Type) values (25, 15, 1);
+insert into LikesTable (UserID, PostID, Type) values (20, 3, 1);
+insert into LikesTable (UserID, PostID, Type) values (5, 9, 0);
+insert into LikesTable (UserID, PostID, Type) values (16, 12, 0);
+insert into LikesTable (UserID, PostID, Type) values (9, 11, 0);
+insert into LikesTable (UserID, PostID, Type) values (13, 3, 0);
+insert into LikesTable (UserID, PostID, Type) values (5, 15, 0);
+insert into LikesTable (UserID, PostID, Type) values (21, 11, 0);
+insert into LikesTable (UserID, PostID, Type) values (15, 8, 1);
+insert into LikesTable (UserID, PostID, Type) values (16, 4, 0);
+insert into LikesTable (UserID, PostID, Type) values (24, 10, 1);
+insert into LikesTable (UserID, PostID, Type) values (12, 9, 0);
+insert into LikesTable (UserID, PostID, Type) values (1, 9, 1);
+insert into LikesTable (UserID, PostID, Type) values (17, 6, 0);
+insert into LikesTable (UserID, PostID, Type) values (8, 4, 0);
+insert into LikesTable (UserID, PostID, Type) values (12, 4, 1);
+insert into LikesTable (UserID, PostID, Type) values (21, 3, 0);
+insert into LikesTable (UserID, PostID, Type) values (2, 10, 1);
+insert into LikesTable (UserID, PostID, Type) values (23, 9, 1);
+insert into LikesTable (UserID, PostID, Type) values (23, 13, 0);
+insert into LikesTable (UserID, PostID, Type) values (21, 1, 0);
+insert into LikesTable (UserID, PostID, Type) values (17, 4, 0);
+insert into LikesTable (UserID, PostID, Type) values (20, 9, 1);
+insert into LikesTable (UserID, PostID, Type) values (20, 2, 0);
+insert into LikesTable (UserID, PostID, Type) values (20, 7, 1);
+insert into LikesTable (UserID, PostID, Type) values (13, 13, 0);
+insert into LikesTable (UserID, PostID, Type) values (13, 1, 1);
+insert into LikesTable (UserID, PostID, Type) values (4, 7, 1);
+insert into LikesTable (UserID, PostID, Type) values (23, 9, 1);
+insert into LikesTable (UserID, PostID, Type) values (11, 4, 0);
+insert into LikesTable (UserID, PostID, Type) values (20, 13, 0);
+insert into LikesTable (UserID, PostID, Type) values (16, 9, 0);
+insert into LikesTable (UserID, PostID, Type) values (7, 6, 0);
+insert into LikesTable (UserID, PostID, Type) values (10, 3, 1);
+insert into LikesTable (UserID, PostID, Type) values (16, 6, 0);
+insert into LikesTable (UserID, PostID, Type) values (24, 4, 0);
+insert into LikesTable (UserID, PostID, Type) values (17, 6, 1);
+insert into LikesTable (UserID, PostID, Type) values (5, 4, 1);
+insert into LikesTable (UserID, PostID, Type) values (4, 5, 1);
+insert into LikesTable (UserID, PostID, Type) values (19, 5, 0);
+insert into LikesTable (UserID, PostID, Type) values (9, 12, 1);
+insert into LikesTable (UserID, PostID, Type) values (23, 6, 1);
+insert into LikesTable (UserID, PostID, Type) values (3, 5, 1);
+insert into LikesTable (UserID, PostID, Type) values (20, 1, 1);
+insert into LikesTable (UserID, PostID, Type) values (8, 4, 0);
+insert into LikesTable (UserID, PostID, Type) values (13, 14, 1);
+insert into LikesTable (UserID, PostID, Type) values (10, 12, 1);
+insert into LikesTable (UserID, PostID, Type) values (9, 7, 1);
+insert into LikesTable (UserID, PostID, Type) values (15, 15, 0);
+insert into LikesTable (UserID, PostID, Type) values (14, 10, 0);
+insert into LikesTable (UserID, PostID, Type) values (17, 10, 1);
+insert into LikesTable (UserID, PostID, Type) values (10, 12, 0);
+insert into LikesTable (UserID, PostID, Type) values (21, 8, 0);
+insert into LikesTable (UserID, PostID, Type) values (3, 14, 0);
+insert into LikesTable (UserID, PostID, Type) values (24, 14, 0);
+insert into LikesTable (UserID, PostID, Type) values (3, 14, 1);
+insert into LikesTable (UserID, PostID, Type) values (6, 12, 0);
+insert into LikesTable (UserID, PostID, Type) values (14, 9, 0);
+insert into LikesTable (UserID, PostID, Type) values (1, 6, 0);
+insert into LikesTable (UserID, PostID, Type) values (6, 11, 1);
+insert into LikesTable (UserID, PostID, Type) values (16, 9, 1);
+insert into LikesTable (UserID, PostID, Type) values (5, 15, 0);
+insert into LikesTable (UserID, PostID, Type) values (1, 6, 1);
+insert into LikesTable (UserID, PostID, Type) values (12, 4, 1);
+insert into LikesTable (UserID, PostID, Type) values (5, 2, 0);
+insert into LikesTable (UserID, PostID, Type) values (14, 2, 1);
 
 
 DELIMITER //
