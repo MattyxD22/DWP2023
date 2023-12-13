@@ -14,8 +14,7 @@ $city = $infoObj["City"];
 $streetName = $infoObj["StreetName"];
 $houseNumber = $infoObj["HouseNumber"];
 $phoneNumber = $infoObj["PhoneNumber"];
-
-$aboutUsDescription = base64_decode($infoController->fetchAboutUsDescription());
+$aboutUsDescription = base64_decode($infoObj["Description"]);
 
 ?>
 

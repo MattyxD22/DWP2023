@@ -17,10 +17,4 @@ class InfoController
         $details = $infoModel->fetchAboutUsDetails();
         return $details;
     }
-
-    function fetchAboutUsDescription() {
-        global $infoModel;
-        $description = $infoModel->fetchAboutUsDescription();
-        return $description;
-    }
 }

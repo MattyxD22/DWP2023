@@ -12,32 +12,32 @@ if (isset($_SESSION["UserID"])) {
 
     $userID = $_SESSION["UserID"];
 
-$query = "SELECT posttable.PostID, posttable.Title, posttable.Description, posttable.CreatedDate, usertable.Username, posttable.CreatedBy, mediaTable.ImgData, 
-(SELECT COUNT(*) FROM posttable p2 WHERE p2.ParentID = posttable.PostID) AS 'Comments', 
-(SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'Likes', 
-(SELECT COUNT(*) FROM likestable WHERE likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'Dislikes', 
-(SELECT COUNT(*) FROM likestable WHERE likestable.UserID = " . $userID . " AND likestable.PostID = posttable.PostID AND likestable.Type = 1) AS 'UserLike', 
-(SELECT COUNT(*) FROM likestable WHERE likestable.UserID = " . $userID . " AND likestable.PostID = posttable.PostID AND likestable.Type = 0) AS 'UserDislike',
-(SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = posttable.PostID) AS 'Reposts',
-(SELECT COUNT(*) FROM RepostTable WHERE RepostTable.UserID = UserID AND RepostTable.PostID = posttable.PostID) AS 'UserReposted',
-posttable.CreatedDate,
+$query = "SELECT PostView.PostID, PostView.Title, PostView.Description, PostView.CreatedDate, usertable.Username, PostView.CreatedBy, mediaTable.ImgData, 
+(SELECT COUNT(*) FROM PostView p2 WHERE p2.ParentID = PostView.PostID) AS 'Comments', 
+(SELECT COUNT(*) FROM likestable WHERE likestable.PostID = PostView.PostID AND likestable.Type = 1) AS 'Likes', 
+(SELECT COUNT(*) FROM likestable WHERE likestable.PostID = PostView.PostID AND likestable.Type = 0) AS 'Dislikes', 
+(SELECT COUNT(*) FROM likestable WHERE likestable.UserID = " . $userID . " AND likestable.PostID = PostView.PostID AND likestable.Type = 1) AS 'UserLike', 
+(SELECT COUNT(*) FROM likestable WHERE likestable.UserID = " . $userID . " AND likestable.PostID = PostView.PostID AND likestable.Type = 0) AS 'UserDislike',
+(SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = PostView.PostID) AS 'Reposts',
+(SELECT COUNT(*) FROM RepostTable WHERE RepostTable.UserID = UserID AND RepostTable.PostID = PostView.PostID) AS 'UserReposted',
+PostView.CreatedDate,
 UserMedia.ImgData AS UserImgData
 FROM 
-    PostTable 
+    PostView 
 LEFT JOIN 
-    MediaTable ON MediaTable.PostID = PostTable.PostID 
+    MediaTable ON MediaTable.PostID = PostView.PostID 
 LEFT JOIN 
-    UserTable ON UserTable.UserID = PostTable.CreatedBy
+    UserTable ON UserTable.UserID = PostView.CreatedBy
 LEFT JOIN 
     MediaTable AS UserMedia ON UserTable.MediaID = UserMedia.MediaID
 WHERE 
-    PostTable.ParentID IS NULL AND PostTable.Hidden = 0 AND PostTable.Deleted = 0 AND
+    PostView.Hidden = 0 AND PostView.Deleted = 0 AND
         NOT EXISTS (
             SELECT 1 FROM BlockedTable
-            WHERE BlockedTable.UserID = UserID AND BlockedTable.BlockedID = PostTable.CreatedBy
+            WHERE BlockedTable.UserID = UserID AND BlockedTable.BlockedID = PostView.CreatedBy
         )
 ORDER BY 
-    PostTable.CreatedDate DESC;";
+    PostView.CreatedDate DESC;";
 
     //$query2 = "SELECT MediaTable.ImgData FROM MediaTable WHERE MediaTable.PostID = ";
 

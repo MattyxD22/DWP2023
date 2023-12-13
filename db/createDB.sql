@@ -111,6 +111,26 @@ CREATE TABLE ContactInfoTable(
     HouseNumber Text
 ) ENGINE = INNODB;
 
+CREATE VIEW PostView AS
+SELECT *
+FROM PostTable
+WHERE ParentID IS NULL; 
+
+CREATE VIEW CombinedInfoView AS
+SELECT 
+    AboutTable.Description,
+    ContactInfoTable.Email,
+    ContactInfoTable.FName,
+    ContactInfoTable.LName,
+    ContactInfoTable.PhoneNumber,
+    ContactInfoTable.City,
+    ContactInfoTable.StreetName,
+    ContactInfoTable.HouseNumber
+FROM 
+    AboutTable
+CROSS JOIN 
+    ContactInfoTable;
+
 ALTER TABLE PostTable ADD FOREIGN KEY (CategoryID) REFERENCES CategoryPostTable(ID);
 
 insert into UserTable (Username, FName, LName, Email, Password) values ('jflipsen0', 'Jess', 'Flipsen', 'jflipsen0@latimes.com', '$2y$10$KEhR01gCVwRtDx9k0mUzxe4WbMpacd6skesgDDC95WfN69t9hfs7O');
@@ -175,38 +195,38 @@ DELIMITER //
 CREATE PROCEDURE getFeed(IN UserID INT(11))
 BEGIN
     SELECT 
-        PostTable.PostID, 
-        PostTable.Description, 
-        PostTable.CreatedBy, 
-        PostTable.Title, 
+        PostView.PostID, 
+        PostView.Description, 
+        PostView.CreatedBy, 
+        PostView.Title, 
         UserTable.Username, 
         UserTable.UserID, 
-        (SELECT COUNT(*) FROM PostTable p2 WHERE p2.ParentID = PostTable.PostID) AS 'Comments', 
-        (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 1) AS 'Likes', 
-        (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 0) AS 'Dislikes', 
-        (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.UserID = UserID AND LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 1) AS 'UserLike', 
-        (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.UserID = UserID AND LikesTable.PostID = PostTable.PostID AND LikesTable.Type = 0) AS 'UserDislike', 
-        (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = PostTable.PostID) AS 'Reposts',
-        (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.UserID = UserID AND RepostTable.PostID = PostTable.PostID) AS 'UserReposted',
+        (SELECT COUNT(*) FROM PostView p2 WHERE p2.ParentID = PostView.PostID) AS 'Comments', 
+        (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostView.PostID AND LikesTable.Type = 1) AS 'Likes', 
+        (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.PostID = PostView.PostID AND LikesTable.Type = 0) AS 'Dislikes', 
+        (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.UserID = UserID AND LikesTable.PostID = PostView.PostID AND LikesTable.Type = 1) AS 'UserLike', 
+        (SELECT COUNT(*) FROM LikesTable WHERE LikesTable.UserID = UserID AND LikesTable.PostID = PostView.PostID AND LikesTable.Type = 0) AS 'UserDislike', 
+        (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.PostID = PostView.PostID) AS 'Reposts',
+        (SELECT COUNT(*) FROM RepostTable WHERE RepostTable.UserID = UserID AND RepostTable.PostID = PostView.PostID) AS 'UserReposted',
         MediaTable.ImgData, 
-        PostTable.CreatedDate ,
+        PostView.CreatedDate ,
         UserMedia.ImgData AS UserImgData
     FROM 
-        PostTable 
+        PostView
     LEFT JOIN 
-        UserTable ON UserTable.UserID = PostTable.CreatedBy 
+        UserTable ON UserTable.UserID = PostView.CreatedBy 
     LEFT JOIN 
-        MediaTable ON MediaTable.PostID = PostTable.PostID
+        MediaTable ON MediaTable.PostID = PostView.PostID
     LEFT JOIN 
         MediaTable AS UserMedia ON UserTable.MediaID = UserMedia.MediaID
     WHERE 
-        PostTable.ParentID IS NULL AND PostTable.Hidden = 0 AND PostTable.Deleted = 0 AND
+        PostView.Hidden = 0 AND PostView.Deleted = 0 AND
         NOT EXISTS (
             SELECT 1 FROM BlockedTable
-            WHERE BlockedTable.UserID = UserID AND BlockedTable.BlockedID = PostTable.CreatedBy
+            WHERE BlockedTable.UserID = UserID AND BlockedTable.BlockedID = PostView.CreatedBy
         )
     ORDER BY 
-        PostTable.CreatedDate DESC;
+        PostView.CreatedDate DESC;
 END //
 
 DELIMITER ;
