@@ -192,22 +192,23 @@ insert into UserTable (Username, FName, LName, Email, Password) values ('aitzkov
 INSERT INTO CategoryTable(CategoryTable.Title) VALUES ("Homemade");
 INSERT INTO CategoryTable(CategoryTable.Title) VALUES ("Amateur");
 INSERT INTO CategoryTable(CategoryTable.Title) VALUES ("Professionals");
-insert into CategoryTable(CategoryTable.Title) VALUES("Category 1");
-insert into CategoryTable(CategoryTable.Title) VALUES("Category 2");
-insert into CategoryTable(CategoryTable.Title) VALUES("Category 3");
-insert into CategoryTable(CategoryTable.Title) VALUES("Category 4");
-insert into CategoryTable(CategoryTable.Title) VALUES("Category 5");
+INSERT INTO CategoryTable(CategoryTable.Title) VALUES ("French");
+INSERT INTO CategoryTable(CategoryTable.Title) VALUES ("Japanese");
+INSERT INTO CategoryTable(CategoryTable.Title) VALUES ("Parody");
+INSERT INTO CategoryTable(CategoryTable.Title) VALUES ("Humor");
+INSERT INTO CategoryTable(CategoryTable.Title) VALUES ("Cartoon");
+INSERT INTO CategoryTable(CategoryTable.Title) VALUES ("Deep Fakes");
 
-insert into RulesTable (Rule) values ('‪‪test‪');
-insert into RulesTable (Rule) values (null);
-insert into RulesTable (Rule) values ('　');
-insert into RulesTable (Rule) values ('-1/2');
-insert into RulesTable (Rule) values ('""');
-insert into RulesTable (Rule) values ('(｡◕ ∀ ◕｡)');
-insert into RulesTable (Rule) values ('✋🏿 💪🏿 👐🏿 🙌🏿 👏🏿 🙏🏿');
-insert into RulesTable (Rule) values ('̗̺͖̹̯͓Ṯ̤͍̥͇͈h̲́e͏͓̼̗̙̼̣͔ ͇̜̱̠͓͍ͅN͕͠e̗̱z̘̝̜̺͙p̤̺̹͍̯͚e̠̻̠͜r̨̤͍̺̖͔̖̖d̠̟̭̬̝͟i̦͖̩͓͔̤a̠̗̬͉̙n͚͜ ̻̞̰͚ͅh̵͉i̳̞v̢͇ḙ͎͟-҉̭̩̼͔m̤̭̫i͕͇̝̦n̗͙ḍ̟ ̯̲͕͞ǫ̟̯̰̲͙̻̝f ̪̰̰̗̖̭̘͘c̦͍̲̞͍̩̙ḥ͚a̮͎̟̙͜ơ̩̹͎s̤.̝̝ ҉Z̡̖̜͖̰̣͉̜a͖̰͙̬͡l̲̫̳͍̩g̡̟̼̱͚̞̬ͅo̗͜.̟');
-insert into RulesTable (Rule) values ('❤️ 💔 💌 💕 💞 💓 💗 💖 💘 💝 💟 💜 💛 💚 💙');
-insert into RulesTable (Rule) values ('👩🏽');
+
+insert into RulesTable (Rule) values ("All Posts should be related to bread, it doens't matter what the context is, as long as it is about bread");
+insert into RulesTable (Rule) values ("Please keep a civil tone with each other, after all it is just bread");
+insert into RulesTable (Rule) values ("Admins can always ban you, within reason");
+insert into RulesTable (Rule) values ("Admins can always delete posts, if it doesn't follow the guidelines");
+
+INSERT INTO AboutTable(Description) VALUES ("W");
+
+INSERT INTO ContactInfoTable (Email, FName, LName, PhoneNumber, City, StreetName, HouseNumber) VALUES("admin@breadtube.dk", "Name", "Nameson", "+45 12 34 56 78", "Esbjerg", "Spangsbjerg Kirkevej", "103");
+
 
 INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Artisan Bread Making', 'TGVhcm4gdG8gbWFrZSBhcnRpc2FuIGJyZWFkIHdpdGggdGhpcyBzaW1wbGUgZ3VpZGU=', 19);
 INSERT INTO PostTable (Title, Description, CreatedBy) VALUES ('Sourdough Starter Tips', 'VGlwcyBmb3IgbWFpbnRhaW5pbmcgYSBoZWFsdGh5IHNvdXJkb3VnaCBzdGFydGVy', 21);

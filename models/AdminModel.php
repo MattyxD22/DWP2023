@@ -115,7 +115,8 @@ class AdminModel extends BaseModel
             return false;
         }
     }
-    function uploadUserImage($userImage) {
+    function uploadUserImage($userImage)
+    {
         try {
             $cxn = $this->openDB();
             $sql = "CALL addFileToPost(:type, :postID, :file);";
@@ -135,8 +136,9 @@ class AdminModel extends BaseModel
         }
     }
 
-    function updateUserAdmin($userID, $userBan, $userNewEmail, $userNewPassword, $userNewImage) {
-        try {  
+    function updateUserAdmin($userID, $userBan, $userNewEmail, $userNewPassword, $userNewImage)
+    {
+        try {
 
             if (!empty($userNewImage)) {
                 $newMediaID = $this->uploadUserImage($userNewImage);
@@ -192,7 +194,6 @@ class AdminModel extends BaseModel
             $cnx = $this->closeDB();
             return false;
         }
-
     }
 
     function deleteRule($ruleID)

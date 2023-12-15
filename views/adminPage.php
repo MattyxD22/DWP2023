@@ -32,7 +32,7 @@ $users = [""];
                     <span>Description</span>
                 </div>
             </div>
-            <section class="p-4 gap-2 selected profile_content" data-type="1">
+            <section class="p-4 gap-2 selected profile_content overflow-auto" data-type="1">
                 <label for="users" class="mb-2">Select a user:</label>
                 <select name="users" id="users" class="w-full text-black pl-4 selectedUserToUpdate" onchange="updateBanStatus()">
                     <?php foreach ($users as $user) : ?>
@@ -70,24 +70,24 @@ $users = [""];
                     </script>
 
                     <?php
-                        include("../views/editUserInfo.php");
-                ?>
-            </section>
-        </section>
-
-            <section class="profile_content" data-type="2">
-                <?php 
-                    include("../views/updateRules.php");
-                ?>
+                    include("../views/editUserInfo.php");
+                    ?>
+                </section>
             </section>
 
-            <section class="p-4 gap-2 profile_content" data-type="3">
+            <section class="profile_content overflow-auto" data-type="2">
+                <?php
+                include("../views/updateRules.php");
+                ?>
+            </section>
+
+            <section class="p-4 gap-2 profile_content overflow-auto" data-type="3">
                 <?php
                 include("../views/updateContact.php");
                 ?>
             </section>
 
-            <section class="p-4 gap-2 profile_content" data-type="4">
+            <section class="p-4 gap-2 profile_content overflow-auto" data-type="4">
                 <?php
                 include("../views/updateDescription.php");
                 ?>
